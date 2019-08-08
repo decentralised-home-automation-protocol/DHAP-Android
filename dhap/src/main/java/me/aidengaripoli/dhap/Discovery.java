@@ -79,7 +79,7 @@ public final class Discovery {
 
     /**
      *
-     * @return
+     * @throws IOException
      */
     private void findDevices() throws IOException {
         int emptyRepliesCount = 0;
@@ -93,7 +93,7 @@ public final class Discovery {
             Log.d(TAG, "Received (" + repliedDevices.size() + ") replies.");
             // received replies?
             if (repliedDevices.size() > 0) { // yes
-                updateList(repliedDevices);
+                updateCensusList(repliedDevices);
             } else { // no
                 emptyRepliesCount++;
                 Log.d(TAG, "Empty replies: (" + emptyRepliesCount + ").");
@@ -154,6 +154,8 @@ public final class Discovery {
 
     /**
      *
+     * @return
+     * @throws IOException
      */
     private List<Device> listenForReplies() throws IOException {
         Log.d(TAG, "Listening to replies...");
@@ -177,7 +179,7 @@ public final class Discovery {
                 socket.receive(replyPacket);
 
                 // ignore packet from self.
-                if (replyPacket.getAddress().getHostAddress().equals(getIpAddress())) {
+                if (isReplyFromSelf(replyPacket)) {
                     continue;
                 }
             } catch (SocketTimeoutException e) {
@@ -187,21 +189,10 @@ public final class Discovery {
 
             Log.d(TAG, "Received reply from: " + replyPacket.getAddress().getHostAddress());
 
-            try {
-                String[] contents = new String(receiveBuffer).split("\\|");
-                if (!contents[0].equals(DISCOVERY_RESPONSE_CODE)) {
-                    throw new Exception();
-                }
-                String[] deviceString = contents[1].split(",");
-                Device device = new Device(
-                        deviceString[0],
-                        replyPacket.getAddress(),
-                        Integer.parseInt(deviceString[1]),
-                        Integer.parseInt(deviceString[2])
-                );
+            Device device = parseReply(receiveBuffer, replyPacket);
+
+            if (device != null) {
                 devices.add(device);
-            } catch (Exception e) {
-                Log.d(TAG, "Device is not compliant, ignoring.");
             }
         }
 
@@ -210,15 +201,52 @@ public final class Discovery {
 
     /**
      *
+     * @param receiveBuffer
+     * @param replyPacket
+     * @return
+     */
+    private Device parseReply(byte[] receiveBuffer, DatagramPacket replyPacket) {
+        try {
+            String[] contents = new String(receiveBuffer).split("\\|");
+            if (!contents[0].equals(DISCOVERY_RESPONSE_CODE)) {
+                throw new Exception();
+            }
+            String[] deviceString = contents[1].split(",");
+
+            return new Device(
+                    deviceString[0],
+                    replyPacket.getAddress(),
+                    Integer.parseInt(deviceString[1]),
+                    Integer.parseInt(deviceString[2])
+            );
+        } catch (Exception e) {
+            Log.d(TAG, "Device is not compliant, ignoring.");
+        }
+
+        return null;
+    }
+
+    /**
+     *
      * @param repliedDevices
      */
-    private void updateList(List<Device> repliedDevices) {
+    private void updateCensusList(List<Device> repliedDevices) {
         // update list
         Log.d(TAG, "Updating list...");
 
         for (Device device : repliedDevices) {
             censusList.add(device);
         }
+    }
+
+    /**
+     *
+     * @param replyPacket
+     * @return
+     * @throws UnknownHostException
+     */
+    private boolean isReplyFromSelf(DatagramPacket replyPacket) throws UnknownHostException {
+        return replyPacket.getAddress().getHostAddress().equals(getIpAddress());
     }
 
     /**
