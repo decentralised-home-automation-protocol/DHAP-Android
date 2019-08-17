@@ -16,7 +16,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.aidengaripoli.dhap.callbacks.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.callbacks.discovery.GetDiscoveredDevicesCallbacks;
 
 /**
  *
