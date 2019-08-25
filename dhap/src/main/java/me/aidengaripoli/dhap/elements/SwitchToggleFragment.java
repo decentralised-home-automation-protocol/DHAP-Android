@@ -10,12 +10,14 @@ import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 import me.aidengaripoli.dhap.R;
 
 public class SwitchToggleFragment extends BaseElementFragment implements
         CompoundButton.OnCheckedChangeListener {
 
-    private static final String SWITCH_TOGGLE = "switch_toggle";
+    public static final String SWITCH_TOGGLE = "switch_toggle";
 
     private Switch toggleSwitch;
 
@@ -23,7 +25,7 @@ public class SwitchToggleFragment extends BaseElementFragment implements
 
     public SwitchToggleFragment() {}
 
-    public static SwitchToggleFragment newInstance() {
+    public static SwitchToggleFragment newInstance(ArrayList<String> displaySettings) {
         SwitchToggleFragment fragment = new SwitchToggleFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -54,5 +56,10 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         this.isChecked = isChecked;
+    }
+
+    @Override
+    void updateFragmentData() {
+
     }
 }

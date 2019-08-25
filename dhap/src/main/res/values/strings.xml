@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">DHAP</string>
+
+    <string name="value">value</string>
+    <string name="zero">0</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="n">N</string>
+    <string name="e">E</string>
+    <string name="s">S</string>
+    <string name="w">W</string>
+    <string name="button">Button</string>
+    <string name="n_a">N/A</string>
 </resources>

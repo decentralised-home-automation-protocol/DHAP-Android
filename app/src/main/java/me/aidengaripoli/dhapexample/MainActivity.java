@@ -37,20 +37,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void test() {
-        dhap.fetchDevicesInterface("", true, new GetDeviceUIActivityCallbacks() {
+        dhap.fetchDeviceInterface("", true, new GetDeviceUIActivityCallbacks() {
             @Override
             public void assetsFileFailure() {
-
+                Log.d(TAG, "assetsFileFailure");
             }
 
             @Override
             public void deviceActivityIntent(Intent intent) {
-
+                Log.d(TAG, "deviceActivityIntent");
+                startActivity(intent);
             }
 
             @Override
             public void displayFailure() {
-
+                Log.d(TAG, "displayFailure");
             }
         });
     }

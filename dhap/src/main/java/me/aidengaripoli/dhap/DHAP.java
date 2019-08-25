@@ -1,6 +1,7 @@
 package me.aidengaripoli.dhap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -21,10 +22,12 @@ public class DHAP {
         this.context = context;
     }
 
-    public void fetchDevicesInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
+    public void fetchDeviceInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
         // --temp-- get device from assets folder
         // make it an option for users of the lib to specify to retrieve xml from assets folder
         // instead of requiring a compliant device for testing.
+
+        String deviceXML = null;
 
         if (useAssetsFolder) {
             AssetManager assetManager = context.getAssets();
@@ -34,7 +37,8 @@ public class DHAP {
                 for (String fileName : list) {
                     if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
                         InputStream inputStream = assetManager.open(fileName);
-                        Log.d(TAG, inputStreamToString(inputStream));
+                        deviceXML = inputStreamToString(inputStream);
+                        Log.d(TAG, deviceXML);
                     }
                 }
             } catch (IOException e) {
@@ -44,26 +48,26 @@ public class DHAP {
 //            assetManager.close();
         } else {
             // attempt to retrieve cached device file/data from storage or db
-
             // if not found, ask the device for its xml file over network
                 // should be a background thread with retry (3) and timeouts (1s)
                 // if successful, cache the file (or save data to db)
         }
 
-//        View view = ElementLayout.create();
-//
-//        // parse file for device ui
-        DeviceDescription description = ;
+        if (deviceXML == null) {
+            callbacks.displayFailure();
+            return;
+        }
 
-//        // create element instances
-//        // create view with elements
-//        ScrollView scrollView = new ScrollView(context);
-//        scrollView.addView(view);
-//
-//        Intent intent = new Intent(context, DeviceActivity.class);
-//        intent.putExtra("view", (Serializable) scrollView);
-//
-//        callbacks.deviceActivityIntent(intent);
+//        // parse file for device ui
+        DeviceDescription description = new DeviceDescription(deviceXML);
+
+        Intent intent = new Intent(context, DeviceActivity.class);
+        intent.putExtra("deviceDescription", description);
+
+        // create new status updates listener thread
+        // assign thread to device description
+
+        callbacks.deviceActivityIntent(intent);
     }
 
     public String inputStreamToString(InputStream is) throws IOException {
