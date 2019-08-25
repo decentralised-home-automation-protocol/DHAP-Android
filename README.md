@@ -1,6 +1,6 @@
 # DHAP
 
-An Android library implementation of the [Distributed Home Automation Protocol]()
+An Android library implementation of the [Decentralised Home Automation Protocol]()
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
