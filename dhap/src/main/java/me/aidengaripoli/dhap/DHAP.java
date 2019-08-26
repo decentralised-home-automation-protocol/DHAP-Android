@@ -70,7 +70,7 @@ public class DHAP {
         callbacks.deviceActivityIntent(intent);
     }
 
-    public String inputStreamToString(InputStream is) throws IOException {
+    private String inputStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         String line;
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DHAPExample</string>
+
+    <string name="discovered_device_mac">Device MAC Address:</string>
+    <string name="discovered_device_ip">Device IP Address:</string>
+    <string name="discovering_devices">Discovering devices…</string>
+    <string name="no_devices_found">No Devices Found</string>
 </resources>
