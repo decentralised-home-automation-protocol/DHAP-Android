@@ -11,15 +11,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import me.aidengaripoli.dhap.callbacks.GetDeviceUIActivityCallbacks;
+import me.aidengaripoli.dhap.callbacks.discovery.GetDiscoveredDevicesCallbacks;
 
 public class DHAP {
 
     private static final String TAG = DHAP.class.getSimpleName();
 
     private Context context;
+    private Discovery discovery;
 
     public DHAP(Context context) {
         this.context = context;
+        discovery = new Discovery(context);
     }
 
     public void fetchDeviceInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
@@ -68,6 +71,10 @@ public class DHAP {
         // assign thread to device description
 
         callbacks.deviceActivityIntent(intent);
+    }
+
+    public void startDiscovery(GetDiscoveredDevicesCallbacks callbacks){
+        discovery.discoverDevices(callbacks);
     }
 
     private String inputStreamToString(InputStream is) throws IOException {

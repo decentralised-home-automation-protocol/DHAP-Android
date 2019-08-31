@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Discovery discovery;
     private DHAP dhap;
 
     @Override
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        discovery = new Discovery(this);
         dhap = new DHAP(this);
 
         beginDeviceDiscovery();
@@ -50,20 +48,22 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_discovery_state_container, fragment)
                 .commit();
 
-        discovery.discoverDevices(new GetDiscoveredDevicesCallbacks() {
+        dhap.startDiscovery(new GetDiscoveredDevicesCallbacks() {
             @Override
             public void foundDevices(List<Device> devices) {
+                Log.e(TAG, "Devices found.");
                 displayDiscoveredDevices(new ArrayList<>(devices));
             }
 
             @Override
             public void noDevicesFound() {
+                Log.e(TAG, "No devices found.");
                 displayNoDevicesFound();
             }
 
             @Override
             public void discoveryFailure() {
-                Log.d(TAG, "Discovery failed.");
+                Log.e(TAG, "Discovery failed.");
             }
         });
     }
@@ -104,48 +104,6 @@ public class MainActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_discovery_state_container, fragment)
                     .commit();
-        });
-    }
-
-//    private void test() {
-//        dhap.fetchDeviceInterface("", true, new GetDeviceUIActivityCallbacks() {
-//            @Override
-//            public void assetsFileFailure() {
-//                Log.d(TAG, "assetsFileFailure");
-//            }
-//
-//            @Override
-//            public void deviceActivityIntent(Intent intent) {
-//                Log.d(TAG, "deviceActivityIntent");
-//                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void displayFailure() {
-//                Log.d(TAG, "displayFailure");
-//            }
-//        });
-//    }
-
-    private void findDevices() {
-        discovery.discoverDevices(new GetDiscoveredDevicesCallbacks() {
-            @Override
-            public void foundDevices(List<Device> devices) {
-                Log.d(TAG, "Found devices: ");
-                for (Device device : devices) {
-                    Log.d(TAG,  "\tMAC: " + device.getMacAddress());
-                }
-            }
-
-            @Override
-            public void noDevicesFound() {
-                Log.d(TAG, "No devices found.");
-            }
-
-            @Override
-            public void discoveryFailure() {
-                Log.d(TAG, "Discovery failed.");
-            }
         });
     }
 

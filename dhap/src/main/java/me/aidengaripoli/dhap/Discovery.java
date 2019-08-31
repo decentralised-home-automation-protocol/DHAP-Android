@@ -66,6 +66,8 @@ public final class Discovery {
                     callback.noDevicesFound();
                 }
             } catch (Exception e) {
+                Log.e(TAG, String.valueOf(e));
+
                 callback.discoveryFailure();
             } finally {
                 censusList.clear();
