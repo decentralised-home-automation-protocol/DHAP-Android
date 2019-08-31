@@ -1,20 +1,11 @@
 package me.aidengaripoli.dhap;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetManager;
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import me.aidengaripoli.dhap.discovery.Discovery;
-import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
-import me.aidengaripoli.dhap.display.DeviceActivity;
-import me.aidengaripoli.dhap.display.DeviceDescription;
+import me.aidengaripoli.dhap.display.Display;
+import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
 public class DHAP {
 
@@ -22,73 +13,19 @@ public class DHAP {
 
     private Context context;
     private Discovery discovery;
+    private Display display;
 
     public DHAP(Context context) {
         this.context = context;
         discovery = new Discovery(context);
+        display = new Display(context);
     }
 
     public void fetchDeviceInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
-        // --temp-- get device from assets folder
-        // make it an option for users of the lib to specify to retrieve xml from assets folder
-        // instead of requiring a compliant device for testing.
-
-        String deviceXML = null;
-
-        if (useAssetsFolder) {
-            AssetManager assetManager = context.getAssets();
-
-            try {
-                String[] list = assetManager.list("");
-                for (String fileName : list) {
-                    if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
-                        InputStream inputStream = assetManager.open(fileName);
-                        deviceXML = inputStreamToString(inputStream);
-                        Log.d(TAG, deviceXML);
-                    }
-                }
-            } catch (IOException e) {
-                callbacks.assetsFileFailure();
-            }
-
-//            assetManager.close();
-        } else {
-            // attempt to retrieve cached device file/data from storage or db
-            // if not found, ask the device for its xml file over network
-                // should be a background thread with retry (3) and timeouts (1s)
-                // if successful, cache the file (or save data to db)
-        }
-
-        if (deviceXML == null) {
-            callbacks.displayFailure();
-            return;
-        }
-
-//        // parse file for device ui
-        DeviceDescription description = new DeviceDescription(deviceXML);
-
-        Intent intent = new Intent(context, DeviceActivity.class);
-        intent.putExtra("deviceDescription", description);
-
-        // create new status updates listener thread
-        // assign thread to device description
-
-        callbacks.deviceActivityIntent(intent);
+        display.fetchDeviceInterface(deviceName, useAssetsFolder, callbacks);
     }
 
-    public void startDiscovery(GetDiscoveredDevicesCallbacks callbacks){
+    public void startDiscovery(GetDiscoveredDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
     }
-
-    private String inputStreamToString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        String line;
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
-    }
-
 }
