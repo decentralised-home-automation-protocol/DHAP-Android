@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".elements.DirectionalButtonsFragment">
+    tools:context=".display.elements.DirectionalButtonsFragment">
 
         <Button
         android:id="@+id/direcButtonN"

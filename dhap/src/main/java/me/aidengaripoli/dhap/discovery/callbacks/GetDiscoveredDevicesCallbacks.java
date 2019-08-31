@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap.callbacks.discovery;
+package me.aidengaripoli.dhap.discovery.callbacks;
 
 import java.util.List;
 

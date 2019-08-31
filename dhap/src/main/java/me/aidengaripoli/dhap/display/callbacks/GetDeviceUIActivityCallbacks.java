@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap.callbacks;
+package me.aidengaripoli.dhap.display.callbacks;
 
 import android.content.Intent;
 

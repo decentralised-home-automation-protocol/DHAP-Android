@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import me.aidengaripoli.dhap.callbacks.GetDeviceUIActivityCallbacks;
-import me.aidengaripoli.dhap.callbacks.discovery.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.Discovery;
+import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.display.DeviceActivity;
+import me.aidengaripoli.dhap.display.DeviceDescription;
 
 public class DHAP {
 

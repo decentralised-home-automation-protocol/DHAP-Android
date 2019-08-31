@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    tools:context=".elements.SelectionFragment">
+    tools:context=".display.elements.SelectionFragment">
 
     <TextView
         android:id="@+id/selection_label"

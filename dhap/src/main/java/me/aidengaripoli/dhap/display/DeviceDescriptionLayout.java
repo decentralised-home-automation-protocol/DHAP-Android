@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap;
+package me.aidengaripoli.dhap.display;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,7 +18,8 @@ import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 
-import me.aidengaripoli.dhap.elements.BaseElementFragment;
+import me.aidengaripoli.dhap.R;
+import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 
 public class DeviceDescriptionLayout {
 

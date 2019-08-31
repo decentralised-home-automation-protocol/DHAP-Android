@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap;
+package me.aidengaripoli.dhap.display;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import me.aidengaripoli.dhap.elements.OnElementCommandListener;
+import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
 

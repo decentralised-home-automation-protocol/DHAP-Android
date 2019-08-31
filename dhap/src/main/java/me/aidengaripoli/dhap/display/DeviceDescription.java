@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap;
+package me.aidengaripoli.dhap.display;
 
 import android.os.Parcel;
 import android.os.Parcelable;

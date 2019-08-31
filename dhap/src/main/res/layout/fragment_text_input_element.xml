@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".elements.TextInputFragment">
+    tools:context=".display.elements.TextInputFragment">
 
     <TextView
         android:id="@+id/input_label"

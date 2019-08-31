@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap;
+package me.aidengaripoli.dhap.discovery;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -16,7 +16,8 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.aidengaripoli.dhap.callbacks.discovery.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
 
 /**
  *
