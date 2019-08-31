@@ -15,7 +15,7 @@ import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 public class Display {
     private static final String TAG = Display.class.getSimpleName();
 
-    Context context;
+    private Context context;
 
     public Display (Context context) {
         this.context = context;
