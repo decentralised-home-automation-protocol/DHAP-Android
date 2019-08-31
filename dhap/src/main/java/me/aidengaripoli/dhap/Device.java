@@ -30,7 +30,7 @@ public class Device implements Parcelable {
 
     private int visibility;
 
-    Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
+    public Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.status = status;

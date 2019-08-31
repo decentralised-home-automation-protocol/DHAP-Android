@@ -1,4 +1,4 @@
-package me.aidengaripoli.dhap.elements;
+package me.aidengaripoli.dhap.display.elements;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.DeviceActivity;
+import me.aidengaripoli.dhap.display.DeviceActivity;
 
 public class DiscoveredDevicesFragment extends Fragment implements
         DiscoveredDeviceAdapter.OnDeviceClicked {

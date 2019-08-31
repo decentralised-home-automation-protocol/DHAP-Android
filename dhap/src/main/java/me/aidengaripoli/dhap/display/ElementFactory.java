@@ -1,22 +1,22 @@
-package me.aidengaripoli.dhap;
+package me.aidengaripoli.dhap.display;
 
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 
-import me.aidengaripoli.dhap.elements.BaseElementFragment;
-import me.aidengaripoli.dhap.elements.ButtonGroupFragment;
-import me.aidengaripoli.dhap.elements.ButtonToggleFragment;
-import me.aidengaripoli.dhap.elements.DirectionalButtonsFragment;
-import me.aidengaripoli.dhap.elements.PasswordFragment;
-import me.aidengaripoli.dhap.elements.ProgressFragment;
-import me.aidengaripoli.dhap.elements.RangeInputFragment;
-import me.aidengaripoli.dhap.elements.SchedulerFragment;
-import me.aidengaripoli.dhap.elements.SelectionFragment;
-import me.aidengaripoli.dhap.elements.StatusFragment;
-import me.aidengaripoli.dhap.elements.StepperFragment;
-import me.aidengaripoli.dhap.elements.SwitchToggleFragment;
-import me.aidengaripoli.dhap.elements.TextInputFragment;
+import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
+import me.aidengaripoli.dhap.display.elements.ButtonGroupFragment;
+import me.aidengaripoli.dhap.display.elements.ButtonToggleFragment;
+import me.aidengaripoli.dhap.display.elements.DirectionalButtonsFragment;
+import me.aidengaripoli.dhap.display.elements.PasswordFragment;
+import me.aidengaripoli.dhap.display.elements.ProgressFragment;
+import me.aidengaripoli.dhap.display.elements.RangeInputFragment;
+import me.aidengaripoli.dhap.display.elements.SchedulerFragment;
+import me.aidengaripoli.dhap.display.elements.SelectionFragment;
+import me.aidengaripoli.dhap.display.elements.StatusFragment;
+import me.aidengaripoli.dhap.display.elements.StepperFragment;
+import me.aidengaripoli.dhap.display.elements.SwitchToggleFragment;
+import me.aidengaripoli.dhap.display.elements.TextInputFragment;
 
 public class ElementFactory {
     static BaseElementFragment getElement(Element element) {

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".elements.RangeInputFragment">
+    tools:context=".display.elements.RangeInputFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"

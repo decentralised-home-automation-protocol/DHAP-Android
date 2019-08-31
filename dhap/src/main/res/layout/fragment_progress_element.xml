@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".elements.ProgressFragment">
+    tools:context=".display.elements.ProgressFragment">
 
     <TextView
         android:id="@+id/progress_label"

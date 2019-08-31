@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    tools:context=".elements.StatusFragment">
+    tools:context=".display.elements.StatusFragment">
 
     <TextView
         android:id="@+id/status_labels"

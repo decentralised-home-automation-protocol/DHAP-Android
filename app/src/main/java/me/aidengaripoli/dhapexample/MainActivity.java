@@ -11,8 +11,7 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.Discovery;
-import me.aidengaripoli.dhap.callbacks.discovery.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
         ActionFragment.OnActionResultListener {

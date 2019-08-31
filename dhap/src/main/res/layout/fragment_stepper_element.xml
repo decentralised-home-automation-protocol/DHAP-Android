@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".elements.StepperFragment">
+    tools:context=".display.elements.StepperFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
