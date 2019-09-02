@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -76,12 +77,17 @@ public class DeviceDescription implements Parcelable, PacketListener {
     }
 
     @Override
-    public void newPacket(String packetData) {
+    public void newPacket(String packetData, InetAddress fromIP) {
         Log.d(TAG, "newPacket: " + packetData);
         for (Status status : getStatus(packetData)) {
-            String key = status.getGroupId() + "-" + status.getElementId();
+            String tag = status.getGroupId() + "-" + status.getElementId();
 
-            elements.get(key).updateFragmentData(status.getValue());
+            BaseElementFragment element = elements.get(tag);
+            if(element != null) {
+                element.updateFragmentData(status.getValue());
+            } else {
+                Log.d(TAG, "newPacket: No element with tag " + tag + " exists");
+            }
         }
     }
 

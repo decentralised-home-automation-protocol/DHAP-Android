@@ -105,7 +105,7 @@ public class UdpPacketSender {
                 try {
                     datagramSocket.receive(receivePacket);
                     for (PacketListener listener: listeners) {
-                        listener.newPacket(new String(receiveBuffer, 0, receivePacket.getLength()));
+                        listener.newPacket(new String(receiveBuffer, 0, receivePacket.getLength()), receivePacket.getAddress());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

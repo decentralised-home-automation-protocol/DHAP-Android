@@ -7,6 +7,8 @@ import android.util.Log;
 import com.isupatches.wisefy.WiseFy;
 import com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks;
 
+import java.net.InetAddress;
+
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
@@ -82,7 +84,7 @@ public class Joining {
 
         udpPacketSender.addPacketListener(new PacketListener() {
             @Override
-            public void newPacket(String packetData) {
+            public void newPacket(String packetData, InetAddress fromIP) {
                 Log.e(TAG, "newPacket: " + packetData);
                 if (packetData.startsWith(PacketCodes.JOINING_SUCCESS)) {
                     udpPacketSender.removePacketListener(this);

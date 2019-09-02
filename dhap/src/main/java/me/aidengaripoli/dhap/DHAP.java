@@ -21,7 +21,7 @@ public class DHAP {
 
     public DHAP(Context context) {
         this.context = context;
-        discovery = new Discovery(context);
+        discovery = new Discovery();
         display = new Display(context);
         joining = new Joining(context);
     }

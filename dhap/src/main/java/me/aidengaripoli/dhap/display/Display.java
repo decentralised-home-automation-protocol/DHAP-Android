@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -63,7 +64,7 @@ public class Display {
 
         UdpPacketSender.getInstance().addPacketListener(new PacketListener() {
             @Override
-            public void newPacket(String packetData) {
+            public void newPacket(String packetData, InetAddress fromIP) {
                 UdpPacketSender.getInstance().removePacketListener(this);
                 String xml = packetData.substring(4);
 
