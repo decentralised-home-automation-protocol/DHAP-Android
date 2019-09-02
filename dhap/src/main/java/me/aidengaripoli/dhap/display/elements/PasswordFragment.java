@@ -60,7 +60,7 @@ public class PasswordFragment extends BaseElementFragment {
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

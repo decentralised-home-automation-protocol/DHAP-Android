@@ -51,7 +51,7 @@ public class StatusFragment extends BaseElementFragment {
 
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

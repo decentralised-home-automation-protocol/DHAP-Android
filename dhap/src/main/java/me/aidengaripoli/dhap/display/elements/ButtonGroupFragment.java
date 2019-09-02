@@ -64,8 +64,9 @@ public class ButtonGroupFragment extends BaseElementFragment {
 
         return view;
     }
+
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

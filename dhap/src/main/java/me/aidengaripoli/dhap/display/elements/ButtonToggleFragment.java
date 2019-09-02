@@ -77,7 +77,7 @@ public class ButtonToggleFragment extends BaseElementFragment implements
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 //        if (updateData.isEmpty()) return;
 //
 //        String state = updateData.get(0);

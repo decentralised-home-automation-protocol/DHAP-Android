@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
 public class Display {
@@ -21,7 +23,7 @@ public class Display {
         this.context = context;
     }
 
-    public void fetchDeviceInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
         // --temp-- get device from assets folder
         // make it an option for users of the lib to specify to retrieve xml from assets folder
         // instead of requiring a compliant device for testing.
@@ -29,20 +31,20 @@ public class Display {
         String deviceXML = null;
 
         if (useAssetsFolder) {
-            AssetManager assetManager = context.getAssets();
-
-            try {
-                String[] list = assetManager.list("");
-                for (String fileName : list) {
-                    if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
-                        InputStream inputStream = assetManager.open(fileName);
-                        deviceXML = inputStreamToString(inputStream);
-                        Log.d(TAG, deviceXML);
-                    }
-                }
-            } catch (IOException e) {
-                callbacks.assetsFileFailure();
-            }
+//            AssetManager assetManager = context.getAssets();
+//
+//            try {
+//                String[] list = assetManager.list("");
+//                for (String fileName : list) {
+//                    if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
+//                        InputStream inputStream = assetManager.open(fileName);
+//                        deviceXML = inputStreamToString(inputStream);
+//                        Log.d(TAG, deviceXML);
+//                    }
+//                }
+//            } catch (IOException e) {
+//                callbacks.assetsFileFailure();
+//            }
 
 //            assetManager.close();
         } else {
@@ -59,6 +61,7 @@ public class Display {
 
 //        // parse file for device ui
         DeviceDescription description = new DeviceDescription(deviceXML);
+        UdpPacketSender.getInstance().addPacketListener(description);
 
         Intent intent = new Intent(context, DeviceActivity.class);
         intent.putExtra("deviceDescription", description);

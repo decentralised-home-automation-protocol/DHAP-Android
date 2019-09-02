@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
@@ -39,5 +40,19 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     public void onElementCommand(String tag, String data) {
         Log.d(TAG, "Received " + data + " from " + tag);
         device.executeCommand(tag, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        UdpPacketSender.getInstance().addPacketListener(device);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        UdpPacketSender.getInstance().removePacketListener(device);
     }
 }

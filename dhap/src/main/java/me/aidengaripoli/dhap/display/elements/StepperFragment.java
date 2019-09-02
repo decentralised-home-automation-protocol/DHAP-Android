@@ -85,7 +85,7 @@ public class StepperFragment extends BaseElementFragment {
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

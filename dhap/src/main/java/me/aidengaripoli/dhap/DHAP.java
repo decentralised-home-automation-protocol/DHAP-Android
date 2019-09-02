@@ -26,8 +26,8 @@ public class DHAP {
         joining = new Joining(context);
     }
 
-    public void fetchDeviceInterface(String deviceName, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
-        display.fetchDeviceInterface(deviceName, useAssetsFolder, callbacks);
+    public void fetchDeviceInterface(Device device, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
+        display.fetchDeviceInterface(device, useAssetsFolder, callbacks);
     }
 
     public void joinDevice() {

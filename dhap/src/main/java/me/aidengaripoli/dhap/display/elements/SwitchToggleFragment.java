@@ -59,7 +59,7 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

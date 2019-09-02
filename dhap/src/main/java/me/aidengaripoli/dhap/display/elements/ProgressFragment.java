@@ -54,7 +54,7 @@ public class ProgressFragment extends BaseElementFragment {
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

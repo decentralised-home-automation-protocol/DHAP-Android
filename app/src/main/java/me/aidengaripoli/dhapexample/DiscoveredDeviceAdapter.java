@@ -28,7 +28,7 @@ public class DiscoveredDeviceAdapter extends
     }
 
     public interface OnDeviceClicked {
-        void onDeviceClicked(String ip);
+        void onDeviceClicked(Device device);
     }
 
     @NonNull
@@ -48,7 +48,7 @@ public class DiscoveredDeviceAdapter extends
         discoveredDeviceViewHolder.itemView.setOnClickListener(v -> {
             Log.d(TAG, "Device clicked.");
             if (mListener != null) {
-                mListener.onDeviceClicked(device.getIpAddress().getHostAddress());
+                mListener.onDeviceClicked(device);
             }
         });
     }

@@ -137,7 +137,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

@@ -128,7 +128,7 @@ public class RangeInputFragment extends BaseElementFragment {
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
 
     }
 }

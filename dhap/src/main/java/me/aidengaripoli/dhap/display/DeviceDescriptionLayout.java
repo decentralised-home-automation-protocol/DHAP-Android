@@ -53,7 +53,7 @@ public class DeviceDescriptionLayout {
 
             addTitle(groupNodeList, rootLayout);
 
-            // iterate through all the <group> elements
+            // iterate through all the <name> elements
             for (int i = 1; i < groupNodeList.getLength(); i++) {
                 Element element = (Element) groupNodeList.item(i);
 
@@ -79,6 +79,8 @@ public class DeviceDescriptionLayout {
             Log.e(TAG, "ERROR WHILST GENERATING UI: " + e.getMessage());
         }
 
+        description.setElements(elements);
+
         return rootLayout;
     }
 
@@ -97,7 +99,7 @@ public class DeviceDescriptionLayout {
     }
 
     private void createGroupOfElements(LinearLayout groupLayout, NodeList guiNodeList, String groupId) {
-        // iterate through all the <gui_element> elements in the group
+        // iterate through all the <gui_element> elements in the name
         for (int i = 0; i < guiNodeList.getLength(); i++) {
             Element element = (Element) guiNodeList.item(i);
             addElementToLayout(element, groupLayout, groupId);

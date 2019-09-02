@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.display.DeviceActivity;
+import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 
 public class DiscoveredDevicesFragment extends Fragment implements
         DiscoveredDeviceAdapter.OnDeviceClicked {
@@ -31,6 +31,8 @@ public class DiscoveredDevicesFragment extends Fragment implements
     private RecyclerView.Adapter adapter;
 
     private ArrayList<Device> mDevices = new ArrayList<>();
+
+    private OnDeviceSelectedListener listener;
 
     public DiscoveredDevicesFragment() {}
 
@@ -77,21 +79,35 @@ public class DiscoveredDevicesFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            listener = (OnDeviceSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnDeviceSelectedListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        listener = null;
     }
 
-    private void displayDeviceUi(String xml) {
-        Intent intent = new Intent(getContext(), DeviceActivity.class);
-        intent.putExtra("xml", xml);
-        startActivity(intent);
-    }
+//    private void displayDeviceUi(String xml) {
+//        Intent intent = new Intent(getContext(), DeviceActivity.class);
+//        intent.putExtra("xml", xml);
+//        startActivity(intent);
+//    }
 
     @Override
-    public void onDeviceClicked(String ip) {
+    public void onDeviceClicked(Device device) {
         Log.d(TAG, "OnDeviceClicked");
+        if (listener != null) {
+            listener.onDeviceSelected(device);
+        }
+    }
+
+    public interface OnDeviceSelectedListener {
+        void onDeviceSelected(Device device);
     }
 }
