@@ -33,6 +33,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
 
+        UdpPacketSender.getInstance().sendUdpPacketToIP("500|10000,2000,F", device.getDevice().getIpAddress().getHostAddress());
+
         setContentView(scrollView);
     }
 

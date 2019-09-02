@@ -16,7 +16,7 @@ public class UdpPacketSender {
     private static final int UDP_PORT = 8888;
     private static final String BROADCAST_ADDRESS = "255.255.255.255";
     private DatagramSocket datagramSocket;
-    private static final int BUFFER_SIZE = 2048;
+    private static final int BUFFER_SIZE = 65507;
 
     private ArrayList<PacketListener> listeners;
 

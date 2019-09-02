@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
@@ -28,48 +29,56 @@ public class Display {
         // make it an option for users of the lib to specify to retrieve xml from assets folder
         // instead of requiring a compliant device for testing.
 
-        String deviceXML = null;
-
-        if (useAssetsFolder) {
-//            AssetManager assetManager = context.getAssets();
+//        String deviceXML = null;
 //
-//            try {
-//                String[] list = assetManager.list("");
-//                for (String fileName : list) {
-//                    if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
-//                        InputStream inputStream = assetManager.open(fileName);
-//                        deviceXML = inputStreamToString(inputStream);
-//                        Log.d(TAG, deviceXML);
-//                    }
-//                }
-//            } catch (IOException e) {
-//                callbacks.assetsFileFailure();
-//            }
+//        if (useAssetsFolder) {
+////            AssetManager assetManager = context.getAssets();
+////
+////            try {
+////                String[] list = assetManager.list("");
+////                for (String fileName : list) {
+////                    if (fileName.contains(deviceName) && fileName.endsWith(".xml")) {
+////                        InputStream inputStream = assetManager.open(fileName);
+////                        deviceXML = inputStreamToString(inputStream);
+////                        Log.d(TAG, deviceXML);
+////                    }
+////                }
+////            } catch (IOException e) {
+////                callbacks.assetsFileFailure();
+////            }
+//
+////            assetManager.close();
+//        } else {
+//            // attempt to retrieve cached device file/data from storage or db
+//            // if not found, ask the device for its xml file over network
+//            // should be a background thread with retry (3) and timeouts (1s)
+//            // if successful, cache the file (or save data to db)
+//        }
+//
+//        if (deviceXML == null) {
+//            callbacks.displayFailure();
+//            return;
+//        }
 
-//            assetManager.close();
-        } else {
-            // attempt to retrieve cached device file/data from storage or db
-            // if not found, ask the device for its xml file over network
-            // should be a background thread with retry (3) and timeouts (1s)
-            // if successful, cache the file (or save data to db)
-        }
+        UdpPacketSender.getInstance().addPacketListener(packetData -> {
+            String xml = packetData.substring(4);
 
-        if (deviceXML == null) {
-            callbacks.displayFailure();
-            return;
-        }
+            Log.d(TAG, xml);
 
 //        // parse file for device ui
-        DeviceDescription description = new DeviceDescription(deviceXML);
-        UdpPacketSender.getInstance().addPacketListener(description);
+            DeviceDescription description = new DeviceDescription(xml, device);
+            UdpPacketSender.getInstance().addPacketListener(description);
 
-        Intent intent = new Intent(context, DeviceActivity.class);
-        intent.putExtra("deviceDescription", description);
+            Intent intent = new Intent(context, DeviceActivity.class);
+            intent.putExtra("deviceDescription", description);
 
-        // create new status updates listener thread
-        // assign thread to device description
+            // create new status updates listener thread
+            // assign thread to device description
 
-        callbacks.deviceActivityIntent(intent);
+            callbacks.deviceActivityIntent(intent);
+        });
+
+        UdpPacketSender.getInstance().sendUdpPacketToIP("200", device.getIpAddress().getHostAddress());
     }
 
     private String inputStreamToString(InputStream is) throws IOException {

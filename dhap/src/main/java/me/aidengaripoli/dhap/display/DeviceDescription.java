@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
@@ -33,20 +34,28 @@ public class DeviceDescription implements Parcelable, PacketListener {
 
     private String xml;
 
+    private Device device;
+
     private HashMap<String, BaseElementFragment> elements;
 
-    public DeviceDescription(String xml) {
+    public DeviceDescription(String xml, Device device) {
         this.xml = xml;
+        this.device = device;
     }
 
     protected DeviceDescription(Parcel in) {
         name = in.readString();
         room = in.readString();
         xml = in.readString();
+        device = in.readParcelable(getClass().getClassLoader());
     }
 
     public String getXml() {
         return xml;
+    }
+
+    public Device getDevice() {
+        return device;
     }
 
     public void executeCommand(String tag, String data) {
@@ -63,6 +72,7 @@ public class DeviceDescription implements Parcelable, PacketListener {
         dest.writeString(name);
         dest.writeString(room);
         dest.writeString(xml);
+        dest.writeParcelable(device, 0);
     }
 
     @Override

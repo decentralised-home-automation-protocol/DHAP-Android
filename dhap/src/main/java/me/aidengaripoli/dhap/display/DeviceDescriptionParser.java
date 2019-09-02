@@ -23,7 +23,7 @@ public class DeviceDescriptionParser {
     private final String LABEL = "label";
     private final String NAME = "name";
     private final String ID = "id";
-    private final String GROUP = "name";
+    private final String GROUP = "group";
     private final String GUI_ELEMENT = "gui_element";
     private final String DELIM = ",";
 
