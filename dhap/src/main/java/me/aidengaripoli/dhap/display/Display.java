@@ -2,8 +2,8 @@ package me.aidengaripoli.dhap.display;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,12 +12,11 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
-public class Display {
+public class Display extends AppCompatActivity {
     private static final String TAG = Display.class.getSimpleName();
 
     private Context context;
@@ -68,10 +67,11 @@ public class Display {
                 UdpPacketSender.getInstance().removePacketListener(this);
                 String xml = packetData.substring(4);
 
-                DeviceDescription description = new DeviceDescription(xml, device);
+                DeviceDescription deviceDescription = new DeviceDescription(xml);
+                device.setDeviceDescription(deviceDescription);
 
                 Intent intent = new Intent(context, DeviceActivity.class);
-                intent.putExtra("deviceDescription", description);
+                intent.putExtra("device", device);
 
                 callbacks.deviceActivityIntent(intent);
             }

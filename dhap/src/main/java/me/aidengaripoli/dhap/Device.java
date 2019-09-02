@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.net.InetAddress;
 
+import me.aidengaripoli.dhap.display.DeviceDescription;
+
 /**
  *
  */
@@ -23,11 +25,9 @@ public class Device implements Parcelable {
     };
 
     private String macAddress;
-
     private InetAddress ipAddress;
-
+    private DeviceDescription deviceDescription;
     private int status;
-
     private int visibility;
 
     public Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
@@ -40,8 +40,17 @@ public class Device implements Parcelable {
     protected Device(Parcel in) {
         macAddress = in.readString();
         ipAddress = (InetAddress) in.readSerializable();
+        deviceDescription = in.readParcelable(getClass().getClassLoader());
         status = in.readInt();
         visibility = in.readInt();
+    }
+
+    public void setDeviceDescription(DeviceDescription deviceDescription) {
+        this.deviceDescription = deviceDescription;
+    }
+
+    public DeviceDescription getDeviceDescription() {
+        return deviceDescription;
     }
 
     public String getMacAddress() {
@@ -74,6 +83,7 @@ public class Device implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(macAddress);
         dest.writeSerializable(ipAddress);
+        dest.writeParcelable(deviceDescription, 0);
         dest.writeInt(status);
         dest.writeInt(visibility);
     }

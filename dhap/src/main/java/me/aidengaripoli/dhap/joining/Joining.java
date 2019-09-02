@@ -25,7 +25,7 @@ public class Joining {
     public Joining(Context context) {
         wiseFy = new WiseFy.Brains(context).logging(true).getSmarts();
 
-//        udpPacketSender = UdpPacketSender.getInstance();
+        udpPacketSender = UdpPacketSender.getInstance();
     }
 
     public void verifyWifiNetwork(String SSID, String password, ConnectToNetworkCallback callback) {

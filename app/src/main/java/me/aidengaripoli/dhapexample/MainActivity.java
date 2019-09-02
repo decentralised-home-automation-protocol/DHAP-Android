@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements
 
         dhap = new DHAP(this);
 
-//        dhap.joinDevice();
-
         beginDeviceDiscovery();
     }
 

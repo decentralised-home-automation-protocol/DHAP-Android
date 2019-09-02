@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 
@@ -16,9 +17,9 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
     private static final String TAG = DeviceActivity.class.getSimpleName();
 
-    private static final String DEVICE_INTENT_EXTRA = "deviceDescription";
+    private static final String DEVICE_INTENT_EXTRA = "device";
 
-    private DeviceDescription device;
+    private Device device;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,12 +29,12 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         DeviceDescriptionLayout layout = new DeviceDescriptionLayout(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device);
+        ViewGroup deviceLayout = layout.create(device.getDeviceDescription());
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
 
-        UdpPacketSender.getInstance().sendUdpPacketToIP("500|10000,2000,F", device.getDevice().getIpAddress().getHostAddress());
+        UdpPacketSender.getInstance().sendUdpPacketToIP("500|10000,2000,F", device.getIpAddress().getHostAddress());
 
         setContentView(scrollView);
     }
@@ -41,20 +42,20 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         Log.d(TAG, "Received " + data + " from " + tag);
-        device.executeCommand(tag, data);
+        device.getDeviceDescription().executeCommand(tag, data);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        UdpPacketSender.getInstance().addPacketListener(device);
+        UdpPacketSender.getInstance().addPacketListener(device.getDeviceDescription());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
-        UdpPacketSender.getInstance().removePacketListener(device);
+        UdpPacketSender.getInstance().removePacketListener(device.getDeviceDescription());
     }
 }

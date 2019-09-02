@@ -3,6 +3,7 @@ package me.aidengaripoli.dhap.display;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -34,29 +35,20 @@ public class DeviceDescription implements Parcelable, PacketListener {
     public String room;
 
     private String xml;
-
-    private Device device;
-
     private HashMap<String, BaseElementFragment> elements;
 
-    public DeviceDescription(String xml, Device device) {
+    public DeviceDescription(String xml) {
         this.xml = xml;
-        this.device = device;
     }
 
     protected DeviceDescription(Parcel in) {
         name = in.readString();
         room = in.readString();
         xml = in.readString();
-        device = in.readParcelable(getClass().getClassLoader());
     }
 
     public String getXml() {
         return xml;
-    }
-
-    public Device getDevice() {
-        return device;
     }
 
     public void executeCommand(String tag, String data) {
@@ -73,7 +65,6 @@ public class DeviceDescription implements Parcelable, PacketListener {
         dest.writeString(name);
         dest.writeString(room);
         dest.writeString(xml);
-        dest.writeParcelable(device, 0);
     }
 
     @Override
