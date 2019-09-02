@@ -80,6 +80,7 @@ public class DeviceDescription implements Parcelable, PacketListener {
         Log.d(TAG, "newPacket: " + packetData);
         for (Status status : getStatus(packetData)) {
             String key = status.getGroupId() + "-" + status.getElementId();
+
             elements.get(key).updateFragmentData(status.getValue());
         }
     }
@@ -91,15 +92,16 @@ public class DeviceDescription implements Parcelable, PacketListener {
     private ArrayList<Status> getStatus(String packetData) {
         ArrayList<Status> statuses = new ArrayList<>();
 
-        String[] temp = packetData.split(PacketCodes.PACKET_CODE_DELIM);
+        String temp = packetData.substring(4);
 
-        StringTokenizer st = new StringTokenizer(temp[1], ",");
+        StringTokenizer st = new StringTokenizer(temp, ",");
         st.nextToken();
         st.nextToken();
+
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             String groupId = token.split("-")[0];
-            String elementId = token.split(",")[1].split("=")[0];
+            String elementId = token.split("-")[1].split("=")[0];
             String value = token.split("=")[1];
             Status status = new Status(Integer.parseInt(groupId), Integer.parseInt(elementId), value);
             statuses.add(status);

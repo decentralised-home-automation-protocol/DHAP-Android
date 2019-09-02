@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
+import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
@@ -60,22 +61,19 @@ public class Display {
 //            return;
 //        }
 
-        UdpPacketSender.getInstance().addPacketListener(packetData -> {
-            String xml = packetData.substring(4);
+        UdpPacketSender.getInstance().addPacketListener(new PacketListener() {
+            @Override
+            public void newPacket(String packetData) {
+                UdpPacketSender.getInstance().removePacketListener(this);
+                String xml = packetData.substring(4);
 
-            Log.d(TAG, xml);
+                DeviceDescription description = new DeviceDescription(xml, device);
 
-//        // parse file for device ui
-            DeviceDescription description = new DeviceDescription(xml, device);
-            UdpPacketSender.getInstance().addPacketListener(description);
+                Intent intent = new Intent(context, DeviceActivity.class);
+                intent.putExtra("deviceDescription", description);
 
-            Intent intent = new Intent(context, DeviceActivity.class);
-            intent.putExtra("deviceDescription", description);
-
-            // create new status updates listener thread
-            // assign thread to device description
-
-            callbacks.deviceActivityIntent(intent);
+                callbacks.deviceActivityIntent(intent);
+            }
         });
 
         UdpPacketSender.getInstance().sendUdpPacketToIP("200", device.getIpAddress().getHostAddress());
