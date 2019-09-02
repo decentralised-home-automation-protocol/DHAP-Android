@@ -84,9 +84,8 @@ public class Joining {
 
         udpPacketSender.addPacketListener(new PacketListener() {
             @Override
-            public void newPacket(String packetData, InetAddress fromIP) {
-                Log.e(TAG, "newPacket: " + packetData);
-                if (packetData.startsWith(PacketCodes.JOINING_SUCCESS)) {
+            public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+                if (packetType.equals(PacketCodes.JOINING_SUCCESS)) {
                     udpPacketSender.removePacketListener(this);
                     callback.success();
                 }

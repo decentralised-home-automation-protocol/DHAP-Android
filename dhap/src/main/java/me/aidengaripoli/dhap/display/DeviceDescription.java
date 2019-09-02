@@ -3,14 +3,12 @@ package me.aidengaripoli.dhap.display;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
@@ -68,30 +66,32 @@ public class DeviceDescription implements Parcelable, PacketListener {
     }
 
     @Override
-    public void newPacket(String packetData, InetAddress fromIP) {
-        Log.d(TAG, "newPacket: " + packetData);
-        for (Status status : getStatus(packetData)) {
-            String tag = status.getGroupId() + "-" + status.getElementId();
+    public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+        if(packetType.equals(PacketCodes.STATUS_UPDATE)){
+            for (ElementStatus elementStatus : getStatus(packetData)) {
+                String tag = elementStatus.getGroupId() + "-" + elementStatus.getElementId();
 
-            BaseElementFragment element = elements.get(tag);
-            if(element != null) {
-                element.updateFragmentData(status.getValue());
-            } else {
-                Log.d(TAG, "newPacket: No element with tag " + tag + " exists");
+                BaseElementFragment element = elements.get(tag);
+                if(element != null) {
+                    element.updateFragmentData(elementStatus.getValue());
+                } else {
+                    Log.d(TAG, "newPacket: No element with tag " + tag + " exists");
+                }
             }
+        } else if(packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)){
+            Log.d(TAG, "newPacket: Status response received: " + packetData);
         }
+
     }
 
     public void setElements(HashMap<String, BaseElementFragment> elements) {
         this.elements = elements;
     }
 
-    private ArrayList<Status> getStatus(String packetData) {
-        ArrayList<Status> statuses = new ArrayList<>();
+    private ArrayList<ElementStatus> getStatus(String packetData) {
+        ArrayList<ElementStatus> elementStatuses = new ArrayList<>();
 
-        String temp = packetData.substring(4);
-
-        StringTokenizer st = new StringTokenizer(temp, ",");
+        StringTokenizer st = new StringTokenizer(packetData, ",");
         st.nextToken();
         st.nextToken();
 
@@ -100,10 +100,10 @@ public class DeviceDescription implements Parcelable, PacketListener {
             String groupId = token.split("-")[0];
             String elementId = token.split("-")[1].split("=")[0];
             String value = token.split("=")[1];
-            Status status = new Status(Integer.parseInt(groupId), Integer.parseInt(elementId), value);
-            statuses.add(status);
+            ElementStatus elementStatus = new ElementStatus(Integer.parseInt(groupId), Integer.parseInt(elementId), value);
+            elementStatuses.add(elementStatus);
         }
 
-        return statuses;
+        return elementStatuses;
     }
 }

@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 
 import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
@@ -63,17 +64,18 @@ public class Display extends AppCompatActivity {
 
         UdpPacketSender.getInstance().addPacketListener(new PacketListener() {
             @Override
-            public void newPacket(String packetData, InetAddress fromIP) {
-                UdpPacketSender.getInstance().removePacketListener(this);
-                String xml = packetData.substring(4);
+            public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+                if(packetType.equals(PacketCodes.SEND_UI)){
+                    UdpPacketSender.getInstance().removePacketListener(this);
 
-                DeviceDescription deviceDescription = new DeviceDescription(xml);
-                device.setDeviceDescription(deviceDescription);
+                    DeviceDescription deviceDescription = new DeviceDescription(packetData);
+                    device.setDeviceDescription(deviceDescription);
 
-                Intent intent = new Intent(context, DeviceActivity.class);
-                intent.putExtra("device", device);
+                    Intent intent = new Intent(context, DeviceActivity.class);
+                    intent.putExtra("device", device);
 
-                callbacks.deviceActivityIntent(intent);
+                    callbacks.deviceActivityIntent(intent);
+                }
             }
         });
 

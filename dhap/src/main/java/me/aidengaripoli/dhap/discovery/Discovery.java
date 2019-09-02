@@ -130,9 +130,10 @@ public final class Discovery implements PacketListener {
         udpPacketSender.addPacketListener(this);
 
         // listen to replies for ~1 second
-        long finish = System.currentTimeMillis() + LISTEN_TIMEOUT_IN_MILLIS; // end time
-        while (System.currentTimeMillis() < finish) {
-            Log.d(TAG, "Waiting for reply...");
+        try {
+            Thread.sleep(LISTEN_TIMEOUT_IN_MILLIS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         udpPacketSender.removePacketListener(this);
 
@@ -140,10 +141,9 @@ public final class Discovery implements PacketListener {
     }
 
     @Override
-    public void newPacket(String packetData, InetAddress fromIP) {
-        Device device = parseReply(packetData, fromIP);
-
-        if (device != null) {
+    public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+        if(packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
+            Device device = parseReply(packetData, fromIP);
             devices.add(device);
         }
     }
@@ -154,24 +154,14 @@ public final class Discovery implements PacketListener {
      * @return
      */
     private Device parseReply(String packetData, InetAddress fromIP) {
-        try {
-            String[] contents = packetData.split("\\|");
-            if (!contents[0].equals(PacketCodes.DISCOVERY_RESPONSE)) {
-                throw new Exception();
-            }
-            String[] deviceString = contents[1].split(",");
+        String[] deviceString = packetData.split(",");
 
-            return new Device(
-                    deviceString[0],
-                    fromIP,
-                    Integer.parseInt(deviceString[1]),
-                    Integer.parseInt(deviceString[2])
-            );
-        } catch (Exception e) {
-            Log.d(TAG, "Device is not compliant, ignoring.");
-        }
-
-        return null;
+        return new Device(
+                deviceString[0],
+                fromIP,
+                Integer.parseInt(deviceString[1]),
+                Integer.parseInt(deviceString[2])
+        );
     }
 
     /**

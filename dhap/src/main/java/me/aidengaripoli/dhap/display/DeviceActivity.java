@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
+import me.aidengaripoli.dhap.status.StatusUpdates;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
 
@@ -20,6 +21,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     private static final String DEVICE_INTENT_EXTRA = "device";
 
     private Device device;
+
+    private StatusUpdates statusUpdates;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +37,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
 
-        UdpPacketSender.getInstance().sendUdpPacketToIP("500|10000,2000,F", device.getIpAddress().getHostAddress());
+        statusUpdates = new StatusUpdates();
+        statusUpdates.requestStatusLease(device, 10000, 2000, false);
 
         setContentView(scrollView);
     }
@@ -49,13 +53,13 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        UdpPacketSender.getInstance().addPacketListener(device.getDeviceDescription());
+        statusUpdates.listenForUpdates(device);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
-        UdpPacketSender.getInstance().removePacketListener(device.getDeviceDescription());
+        statusUpdates.stopListeningForUpdates(device);
     }
 }

@@ -1,6 +1,6 @@
 package me.aidengaripoli.dhap.display;
 
-public class Status {
+public class ElementStatus {
 
     private int groupId;
 
@@ -8,7 +8,7 @@ public class Status {
 
     private String value;
 
-    Status(int groupId, int elementId, String value) {
+    ElementStatus(int groupId, int elementId, String value) {
         this.groupId = groupId;
         this.elementId = elementId;
         this.value = value;

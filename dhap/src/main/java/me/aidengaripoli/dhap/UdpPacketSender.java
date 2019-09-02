@@ -12,14 +12,12 @@ import java.util.ArrayList;
 
 public class UdpPacketSender {
     private static final String TAG = UdpPacketSender.class.getSimpleName();
-
     private static final int UDP_PORT = 8888;
     private static final String BROADCAST_ADDRESS = "255.255.255.255";
-    private DatagramSocket datagramSocket;
     private static final int BUFFER_SIZE = 65507;
-
+    private static final int DELIM_CHAR_INDEX = 3;
+    private DatagramSocket datagramSocket;
     private ArrayList<PacketListener> listeners;
-
     private static UdpPacketSender udpPacketSender;
 
     private UdpPacketSender() {
@@ -36,15 +34,15 @@ public class UdpPacketSender {
     }
 
     public static UdpPacketSender getInstance() {
-        if(udpPacketSender == null) {
+        if (udpPacketSender == null) {
             udpPacketSender = new UdpPacketSender();
         }
 
         return udpPacketSender;
     }
 
-    public void addPacketListener(PacketListener listener){
-        if(listener != null) {
+    public void addPacketListener(PacketListener listener) {
+        if (listener != null) {
             listeners.add(listener);
         }
     }
@@ -104,8 +102,16 @@ public class UdpPacketSender {
             while (true) {
                 try {
                     datagramSocket.receive(receivePacket);
-                    for (PacketListener listener: listeners) {
-                        listener.newPacket(new String(receiveBuffer, 0, receivePacket.getLength()), receivePacket.getAddress());
+                    String packet = new String(receiveBuffer, 0, receivePacket.getLength());
+                    String packetType = packet.substring(0, DELIM_CHAR_INDEX);
+                    String packetData = "";
+                    if(packet.length() > DELIM_CHAR_INDEX) {
+                        packetData = packet.substring(DELIM_CHAR_INDEX+1);
+                    }
+
+                    //TODO: Ensure packet is a DHAP packet
+                    for (PacketListener listener : listeners) {
+                        listener.newPacket(packetType, packetData, receivePacket.getAddress());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
