@@ -26,9 +26,6 @@ public class DeviceDescription implements Parcelable {
         }
     };
 
-    public String name;
-    public String room;
-
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
 
@@ -37,8 +34,6 @@ public class DeviceDescription implements Parcelable {
     }
 
     protected DeviceDescription(Parcel in) {
-        name = in.readString();
-        room = in.readString();
         xml = in.readString();
     }
 
@@ -57,8 +52,6 @@ public class DeviceDescription implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(room);
         dest.writeString(xml);
     }
 

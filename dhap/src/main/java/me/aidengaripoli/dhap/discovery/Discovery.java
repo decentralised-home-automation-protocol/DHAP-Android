@@ -20,6 +20,7 @@ public final class Discovery implements PacketListener {
 
     private static final String TAG = Discovery.class.getSimpleName();
     private static final int LISTEN_TIMEOUT_IN_MILLIS = 1000;
+    private static final int HEADER_TIMEOUT_IN_MILLIS = 100;
 
     private List<Device> censusList;
     private List<Device> previousCensusList;
@@ -43,6 +44,9 @@ public final class Discovery implements PacketListener {
                 findDevices();
 
                 if (censusList.size() > 0) {
+
+                    getDeviceHeaders();
+
                     callback.foundDevices(censusList);
                 } else {
                     callback.noDevicesFound();
@@ -106,6 +110,20 @@ public final class Discovery implements PacketListener {
         }
     }
 
+    private void getDeviceHeaders(){
+        udpPacketSender.addPacketListener(this);
+        for (Device device: censusList) {
+            udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, device.getIpAddress().getHostAddress());
+
+            try {
+                Thread.sleep(HEADER_TIMEOUT_IN_MILLIS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        udpPacketSender.removePacketListener(this);
+    }
+
     /**
      *
      */
@@ -145,6 +163,20 @@ public final class Discovery implements PacketListener {
         if(packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
             Device device = parseReply(packetData, fromIP);
             devices.add(device);
+        } else if(packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)){
+            addHeaderToDevice(packetData, fromIP);
+        }
+    }
+
+    private void addHeaderToDevice(String header, InetAddress fromIP){
+        Log.e(TAG, "addHeaderToDevice: " + header);
+        String[] headerData = header.split(",");
+
+        for (Device device: censusList) {
+            if(device.getIpAddress().equals(fromIP)) {
+                device.setName(headerData[1]);
+                device.setRoom(headerData[2]);
+            }
         }
     }
 

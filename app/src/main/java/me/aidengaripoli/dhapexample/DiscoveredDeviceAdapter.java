@@ -62,17 +62,23 @@ public class DiscoveredDeviceAdapter extends
 
         private TextView MACAddress;
         private TextView ipAddress;
+        private TextView name;
+        private TextView room;
 
         public DiscoveredDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
 
             MACAddress = itemView.findViewById(R.id.text_view_device_mac);
             ipAddress = itemView.findViewById(R.id.text_view_device_ip);
+            name = itemView.findViewById(R.id.text_view_device_name);
+            room = itemView.findViewById(R.id.text_view_device_room);
         }
 
         public void bind(Device device) {
             MACAddress.setText(device.getMacAddress());
             ipAddress.setText(device.getIpAddress().toString());
+            name.setText(device.getName());
+            room.setText(device.getRoom());
         }
     }
 

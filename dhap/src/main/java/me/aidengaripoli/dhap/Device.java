@@ -24,6 +24,8 @@ public class Device implements Parcelable {
         }
     };
 
+    private String name;
+    private String room;
     private String macAddress;
     private InetAddress ipAddress;
     private DeviceDescription deviceDescription;
@@ -43,6 +45,8 @@ public class Device implements Parcelable {
         deviceDescription = in.readParcelable(getClass().getClassLoader());
         status = in.readInt();
         visibility = in.readInt();
+        name = in.readString();
+        room = in.readString();
     }
 
     public void setDeviceDescription(DeviceDescription deviceDescription) {
@@ -69,6 +73,22 @@ public class Device implements Parcelable {
         return visibility;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
     @Override
     public String toString() {
         return macAddress + "," + ipAddress + "," + status + "," + visibility;
@@ -86,6 +106,8 @@ public class Device implements Parcelable {
         dest.writeParcelable(deviceDescription, 0);
         dest.writeInt(status);
         dest.writeInt(visibility);
+        dest.writeString(name);
+        dest.writeString(room);
     }
 }
 

@@ -123,8 +123,4 @@ public class UdpPacketSender {
             }
         }).start();
     }
-
-    private void accessListenersList(int action) {
-
-    }
 }
