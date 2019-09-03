@@ -4,16 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
-import me.aidengaripoli.dhap.PacketCodes;
-import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
+import me.aidengaripoli.dhap.status.ElementStatus;
 
-public class DeviceDescription implements Parcelable, PacketListener {
+public class DeviceDescription implements Parcelable {
 
     private static final String TAG = DeviceDescription.class.getSimpleName();
 
@@ -65,45 +62,27 @@ public class DeviceDescription implements Parcelable, PacketListener {
         dest.writeString(xml);
     }
 
-    @Override
-    public void newPacket(String packetType, String packetData, InetAddress fromIP) {
-        if(packetType.equals(PacketCodes.STATUS_UPDATE)){
-            for (ElementStatus elementStatus : getStatus(packetData)) {
-                String tag = elementStatus.getGroupId() + "-" + elementStatus.getElementId();
-
-                BaseElementFragment element = elements.get(tag);
-                if(element != null) {
-                    element.updateFragmentData(elementStatus.getValue());
-                } else {
-                    Log.d(TAG, "newPacket: No element with tag " + tag + " exists");
-                }
-            }
-        } else if(packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)){
-            Log.d(TAG, "newPacket: Status response received: " + packetData);
-        }
-
-    }
-
     public void setElements(HashMap<String, BaseElementFragment> elements) {
         this.elements = elements;
     }
 
-    private ArrayList<ElementStatus> getStatus(String packetData) {
-        ArrayList<ElementStatus> elementStatuses = new ArrayList<>();
-
-        StringTokenizer st = new StringTokenizer(packetData, ",");
-        st.nextToken();
-        st.nextToken();
-
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            String groupId = token.split("-")[0];
-            String elementId = token.split("-")[1].split("=")[0];
-            String value = token.split("=")[1];
-            ElementStatus elementStatus = new ElementStatus(Integer.parseInt(groupId), Integer.parseInt(elementId), value);
-            elementStatuses.add(elementStatus);
+    public void newStatusUpdate(ArrayList<ElementStatus> elementStatuses) {
+        for (ElementStatus elementStatus : elementStatuses) {
+            BaseElementFragment element = elements.get(elementStatus.getTag());
+            if (element != null) {
+                element.updateFragmentData(elementStatus.getValue());
+            } else {
+                Log.d(TAG, "newPacket: No element with tag " + elementStatus.getTag() + " exists");
+            }
         }
+    }
 
-        return elementStatuses;
+    public boolean shouldRenewStatusLease() {
+        Log.d(TAG, "shouldRenewStatusLease: Renewing Status Lease");
+        return true;
+    }
+
+    public void statusRequestResponse(float leaseLength, float updatePeriod) {
+        Log.e(TAG, "statusRequestResponse: LeaseLength: " + leaseLength + " UpdatePeriod: " + updatePeriod);
     }
 }

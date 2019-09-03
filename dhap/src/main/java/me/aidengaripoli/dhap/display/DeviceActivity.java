@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 import me.aidengaripoli.dhap.status.StatusUpdates;
 
@@ -37,8 +36,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
 
-        statusUpdates = new StatusUpdates();
-        statusUpdates.requestStatusLease(device, 10000, 2000, false);
+        statusUpdates = new StatusUpdates(device);
+        statusUpdates.requestStatusLease(10000, 1000, true);
 
         setContentView(scrollView);
     }
@@ -53,13 +52,20 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        statusUpdates.listenForUpdates(device);
+        statusUpdates.listenForUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
-        statusUpdates.stopListeningForUpdates(device);
+        statusUpdates.stopListeningForUpdates();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        statusUpdates.leaveLease();
     }
 }
