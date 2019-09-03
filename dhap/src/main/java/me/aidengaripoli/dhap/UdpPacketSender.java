@@ -17,15 +17,13 @@ public class UdpPacketSender {
     private static final int BUFFER_SIZE = 65507;
     private static final int DELIM_CHAR_INDEX = 3;
     private DatagramSocket datagramSocket;
-    private ArrayList<PacketListener> listeners;
+    private final ArrayList<PacketListener> listeners = new ArrayList<>();
     private static UdpPacketSender udpPacketSender;
 
     private UdpPacketSender() {
         try {
             datagramSocket = new DatagramSocket(UDP_PORT);
             datagramSocket.setBroadcast(true);
-
-            listeners = new ArrayList<>();
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -42,13 +40,17 @@ public class UdpPacketSender {
     }
 
     public void addPacketListener(PacketListener listener) {
-        if (listener != null) {
-            listeners.add(listener);
+        synchronized(listeners) {
+            if (listener != null) {
+                listeners.add(listener);
+            }
         }
     }
 
     public void removePacketListener(PacketListener listener) {
-        listeners.remove(listener);
+        synchronized(listeners) {
+            listeners.remove(listener);
+        }
     }
 
     public void sendUdpPacketToIP(String data, String IP) {
@@ -110,13 +112,19 @@ public class UdpPacketSender {
                     }
 
                     //TODO: Ensure packet is a DHAP packet
-                    for (PacketListener listener : listeners) {
-                        listener.newPacket(packetType, packetData, receivePacket.getAddress());
+                    synchronized(listeners) {
+                        for (PacketListener listener : listeners) {
+                            listener.newPacket(packetType, packetData, receivePacket.getAddress());
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+    private void accessListenersList(int action) {
+
     }
 }
