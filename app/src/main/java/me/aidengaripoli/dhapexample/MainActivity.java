@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private DHAP dhap;
 
+    private FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +29,13 @@ public class MainActivity extends AppCompatActivity implements
 
         dhap = new DHAP(this);
 
+        fragmentManager = getSupportFragmentManager();
+
         beginDeviceDiscovery();
     }
 
     private void beginDeviceDiscovery() {
         // discover devices
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         DiscoveringDevicesFragment fragment = DiscoveringDevicesFragment.newInstance();
 
         ActionFragment actionFragment = (ActionFragment) fragmentManager
@@ -75,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements
             ActionFragment actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_discovery_state_container, devicesFragment)
                     .commit();
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements
 
             ActionFragment actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_action_container, actionFragment)
