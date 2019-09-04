@@ -37,7 +37,6 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         scrollView.addView(deviceLayout);
 
         statusUpdates = new StatusUpdates(device);
-        statusUpdates.requestStatusLease(10000, 1000, true);
 
         setContentView(scrollView);
     }
@@ -52,7 +51,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        statusUpdates.requestStatusLease(10000, 1000, true);
+        statusUpdates.requestStatusLease(10000, 1000, false);
     }
 
     @Override

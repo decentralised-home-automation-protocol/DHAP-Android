@@ -27,11 +27,6 @@ public class StatusUpdates implements PacketListener {
     public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired) {
         sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
 
-        if (!isListening && responseRequired) {
-            udpPacketSender.addPacketListener(this);
-            isListening = true;
-        }
-
         this.leaseLength = leaseLength;
         this.updatePeriod = updatePeriod;
         this.responseRequired = responseRequired;
@@ -43,6 +38,7 @@ public class StatusUpdates implements PacketListener {
         statusLeaseRequest += responseRequired ? "T" : "F";
 
         udpPacketSender.sendUdpPacketToIP(statusLeaseRequest, device.getIpAddress().getHostAddress());
+        listenForUpdates();
     }
 
     public void listenForUpdates() {
