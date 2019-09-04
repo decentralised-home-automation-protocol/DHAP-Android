@@ -64,7 +64,7 @@ public class StatusUpdates implements PacketListener {
     public void newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
             ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
-            device.getDeviceDescription().newStatusUpdate(elementStatuses);
+            device.getDeviceLayout().newStatusUpdate(elementStatuses);
         } else if (packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)) {
             StringTokenizer st = new StringTokenizer(packetData, ",");
             st.nextToken();
@@ -72,7 +72,7 @@ public class StatusUpdates implements PacketListener {
             float leaseLength = Float.parseFloat(st.nextToken());
             float updatePeriod = Float.parseFloat(st.nextToken());
 
-            device.getDeviceDescription().statusRequestResponse(leaseLength, updatePeriod);
+            device.getDeviceLayout().statusRequestResponse(leaseLength, updatePeriod);
         }
     }
 
@@ -83,7 +83,7 @@ public class StatusUpdates implements PacketListener {
         st.nextToken();
 
         if (st.nextToken().equals(END_OF_LEASE)) {
-            if (device.getDeviceDescription().shouldRenewStatusLease()) {
+            if (device.getDeviceLayout().shouldRenewStatusLease()) {
                 sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
             }
         }

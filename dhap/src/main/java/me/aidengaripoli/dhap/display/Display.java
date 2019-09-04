@@ -68,8 +68,8 @@ public class Display extends AppCompatActivity {
                 if(packetType.equals(PacketCodes.SEND_UI)){
                     UdpPacketSender.getInstance().removePacketListener(this);
 
-                    DeviceDescription deviceDescription = new DeviceDescription(packetData);
-                    device.setDeviceDescription(deviceDescription);
+                    DeviceLayout deviceLayout = new DeviceLayout(packetData);
+                    device.setDeviceLayout(deviceLayout);
 
                     Intent intent = new Intent(context, DeviceActivity.class);
                     intent.putExtra("device", device);

@@ -31,8 +31,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         device = getIntent().getParcelableExtra(DEVICE_INTENT_EXTRA);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        DeviceDescriptionLayout layout = new DeviceDescriptionLayout(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device.getDeviceDescription());
+        DeviceLayoutBuilder layout = new DeviceLayoutBuilder(fragmentManager, this);
+        ViewGroup deviceLayout = layout.create(device.getDeviceLayout());
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
