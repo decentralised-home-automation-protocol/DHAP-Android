@@ -25,7 +25,7 @@ public class DHAP {
         display.fetchDeviceInterface(deviceName, useAssetsFolder, callbacks);
     }
 
-    public void startDiscovery(GetDiscoveredDevicesCallbacks callbacks) {
+    public void discoverDevices(GetDiscoveredDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
     }
 }

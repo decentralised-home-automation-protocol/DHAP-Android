@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_discovery_state_container, fragment)
                 .commit();
 
-        dhap.startDiscovery(new GetDiscoveredDevicesCallbacks() {
+        dhap.discoverDevices(new GetDiscoveredDevicesCallbacks() {
             @Override
             public void foundDevices(List<Device> devices) {
                 Log.e(TAG, "Devices found.");
