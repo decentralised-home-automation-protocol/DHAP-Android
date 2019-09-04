@@ -29,7 +29,7 @@ public class DeviceLayout implements Parcelable {
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
 
-    DeviceLayout(String xml) {
+    public DeviceLayout(String xml) {
         this.xml = xml;
     }
 

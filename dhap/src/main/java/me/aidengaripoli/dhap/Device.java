@@ -49,12 +49,12 @@ public class Device implements Parcelable {
         room = in.readString();
     }
 
-    public void setDeviceLayout(DeviceLayout deviceLayout) {
-        this.deviceLayout = deviceLayout;
-    }
-
     public DeviceLayout getDeviceLayout() {
         return deviceLayout;
+    }
+
+    public void newDeviceLayout(String xml) {
+        deviceLayout = new DeviceLayout(xml);
     }
 
     public String getMacAddress() {

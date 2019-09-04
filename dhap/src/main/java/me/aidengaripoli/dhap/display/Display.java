@@ -26,7 +26,7 @@ public class Display extends AppCompatActivity {
         this.context = context;
     }
 
-    public void fetchDeviceInterface(Device device, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, GetDeviceUIActivityCallbacks callbacks) {
         // --temp-- get device from assets folder
         // make it an option for users of the lib to specify to retrieve xml from assets folder
         // instead of requiring a compliant device for testing.
@@ -68,8 +68,7 @@ public class Display extends AppCompatActivity {
                 if(packetType.equals(PacketCodes.SEND_UI)){
                     UdpPacketSender.getInstance().removePacketListener(this);
 
-                    DeviceLayout deviceLayout = new DeviceLayout(packetData);
-                    device.setDeviceLayout(deviceLayout);
+                    device.newDeviceLayout(packetData);
 
                     Intent intent = new Intent(context, DeviceActivity.class);
                     intent.putExtra("device", device);
