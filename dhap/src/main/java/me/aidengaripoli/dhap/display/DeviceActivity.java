@@ -52,14 +52,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        statusUpdates.listenForUpdates();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-        statusUpdates.stopListeningForUpdates();
+        statusUpdates.requestStatusLease(10000, 1000, true);
     }
 
     @Override
