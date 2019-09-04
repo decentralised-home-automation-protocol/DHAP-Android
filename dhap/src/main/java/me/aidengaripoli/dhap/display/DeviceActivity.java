@@ -9,15 +9,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
+import me.aidengaripoli.dhap.status.StatusUpdates;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
 
     private static final String TAG = DeviceActivity.class.getSimpleName();
 
-    private static final String DEVICE_INTENT_EXTRA = "deviceDescription";
+    private static final String DEVICE_INTENT_EXTRA = "device";
 
-    private DeviceDescription device;
+    private Device device;
+    private StatusUpdates statusUpdates;
+    private UdpPacketSender udpPacketSender;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,10 +32,13 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         DeviceDescriptionLayout layout = new DeviceDescriptionLayout(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device);
+        ViewGroup deviceLayout = layout.create(device.getDeviceDescription());
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
+
+        statusUpdates = new StatusUpdates(device);
+        udpPacketSender = UdpPacketSender.getInstance();
 
         setContentView(scrollView);
     }
@@ -38,6 +46,20 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         Log.d(TAG, "Received " + data + " from " + tag);
-        device.executeCommand(tag, data);
+        udpPacketSender.sendUdpPacketToIP("400|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        statusUpdates.requestStatusLease(10000, 1000, false);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        statusUpdates.leaveLease();
     }
 }

@@ -1,12 +1,13 @@
 package me.aidengaripoli.dhap.joining;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
 import com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks;
+
+import java.net.InetAddress;
 
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
@@ -14,23 +15,14 @@ import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.joining.callbacks.BaseCallback;
 import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
 
-import static android.content.Context.WIFI_SERVICE;
-
 public class Joining {
     private static final String TAG = Joining.class.getSimpleName();
     private static final int TIMEOUT_IN_MILLIS = 10000;
 
     private WiseFy wiseFy;
-    private WifiManager wifiManager;
-    private Context context;
     private UdpPacketSender udpPacketSender;
 
     public Joining(Context context) {
-        this.context = context;
-        wifiManager = (WifiManager) context
-                .getApplicationContext()
-                .getSystemService(WIFI_SERVICE);
-
         wiseFy = new WiseFy.Brains(context).logging(true).getSmarts();
 
         udpPacketSender = UdpPacketSender.getInstance();
@@ -92,9 +84,8 @@ public class Joining {
 
         udpPacketSender.addPacketListener(new PacketListener() {
             @Override
-            public void newPacket(String packetData) {
-                Log.e(TAG, "newPacket: " + packetData);
-                if(packetData.startsWith(PacketCodes.JOINING_SUCCESS)) {
+            public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+                if (packetType.equals(PacketCodes.JOINING_SUCCESS)) {
                     udpPacketSender.removePacketListener(this);
                     callback.success();
                 }

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.net.InetAddress;
 
+import me.aidengaripoli.dhap.display.DeviceDescription;
+
 /**
  *
  */
@@ -22,12 +24,12 @@ public class Device implements Parcelable {
         }
     };
 
+    private String name;
+    private String room;
     private String macAddress;
-
     private InetAddress ipAddress;
-
+    private DeviceDescription deviceDescription;
     private int status;
-
     private int visibility;
 
     public Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
@@ -40,8 +42,19 @@ public class Device implements Parcelable {
     protected Device(Parcel in) {
         macAddress = in.readString();
         ipAddress = (InetAddress) in.readSerializable();
+        deviceDescription = in.readParcelable(getClass().getClassLoader());
         status = in.readInt();
         visibility = in.readInt();
+        name = in.readString();
+        room = in.readString();
+    }
+
+    public void setDeviceDescription(DeviceDescription deviceDescription) {
+        this.deviceDescription = deviceDescription;
+    }
+
+    public DeviceDescription getDeviceDescription() {
+        return deviceDescription;
     }
 
     public String getMacAddress() {
@@ -60,6 +73,22 @@ public class Device implements Parcelable {
         return visibility;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
     @Override
     public String toString() {
         return macAddress + "," + ipAddress + "," + status + "," + visibility;
@@ -74,8 +103,11 @@ public class Device implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(macAddress);
         dest.writeSerializable(ipAddress);
+        dest.writeParcelable(deviceDescription, 0);
         dest.writeInt(status);
         dest.writeInt(visibility);
+        dest.writeString(name);
+        dest.writeString(room);
     }
 }
 

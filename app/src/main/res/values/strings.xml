@@ -5,4 +5,6 @@
     <string name="discovered_device_ip">Device IP Address:</string>
     <string name="discovering_devices">Discovering devices…</string>
     <string name="no_devices_found">No Devices Found</string>
+    <string name="name">Name:</string>
+    <string name="room">Room:</string>
 </resources>

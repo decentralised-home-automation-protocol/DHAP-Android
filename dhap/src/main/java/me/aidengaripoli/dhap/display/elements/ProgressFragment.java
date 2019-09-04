@@ -16,11 +16,10 @@ public class ProgressFragment extends BaseElementFragment {
 
     public static final String PROGRESS = "progress";
 
-    private int value;
-
     private ProgressBar progressValue;
 
-    public ProgressFragment() {}
+    public ProgressFragment() {
+    }
 
     public static ProgressFragment newInstance(ArrayList<String> displaySettings) {
         ProgressFragment fragment = new ProgressFragment();
@@ -48,13 +47,13 @@ public class ProgressFragment extends BaseElementFragment {
         addLabel();
 
         progressValue = view.findViewById(R.id.progress_value);
-        progressValue.setProgress(value);
 
         return view;
     }
 
     @Override
-    void updateFragmentData() {
-
+    public void updateFragmentData(String value) {
+        int progress = Integer.parseInt(value);
+        getActivity().runOnUiThread(() -> this.progressValue.setProgress(progress));
     }
 }

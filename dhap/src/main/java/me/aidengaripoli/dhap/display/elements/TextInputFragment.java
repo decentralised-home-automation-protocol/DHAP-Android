@@ -14,17 +14,14 @@ import me.aidengaripoli.dhap.R;
 public class TextInputFragment extends BaseElementFragment {
 
     public static final String TEXT_INPUT = "textinput";
-
     private static final String ARG_BUTTON_LABEL = "buttonLabel";
-
     private static final int ARG_BUTTON_LABEL_INDEX = 1;
 
     private EditText textInput;
-    private String textInputValue;
-
     private String buttonLabel;
 
-    public TextInputFragment() {}
+    public TextInputFragment() {
+    }
 
     public static TextInputFragment newInstance(ArrayList<String> displaySettings) {
         TextInputFragment fragment = new TextInputFragment();
@@ -54,7 +51,6 @@ public class TextInputFragment extends BaseElementFragment {
         addLabel();
 
         textInput = view.findViewById(R.id.input_value);
-        textInput.setText(textInputValue);
 
         Button button = view.findViewById(R.id.input_button);
         button.setText(buttonLabel);
@@ -64,7 +60,7 @@ public class TextInputFragment extends BaseElementFragment {
     }
 
     @Override
-    void updateFragmentData() {
-
+    public void updateFragmentData(String value) {
+        getActivity().runOnUiThread(() -> this.textInput.setText(value));
     }
 }
