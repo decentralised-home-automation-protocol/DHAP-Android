@@ -109,5 +109,9 @@ public class Device implements Parcelable {
         dest.writeString(name);
         dest.writeString(room);
     }
+
+    public boolean isDebugDevice() {
+        return macAddress == null && ipAddress == null;
+    }
 }
 

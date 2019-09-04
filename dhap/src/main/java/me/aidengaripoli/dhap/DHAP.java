@@ -18,7 +18,7 @@ public class DHAP {
     private Joining joining;
 
     public DHAP(Context context) {
-        discovery = new Discovery();
+        discovery = new Discovery(context);
         display = new Display(context);
         joining = new Joining(context);
     }
@@ -41,5 +41,9 @@ public class DHAP {
 
     public void discoverDevices(GetDiscoveredDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
+    }
+
+    public void discoverDebugDevices(GetDiscoveredDevicesCallbacks callbacks) {
+        discovery.discoverDebugDevices(callbacks);
     }
 }
