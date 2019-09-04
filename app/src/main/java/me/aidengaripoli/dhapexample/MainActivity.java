@@ -110,11 +110,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onActionResult(String action) {
-        Log.d(TAG, "onActionResult");
-    }
-
-    @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
         dhap.fetchDeviceInterface(device, false, new GetDeviceUIActivityCallbacks() {
@@ -135,4 +130,21 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
     }
+
+    @Override
+    public void onActionResult(String action) {
+        switch (action) {
+            case "Refresh": {
+                Log.d(TAG, "Re-discovering devices.");
+                beginDeviceDiscovery();
+                break;
+            }
+            case "Add": {
+                Log.d(TAG,  "Join Device.");
+//                startActivity(new Intent(this, WifiNetworkListActivity.class));
+                break;
+            }
+        }
+    }
+
 }
