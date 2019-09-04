@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 import me.aidengaripoli.dhap.status.StatusUpdates;
 
@@ -20,8 +21,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     private static final String DEVICE_INTENT_EXTRA = "device";
 
     private Device device;
-
     private StatusUpdates statusUpdates;
+    private UdpPacketSender udpPacketSender;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         scrollView.addView(deviceLayout);
 
         statusUpdates = new StatusUpdates(device);
+        udpPacketSender = UdpPacketSender.getInstance();
 
         setContentView(scrollView);
     }

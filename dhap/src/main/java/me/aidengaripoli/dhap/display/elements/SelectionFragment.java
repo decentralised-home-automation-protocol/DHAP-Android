@@ -1,7 +1,9 @@
 package me.aidengaripoli.dhap.display.elements;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import me.aidengaripoli.dhap.R;
 
 public class SelectionFragment extends BaseElementFragment implements
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
     public static final String SELECTION = "selection";
 
@@ -24,6 +26,7 @@ public class SelectionFragment extends BaseElementFragment implements
     private String[] items;
     private Spinner selection;
     private int position;
+    private boolean userSelect;
 
     public SelectionFragment() {
         // Required empty public constructor
@@ -69,6 +72,7 @@ public class SelectionFragment extends BaseElementFragment implements
 
         selection = view.findViewById(R.id.selection_value);
         selection.setOnItemSelectedListener(this);
+        selection.setOnTouchListener(this);
         selection.setAdapter(new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_dropdown_item_1line,
@@ -82,8 +86,11 @@ public class SelectionFragment extends BaseElementFragment implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String value = (String) parent.getItemAtPosition(position);
-        sendMessage(value);
+        if (userSelect) {
+            String value = (String) parent.getItemAtPosition(position);
+            sendMessage(value);
+            userSelect = false;
+        }
     }
 
     @Override
@@ -95,5 +102,11 @@ public class SelectionFragment extends BaseElementFragment implements
     public void updateFragmentData(String value) {
         this.position = Integer.parseInt(value);
         getActivity().runOnUiThread(() -> this.selection.setSelection(position));
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        userSelect = true;
+        return false;
     }
 }
