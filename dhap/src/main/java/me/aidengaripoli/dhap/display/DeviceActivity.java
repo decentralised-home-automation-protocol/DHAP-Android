@@ -46,7 +46,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         Log.d(TAG, "Received " + data + " from " + tag);
-        device.getDeviceDescription().executeCommand(tag, data);
+        udpPacketSender.sendUdpPacketToIP("400|" + tag + "=" + data, device.getIpAddress().getHostAddress());
     }
 
     @Override
