@@ -1,6 +1,7 @@
 package me.aidengaripoli.dhap.display.elements;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import me.aidengaripoli.dhap.R;
 public class SwitchToggleFragment extends BaseElementFragment implements
         CompoundButton.OnCheckedChangeListener {
 
-    public static final String SWITCH_TOGGLE = "switch_toggle";
+    public static final String SWITCH_TOGGLE = "switchtoggle";
 
     private Switch toggleSwitch;
 
@@ -59,7 +60,8 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     }
 
     @Override
-    void updateFragmentData() {
-
+    public void updateFragmentData(String value) {
+        isChecked = value.equals("true");
+        getActivity().runOnUiThread(() -> toggleSwitch.setChecked(isChecked));
     }
 }

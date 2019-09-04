@@ -132,10 +132,10 @@ public class DeviceDescriptionParser {
     }
 
     /**
-     * Used to get all the group nodes in an xml file from and Inputstream.
+     * Used to get all the name nodes in an xml file from and Inputstream.
      *
      * @param xml Parameter 1.
-     * @return A Nodelist of each group node.
+     * @return A Nodelist of each name node.
      */
     NodeList getGroups(String xml) {
         InputStream inputStream = new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8")));
@@ -146,7 +146,7 @@ public class DeviceDescriptionParser {
             e.printStackTrace();
         }
 
-        // get all of the <group> elements
+        // get all of the <name> elements
         NodeList groupNodeList = null;
         try {
             if (builder != null) {
@@ -162,7 +162,7 @@ public class DeviceDescriptionParser {
     }
 
     /**
-     * Used to retrieve all the guiElements in a group element.
+     * Used to retrieve all the guiElements in a name element.
      *
      * @param element Parameter 1.
      * @return A Nodelist of each node called gui_element.

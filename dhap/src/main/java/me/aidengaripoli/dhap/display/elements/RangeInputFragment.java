@@ -76,10 +76,7 @@ public class RangeInputFragment extends BaseElementFragment {
         valueView = view.findViewById(R.id.slider_value);
         seekBarView = view.findViewById(R.id.slider);
 
-        valueView.setText(String.valueOf(value));
-
-        float progress = (float) (value - min) / range * 100;
-        seekBarView.setProgress((int) progress);
+        setProgressbarValue();
 
         valueView.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -127,8 +124,17 @@ public class RangeInputFragment extends BaseElementFragment {
         return view;
     }
 
+    private void setProgressbarValue(){
+        valueView.setText(String.valueOf(value));
+
+        float progress = (float) (value - min) / range * 100;
+        seekBarView.setProgress((int) progress);
+    }
+
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
+        this.value = Integer.parseInt(value);
+        getActivity().runOnUiThread(this::setProgressbarValue);
 
     }
 }

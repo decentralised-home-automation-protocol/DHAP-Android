@@ -3,6 +3,7 @@ package me.aidengaripoli.dhapexample;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,9 +13,11 @@ import java.util.List;
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
-        ActionFragment.OnActionResultListener {
+        ActionFragment.OnActionResultListener,
+        DiscoveredDevicesFragment.OnDeviceSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -107,5 +110,27 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onActionResult(String action) {
         Log.d(TAG, "onActionResult");
+    }
+
+    @Override
+    public void onDeviceSelected(Device device) {
+        Log.d(TAG, "received device: " + device.getMacAddress());
+        dhap.fetchDeviceInterface(device, false, new GetDeviceUIActivityCallbacks() {
+            @Override
+            public void assetsFileFailure() {
+                Log.d(TAG, "assetsFileFailure");
+            }
+
+            @Override
+            public void deviceActivityIntent(Intent intent) {
+                Log.d(TAG, "deviceActivityIntent");
+                startActivity(intent);
+            }
+
+            @Override
+            public void displayFailure() {
+                Log.d(TAG, "displayFailure");
+            }
+        });
     }
 }

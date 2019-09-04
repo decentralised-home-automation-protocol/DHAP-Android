@@ -17,7 +17,7 @@ public abstract class BaseElementFragment extends Fragment {
 
     OnElementCommandListener listener;
 
-    abstract void updateFragmentData();
+    public abstract void updateFragmentData(String value);
 
     void addLabel() {
         if (label == null) return;
@@ -29,7 +29,7 @@ public abstract class BaseElementFragment extends Fragment {
         }
     }
 
-    void sendMessage(String data) {
+    public void sendMessage(String data) {
         if (listener != null) {
             listener.onElementCommand(getTag(), data);
         }

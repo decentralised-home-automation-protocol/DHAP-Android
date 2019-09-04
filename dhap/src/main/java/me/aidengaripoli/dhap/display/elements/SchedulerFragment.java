@@ -3,6 +3,7 @@ package me.aidengaripoli.dhap.display.elements;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 import me.aidengaripoli.dhap.R;
 
-public class SchedulerFragment extends BaseElementFragment implements AdapterView.OnItemSelectedListener {
+public class SchedulerFragment extends BaseElementFragment implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
     public static final String SCHEDULER = "scheduler";
 
@@ -27,15 +28,13 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
     private static final int ARG_BUTTON_LABEL_INDEX = 1;
 
     private String[] spinnerItems;
-
     private int hr;
     private int min;
     private String time = "NA";
     private Button timeButton;
-
     private int currentPosition;
-
     private Spinner selection;
+    private boolean userSelect;
 
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -88,6 +87,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
 
         selection = view.findViewById(R.id.SchedulerSpinner);
         selection.setOnItemSelectedListener(this);
+        selection.setOnTouchListener(this);
         selection.setAdapter(new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_dropdown_item_1line,
@@ -128,7 +128,10 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currentPosition = position;
-        sendMessage(spinnerItems[currentPosition]);
+        if (userSelect) {
+            sendMessage(spinnerItems[currentPosition]);
+            userSelect = false;
+        }
     }
 
     @Override
@@ -137,7 +140,21 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
     }
 
     @Override
-    void updateFragmentData() {
+    public void updateFragmentData(String value) {
+        String spinnerValue = value.split("!")[0];
+        String timeValue = value.split("!")[1];
 
+        int spinnerPosition = Integer.parseInt(spinnerValue);
+
+        getActivity().runOnUiThread(() -> {
+            selection.setSelection(spinnerPosition);
+            timeButton.setText(timeValue);
+        });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        userSelect = true;
+        return false;
     }
 }
