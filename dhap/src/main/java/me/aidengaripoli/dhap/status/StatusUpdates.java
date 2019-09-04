@@ -17,6 +17,8 @@ public class StatusUpdates implements PacketListener {
     private float updatePeriod;
     private boolean responseRequired;
 
+    private boolean isListening = false;
+
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
         this.device = device;
@@ -25,8 +27,9 @@ public class StatusUpdates implements PacketListener {
     public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired) {
         sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
 
-        if (responseRequired) {
-            listenForUpdates();
+        if (!isListening && responseRequired) {
+            udpPacketSender.addPacketListener(this);
+            isListening = true;
         }
 
         this.leaseLength = leaseLength;
@@ -43,7 +46,10 @@ public class StatusUpdates implements PacketListener {
     }
 
     public void listenForUpdates() {
-        udpPacketSender.addPacketListener(this);
+        if (!isListening) {
+            udpPacketSender.addPacketListener(this);
+            isListening = true;
+        }
     }
 
     public void leaveLease() {
@@ -52,7 +58,10 @@ public class StatusUpdates implements PacketListener {
     }
 
     public void stopListeningForUpdates() {
-        udpPacketSender.removePacketListener(this);
+        if (isListening) {
+            udpPacketSender.removePacketListener(this);
+            isListening = false;
+        }
     }
 
     @Override
