@@ -67,6 +67,6 @@ public class ButtonGroupFragment extends BaseElementFragment {
 
     @Override
     public void updateFragmentData(String value) {
-
+        //No updates for this element.
     }
 }

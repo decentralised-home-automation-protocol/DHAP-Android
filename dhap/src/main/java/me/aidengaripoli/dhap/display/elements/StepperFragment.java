@@ -86,6 +86,7 @@ public class StepperFragment extends BaseElementFragment {
 
     @Override
     public void updateFragmentData(String value) {
-
+        this.currentValue = Integer.parseInt(value);
+        getActivity().runOnUiThread(() -> this.value.setText(String.valueOf(currentValue)));
     }
 }

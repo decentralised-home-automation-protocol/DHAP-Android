@@ -93,6 +93,7 @@ public class SelectionFragment extends BaseElementFragment implements
 
     @Override
     public void updateFragmentData(String value) {
-
+        this.position = Integer.parseInt(value);
+        getActivity().runOnUiThread(() -> this.selection.setSelection(position));
     }
 }

@@ -78,13 +78,7 @@ public class ButtonToggleFragment extends BaseElementFragment implements
 
     @Override
     public void updateFragmentData(String value) {
-//        if (updateData.isEmpty()) return;
-//
-//        String state = updateData.get(0);
-//        if (state.equals("true")) {
-//            this.state = true;
-//        } else if(state.equals("false")) {
-//            this.state = false;
-//        }
+        this.state = value.equals("true");
+        getActivity().runOnUiThread(() -> toggleButton.setText(state ? buttonPosLabel : buttonNegLabel));
     }
 }

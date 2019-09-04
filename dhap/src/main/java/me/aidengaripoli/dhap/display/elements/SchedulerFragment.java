@@ -138,6 +138,14 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
 
     @Override
     public void updateFragmentData(String value) {
+        String spinnerValue = value.split("!")[0];
+        String timeValue = value.split("!")[1];
 
+        int spinnerPosition = Integer.parseInt(spinnerValue);
+
+        getActivity().runOnUiThread(() -> {
+            selection.setSelection(spinnerPosition);
+            timeButton.setText(timeValue);
+        });
     }
 }

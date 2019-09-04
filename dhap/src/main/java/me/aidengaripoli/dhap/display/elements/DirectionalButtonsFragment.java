@@ -79,6 +79,6 @@ public class DirectionalButtonsFragment extends BaseElementFragment {
 
     @Override
     public void updateFragmentData(String value) {
-
+        //No updates for this element
     }
 }

@@ -13,10 +13,10 @@ import me.aidengaripoli.dhap.R;
 public class StatusFragment extends BaseElementFragment {
 
     public static final String STATUS = "status";
-    private TextView statusLabel;
-    private String statusValue;
+    private TextView statusValueView;
 
-    public StatusFragment() {}
+    public StatusFragment() {
+    }
 
     public static StatusFragment newInstance(ArrayList<String> displaySettings) {
         StatusFragment fragment = new StatusFragment();
@@ -44,14 +44,13 @@ public class StatusFragment extends BaseElementFragment {
         labelView = view.findViewById(R.id.status_labels);
         addLabel();
 
-        TextView statusValueView = view.findViewById(R.id.status_value);
-        statusValueView.setText(statusValue);
+        statusValueView = view.findViewById(R.id.status_value);
         return view;
     }
 
 
     @Override
     public void updateFragmentData(String value) {
-
+        getActivity().runOnUiThread(() -> this.statusValueView.setText(value));
     }
 }

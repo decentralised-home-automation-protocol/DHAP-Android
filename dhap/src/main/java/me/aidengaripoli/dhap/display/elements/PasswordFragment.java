@@ -18,8 +18,8 @@ public class PasswordFragment extends BaseElementFragment {
 
     private static final int ARG_BUTTON_LABEL_INDEX = 1;
 
-    private String label;
     private String buttonLabel;
+    private EditText passwordView;
 
     public PasswordFragment() {}
 
@@ -50,7 +50,7 @@ public class PasswordFragment extends BaseElementFragment {
         labelView = view.findViewById(R.id.password_label);
         addLabel();
 
-        EditText passwordView = view.findViewById(R.id.password_value);
+        passwordView = view.findViewById(R.id.password_value);
 
         Button button = view.findViewById(R.id.password_button);
         button.setOnClickListener(v -> sendMessage(passwordView.getText().toString()));
@@ -61,6 +61,6 @@ public class PasswordFragment extends BaseElementFragment {
 
     @Override
     public void updateFragmentData(String value) {
-
+        getActivity().runOnUiThread(() -> this.passwordView.setText(value));
     }
 }
