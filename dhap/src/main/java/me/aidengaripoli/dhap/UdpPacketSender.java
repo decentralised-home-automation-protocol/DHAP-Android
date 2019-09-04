@@ -64,7 +64,6 @@ public class UdpPacketSender {
     }
 
     public void sendUdpBroadcastPacket(String data) {
-        Log.e(TAG, "sendUdpBroadcastPacket: " + data);
         try {
             InetAddress address = InetAddress.getByName(BROADCAST_ADDRESS);
             sendPacket(address, data);

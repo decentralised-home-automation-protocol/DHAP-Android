@@ -10,39 +10,35 @@ import java.util.HashMap;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 import me.aidengaripoli.dhap.status.ElementStatus;
 
-public class DeviceDescription implements Parcelable {
+public class DeviceLayout implements Parcelable {
 
-    private static final String TAG = DeviceDescription.class.getSimpleName();
+    private static final String TAG = DeviceLayout.class.getSimpleName();
 
-    public static final Creator<DeviceDescription> CREATOR = new Creator<DeviceDescription>() {
+    public static final Creator<DeviceLayout> CREATOR = new Creator<DeviceLayout>() {
         @Override
-        public DeviceDescription createFromParcel(Parcel in) {
-            return new DeviceDescription(in);
+        public DeviceLayout createFromParcel(Parcel in) {
+            return new DeviceLayout(in);
         }
 
         @Override
-        public DeviceDescription[] newArray(int size) {
-            return new DeviceDescription[size];
+        public DeviceLayout[] newArray(int size) {
+            return new DeviceLayout[size];
         }
     };
 
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
 
-    public DeviceDescription(String xml) {
+    public DeviceLayout(String xml) {
         this.xml = xml;
     }
 
-    protected DeviceDescription(Parcel in) {
+    private DeviceLayout(Parcel in) {
         xml = in.readString();
     }
 
     public String getXml() {
         return xml;
-    }
-
-    public void executeCommand(String tag, String data) {
-        Log.d(TAG, "executeCommand");
     }
 
     @Override

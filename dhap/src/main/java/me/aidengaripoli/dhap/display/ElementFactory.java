@@ -20,7 +20,7 @@ import me.aidengaripoli.dhap.display.elements.TextInputFragment;
 
 public class ElementFactory {
     static BaseElementFragment getElement(Element element) {
-        DeviceDescriptionParser xmlParser = new DeviceDescriptionParser();
+        XmlParser xmlParser = new XmlParser();
         ArrayList<String> displaySettings = xmlParser.getDisplaySettings(element);
         String type = xmlParser.getElementType(element);
 

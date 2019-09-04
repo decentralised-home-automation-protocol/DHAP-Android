@@ -1,8 +1,14 @@
 package me.aidengaripoli.dhap.discovery;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +32,10 @@ public final class Discovery implements PacketListener {
     private List<Device> previousCensusList;
     private UdpPacketSender udpPacketSender;
     private List<Device> devices = new ArrayList<>();
+    private Context context;
 
-    public Discovery() {
+    public Discovery(Context context) {
+        this.context = context;
         censusList = new ArrayList<>();
         previousCensusList = new ArrayList<>();
 
@@ -60,6 +68,49 @@ public final class Discovery implements PacketListener {
                 previousCensusList.clear();
             }
         }).start();
+    }
+
+    public void discoverDebugDevices(GetDiscoveredDevicesCallbacks callback) {
+        String deviceXML;
+        AssetManager assetManager = context.getAssets();
+
+        try {
+            String[] list = assetManager.list("");
+            if (list == null) {
+                callback.noDevicesFound();
+                return;
+            }
+            for (String fileName : list) {
+                if (fileName.endsWith(".xml")) {
+                    InputStream inputStream = assetManager.open(fileName);
+                    deviceXML = inputStreamToString(inputStream);
+                    Device device = new Device(null, null, 0, 0);
+                    device.newDeviceLayout(deviceXML);
+                    device.setRoom("Debug Room");
+                    device.setName("Debug Name");
+                    censusList.add(device);
+                }
+            }
+        } catch (IOException e) {
+            callback.noDevicesFound();
+        }
+
+        if(censusList.isEmpty()) {
+            callback.noDevicesFound();
+        } else {
+            callback.foundDevices(censusList);
+        }
+    }
+
+    private String inputStreamToString(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        br.close();
+        return sb.toString();
     }
 
     /**
@@ -110,9 +161,9 @@ public final class Discovery implements PacketListener {
         }
     }
 
-    private void getDeviceHeaders(){
+    private void getDeviceHeaders() {
         udpPacketSender.addPacketListener(this);
-        for (Device device: censusList) {
+        for (Device device : censusList) {
             udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, device.getIpAddress().getHostAddress());
 
             try {
@@ -160,20 +211,20 @@ public final class Discovery implements PacketListener {
 
     @Override
     public void newPacket(String packetType, String packetData, InetAddress fromIP) {
-        if(packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
+        if (packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
             Device device = parseReply(packetData, fromIP);
             devices.add(device);
-        } else if(packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)){
+        } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
             addHeaderToDevice(packetData, fromIP);
         }
     }
 
-    private void addHeaderToDevice(String header, InetAddress fromIP){
-        Log.e(TAG, "addHeaderToDevice: " + header);
+    private void addHeaderToDevice(String header, InetAddress fromIP) {
+        Log.d(TAG, "addHeaderToDevice: Header received" + header);
         String[] headerData = header.split(",");
 
-        for (Device device: censusList) {
-            if(device.getIpAddress().equals(fromIP)) {
+        for (Device device : censusList) {
+            if (device.getIpAddress().equals(fromIP)) {
                 device.setName(headerData[1]);
                 device.setRoom(headerData[2]);
             }

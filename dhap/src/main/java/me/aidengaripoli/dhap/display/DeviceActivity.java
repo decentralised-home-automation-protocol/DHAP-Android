@@ -1,7 +1,6 @@
 package me.aidengaripoli.dhap.display;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
@@ -31,8 +30,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         device = getIntent().getParcelableExtra(DEVICE_INTENT_EXTRA);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        DeviceDescriptionLayout layout = new DeviceDescriptionLayout(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device.getDeviceDescription());
+        DeviceLayoutBuilder layout = new DeviceLayoutBuilder(fragmentManager, this);
+        ViewGroup deviceLayout = layout.create(device.getDeviceLayout());
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);
@@ -45,21 +44,24 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
     @Override
     public void onElementCommand(String tag, String data) {
-        Log.d(TAG, "Received " + data + " from " + tag);
-        udpPacketSender.sendUdpPacketToIP("400|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+        if (!device.isDebugDevice()) {
+            udpPacketSender.sendUdpPacketToIP("400|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
-        statusUpdates.requestStatusLease(10000, 1000, false);
+        if (!device.isDebugDevice()) {
+            statusUpdates.requestStatusLease(10000, 1000, false);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop");
-        statusUpdates.leaveLease();
+        if (!device.isDebugDevice()) {
+            statusUpdates.leaveLease();
+        }
     }
 }

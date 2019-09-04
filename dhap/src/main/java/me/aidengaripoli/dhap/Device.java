@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.net.InetAddress;
 
-import me.aidengaripoli.dhap.display.DeviceDescription;
+import me.aidengaripoli.dhap.display.DeviceLayout;
 
 /**
  *
@@ -28,7 +28,7 @@ public class Device implements Parcelable {
     private String room;
     private String macAddress;
     private InetAddress ipAddress;
-    private DeviceDescription deviceDescription;
+    private DeviceLayout deviceLayout;
     private int status;
     private int visibility;
 
@@ -42,19 +42,19 @@ public class Device implements Parcelable {
     protected Device(Parcel in) {
         macAddress = in.readString();
         ipAddress = (InetAddress) in.readSerializable();
-        deviceDescription = in.readParcelable(getClass().getClassLoader());
+        deviceLayout = in.readParcelable(getClass().getClassLoader());
         status = in.readInt();
         visibility = in.readInt();
         name = in.readString();
         room = in.readString();
     }
 
-    public void setDeviceDescription(DeviceDescription deviceDescription) {
-        this.deviceDescription = deviceDescription;
+    public DeviceLayout getDeviceLayout() {
+        return deviceLayout;
     }
 
-    public DeviceDescription getDeviceDescription() {
-        return deviceDescription;
+    public void newDeviceLayout(String xml) {
+        deviceLayout = new DeviceLayout(xml);
     }
 
     public String getMacAddress() {
@@ -103,11 +103,15 @@ public class Device implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(macAddress);
         dest.writeSerializable(ipAddress);
-        dest.writeParcelable(deviceDescription, 0);
+        dest.writeParcelable(deviceLayout, 0);
         dest.writeInt(status);
         dest.writeInt(visibility);
         dest.writeString(name);
         dest.writeString(room);
+    }
+
+    public boolean isDebugDevice() {
+        return macAddress == null && ipAddress == null;
     }
 }
 

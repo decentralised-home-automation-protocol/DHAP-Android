@@ -1,55 +1,49 @@
 package me.aidengaripoli.dhap;
 
 import android.content.Context;
-import android.util.Log;
 
 import me.aidengaripoli.dhap.discovery.Discovery;
 import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
 import me.aidengaripoli.dhap.display.Display;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
+import me.aidengaripoli.dhap.joining.callbacks.BaseCallback;
 import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
 
 public class DHAP {
-
     private static final String TAG = DHAP.class.getSimpleName();
 
-    private Context context;
     private Discovery discovery;
     private Display display;
     private Joining joining;
 
     public DHAP(Context context) {
-        this.context = context;
-        discovery = new Discovery();
+        discovery = new Discovery(context);
         display = new Display(context);
         joining = new Joining(context);
     }
 
-    public void fetchDeviceInterface(Device device, boolean useAssetsFolder, GetDeviceUIActivityCallbacks callbacks) {
-        display.fetchDeviceInterface(device, useAssetsFolder, callbacks);
+    public void fetchDeviceInterface(Device device, GetDeviceUIActivityCallbacks callbacks) {
+        display.fetchDeviceInterface(device, callbacks);
     }
 
-    public void joinDevice() {
-        joining.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallback() {
-            @Override
-            public void networkNotFound() {
-                Log.e(TAG, "networkNotFound");
-            }
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallback callback) {
+        joining.joinDevice(networkSSID, networkPassword, deviceSSID, devicePassword, callback);
+    }
 
-            @Override
-            public void success() {
-                Log.e(TAG, "success" );
-            }
+    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallback callback) {
+        joining.connectToAccessPoint(SSID, password, callback);
+    }
 
-            @Override
-            public void failure() {
-                Log.e(TAG, "failure");
-            }
-        });
+    public void sendCredentials(String SSID, String password, BaseCallback callback) {
+        joining.sendCredentials(SSID, password, callback);
     }
 
     public void discoverDevices(GetDiscoveredDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
+    }
+
+    public void discoverDebugDevices(GetDiscoveredDevicesCallbacks callbacks) {
+        discovery.discoverDebugDevices(callbacks);
     }
 }

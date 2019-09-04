@@ -14,6 +14,7 @@ import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
 
 public class MainActivity extends AppCompatActivity implements
         ActionFragment.OnActionResultListener,
@@ -33,6 +34,23 @@ public class MainActivity extends AppCompatActivity implements
         dhap = new DHAP(this);
 
         fragmentManager = getSupportFragmentManager();
+
+//        dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallback() {
+//            @Override
+//            public void networkNotFound() {
+//                Log.e(TAG, "networkNotFound");
+//            }
+//
+//            @Override
+//            public void success() {
+//                Log.e(TAG, "success" );
+//            }
+//
+//            @Override
+//            public void failure() {
+//                Log.e(TAG, "failure");
+//            }
+//        });
 
         beginDeviceDiscovery();
     }
@@ -110,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
-        dhap.fetchDeviceInterface(device, false, new GetDeviceUIActivityCallbacks() {
+        dhap.fetchDeviceInterface(device, new GetDeviceUIActivityCallbacks() {
             @Override
             public void assetsFileFailure() {
                 Log.d(TAG, "assetsFileFailure");

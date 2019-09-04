@@ -28,28 +28,8 @@ public class Joining {
         udpPacketSender = UdpPacketSender.getInstance();
     }
 
-    public void verifyWifiNetwork(String SSID, String password, ConnectToNetworkCallback callback) {
-        boolean isWifiEnabled = wiseFy.isWifiEnabled();
-
-        if (isWifiEnabled) {
-            Log.d(TAG, "wifi enabled");
-        } else {
-            wiseFy.enableWifi();
-        }
-
-        if (wiseFy.isNetworkSaved(SSID)) {
-            wiseFy.removeNetwork(SSID);
-        }
-
-        wiseFy.addWPA2Network(SSID, password);
-
-        connectToAP(SSID, password, callback);
-    }
-
-    public void connectToAP(String SSID, String password, ConnectToNetworkCallback callback) {
-        if (!wiseFy.isNetworkSaved(SSID)) {
-            wiseFy.addWPA2Network(SSID, password);
-        }
+    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallback callback) {
+        verifyWiFi(SSID, password);
 
         wiseFy.connectToNetwork(SSID, TIMEOUT_IN_MILLIS, new ConnectToNetworkCallbacks() {
             @Override
@@ -94,7 +74,7 @@ public class Joining {
     }
 
     public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallback callback) {
-        verifyWifiNetwork(networkSSID, networkPassword, new ConnectToNetworkCallback() {
+        connectToAccessPoint(networkSSID, networkPassword, new ConnectToNetworkCallback() {
             @Override
             public void networkNotFound() {
                 callback.networkNotFound();
@@ -103,7 +83,7 @@ public class Joining {
             @Override
             public void success() {
                 Log.e(TAG, "Verified credentials");
-                connectToAP(deviceSSID, devicePassword, new ConnectToNetworkCallback() {
+                connectToAccessPoint(deviceSSID, devicePassword, new ConnectToNetworkCallback() {
                     @Override
                     public void networkNotFound() {
                         callback.networkNotFound();
@@ -128,5 +108,21 @@ public class Joining {
                 callback.failure();
             }
         });
+    }
+
+    private void verifyWiFi(String SSID, String password) {
+        boolean isWifiEnabled = wiseFy.isWifiEnabled();
+
+        if (isWifiEnabled) {
+            Log.d(TAG, "wifi enabled");
+        } else {
+            wiseFy.enableWifi();
+        }
+
+        if (wiseFy.isNetworkSaved(SSID)) {
+            wiseFy.removeNetwork(SSID);
+        }
+
+        wiseFy.addWPA2Network(SSID, password);
     }
 }

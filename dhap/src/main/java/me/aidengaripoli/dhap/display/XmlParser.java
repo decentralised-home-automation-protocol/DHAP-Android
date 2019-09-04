@@ -16,7 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class DeviceDescriptionParser {
+public class XmlParser {
 
     private final String TYPE = "type";
     private final String DISPLAY_SETTINGS = "disp_settings";

@@ -21,24 +21,24 @@ import java.util.HashMap;
 import me.aidengaripoli.dhap.R;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 
-public class DeviceDescriptionLayout {
+public class DeviceLayoutBuilder {
 
-    private static final String TAG = DeviceDescriptionLayout.class.getSimpleName();
+    private static final String TAG = DeviceLayoutBuilder.class.getSimpleName();
 
-    private static DeviceDescriptionParser parser = new DeviceDescriptionParser();
+    private static XmlParser parser = new XmlParser();
 
     private FragmentManager fragmentManager;
     private Context context;
 
     private HashMap<String, BaseElementFragment> elements;
 
-    public DeviceDescriptionLayout(FragmentManager fragmentManager, Context context) {
+    public DeviceLayoutBuilder(FragmentManager fragmentManager, Context context) {
         this.fragmentManager = fragmentManager;
         this.context = context;
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(DeviceDescription description) {
+    public ViewGroup create(DeviceLayout description) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
