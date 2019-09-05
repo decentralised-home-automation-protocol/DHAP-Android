@@ -68,10 +68,10 @@ public class DirectionalButtonsFragment extends BaseElementFragment {
             sButton.setText(getArguments().getString(ARG_BOTTOM));
             wButton.setText(getArguments().getString(ARG_LEFT));
 
-            nButton.setOnClickListener(v -> sendMessage(getArguments().getString(ARG_TOP)));
-            eButton.setOnClickListener(v -> sendMessage(getArguments().getString(ARG_RIGHT)));
-            sButton.setOnClickListener(v -> sendMessage(getArguments().getString(ARG_BOTTOM)));
-            wButton.setOnClickListener(v -> sendMessage(getArguments().getString(ARG_LEFT)));
+            nButton.setOnClickListener(v -> sendMessage(String.valueOf(0)));
+            eButton.setOnClickListener(v -> sendMessage(String.valueOf(1)));
+            sButton.setOnClickListener(v -> sendMessage(String.valueOf(2)));
+            wButton.setOnClickListener(v -> sendMessage(String.valueOf(3)));
         }
 
         return view;
