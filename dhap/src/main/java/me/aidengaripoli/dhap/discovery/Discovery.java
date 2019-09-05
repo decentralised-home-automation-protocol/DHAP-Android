@@ -26,7 +26,7 @@ public final class Discovery implements PacketListener {
 
     private static final String TAG = Discovery.class.getSimpleName();
     private static final int LISTEN_TIMEOUT_IN_MILLIS = 1000;
-    private static final int HEADER_TIMEOUT_IN_MILLIS = 100;
+    private static final int HEADER_TIMEOUT_IN_MILLIS = 300;
 
     private List<Device> censusList;
     private List<Device> previousCensusList;
@@ -220,7 +220,7 @@ public final class Discovery implements PacketListener {
     }
 
     private void addHeaderToDevice(String header, InetAddress fromIP) {
-        Log.d(TAG, "addHeaderToDevice: Header received" + header);
+        Log.d(TAG, "addHeaderToDevice: Header received " + header);
         String[] headerData = header.split(",");
 
         for (Device device : censusList) {
