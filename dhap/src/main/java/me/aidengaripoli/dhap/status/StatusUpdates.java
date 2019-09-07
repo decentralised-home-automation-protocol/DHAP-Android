@@ -11,6 +11,7 @@ import me.aidengaripoli.dhap.UdpPacketSender;
 
 public class StatusUpdates implements PacketListener {
     private static final String END_OF_LEASE = "T";
+    private static final int STATUS_LOCATION_START = 1;
     private UdpPacketSender udpPacketSender;
     private Device device;
     private float leaseLength;
@@ -88,13 +89,13 @@ public class StatusUpdates implements PacketListener {
             }
         }
 
+        int fragmentTag = STATUS_LOCATION_START;
+
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            String groupId = token.split("-")[0];
-            String elementId = token.split("-")[1].split("=")[0];
-            String value = token.split("=")[1];
-            ElementStatus elementStatus = new ElementStatus(Integer.parseInt(groupId), Integer.parseInt(elementId), value);
+            ElementStatus elementStatus = new ElementStatus(fragmentTag,  token);
             elementStatuses.add(elementStatus);
+            fragmentTag++;
         }
 
         return elementStatuses;

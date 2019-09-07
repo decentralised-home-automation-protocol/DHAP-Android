@@ -22,6 +22,7 @@ public class XmlParser {
     private final String DISPLAY_SETTINGS = "disp_settings";
     private final String LABEL = "label";
     private final String NAME = "name";
+    private final String STATUS_LOCATION = "status_location";
     private final String ID = "id";
     private final String GROUP = "group";
     private final String GUI_ELEMENT = "gui_element";
@@ -97,6 +98,16 @@ public class XmlParser {
     }
 
     /**
+     * Used to retrieve the value in the <name/> tag.
+     *
+     * @param element Parameter 1.
+     * @return A String with the value in the name tag.
+     */
+    String getStatusLoction(Element element) {
+        return getTagData(element, STATUS_LOCATION);
+    }
+
+    /**
      * Used to retrieve the value in the id attribute.
      *
      * @param element Parameter 1.
@@ -169,36 +180,6 @@ public class XmlParser {
      */
     NodeList getGuiElementsInGroup(Element element) {
         return element.getElementsByTagName(GUI_ELEMENT);
-    }
-
-
-    /**
-     * Used to get the widget tag in a status update command.
-     *
-     * @param command Parameter 1.
-     * @return An string of the widgets tag.
-     */
-    String getCommandTag(String command) {
-        StringTokenizer st = new StringTokenizer(command, DELIM);
-        return st.nextToken();
-    }
-
-    /**
-     * Used to get the status data in a status update command.
-     *
-     * @param command Parameter 1.
-     * @return An arrayList of the comma separated status data.
-     */
-    ArrayList<String> getCommandData(String command) {
-        ArrayList<String> statusData = new ArrayList<>();
-
-        StringTokenizer st = new StringTokenizer(command, DELIM);
-        st.nextToken();
-        while (st.hasMoreTokens()) {
-            statusData.add(st.nextToken());
-        }
-
-        return statusData;
     }
 
     boolean doesGroupHaveBorderAttribute(Element element){

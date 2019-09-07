@@ -57,11 +57,11 @@ public class DeviceLayout implements Parcelable {
 
     public void newStatusUpdate(ArrayList<ElementStatus> elementStatuses) {
         for (ElementStatus elementStatus : elementStatuses) {
-            BaseElementFragment element = elements.get(elementStatus.getTag());
+            BaseElementFragment element = elements.get(String.valueOf(elementStatus.getFragmentTag()));
             if (element != null) {
                 element.updateFragmentData(elementStatus.getValue());
             } else {
-                Log.d(TAG, "newPacket: No element with tag " + elementStatus.getTag() + " exists");
+                Log.d(TAG, "newPacket: No element with tag " + elementStatus.getFragmentTag() + " exists");
             }
         }
     }
