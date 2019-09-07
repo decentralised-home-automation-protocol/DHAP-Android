@@ -2,29 +2,19 @@ package me.aidengaripoli.dhap.status;
 
 public class ElementStatus {
 
-    private int groupId;
-    private int elementId;
+    private int fragmentTag;
     private String value;
 
-    public ElementStatus(int groupId, int elementId, String value) {
-        this.groupId = groupId;
-        this.elementId = elementId;
+    public ElementStatus(int fragmentTag, String value) {
+        this.fragmentTag = fragmentTag;
         this.value = value;
     }
 
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public int getElementId() {
-        return elementId;
+    public int getFragmentTag() {
+        return fragmentTag;
     }
 
     public String getValue() {
         return value;
-    }
-
-    public String getTag() {
-        return groupId + "-" + elementId;
     }
 }

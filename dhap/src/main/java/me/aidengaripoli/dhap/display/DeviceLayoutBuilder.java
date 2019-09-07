@@ -57,15 +57,14 @@ public class DeviceLayoutBuilder {
             for (int i = 1; i < groupNodeList.getLength(); i++) {
                 Element element = (Element) groupNodeList.item(i);
 
-                String groupId = parser.getId(element);
                 NodeList guiNodeList = parser.getGuiElementsInGroup(element);
 
                 LinearLayout groupLayout = createLinearLayout(parser.getGroupLayoutOrientation(element));
 
                 if (guiNodeList.getLength() == 1) {
-                    addElementToLayout((Element) guiNodeList.item(0), groupLayout, groupId);
+                    addElementToLayout((Element) guiNodeList.item(0), groupLayout);
                 } else {
-                    createGroupOfElements(groupLayout, guiNodeList, groupId);
+                    createGroupOfElements(groupLayout, guiNodeList);
                 }
 
                 if(parser.doesGroupHaveBorderAttribute(element)){
@@ -98,20 +97,21 @@ public class DeviceLayoutBuilder {
         rootLayout.addView(groupLayout);
     }
 
-    private void createGroupOfElements(LinearLayout groupLayout, NodeList guiNodeList, String groupId) {
+    private void createGroupOfElements(LinearLayout groupLayout, NodeList guiNodeList) {
         // iterate through all the <gui_element> elements in the name
         for (int i = 0; i < guiNodeList.getLength(); i++) {
             Element element = (Element) guiNodeList.item(i);
-            addElementToLayout(element, groupLayout, groupId);
+            addElementToLayout(element, groupLayout);
         }
     }
 
-    private void addElementToLayout(Element element, LinearLayout layout, String groupId) {
+    private void addElementToLayout(Element element, LinearLayout layout) {
         // generate a view (widget) for each gui_element
         BaseElementFragment fragment = ElementFactory.getElement(element);
 
-        String fragmentTag = groupId + "-" + parser.getId(element);
-
+        //Get value in the status_location tag
+        String fragmentTag = parser.getStatusLoction(element);
+        
         // add the view to the groups layout
         if (fragment != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
