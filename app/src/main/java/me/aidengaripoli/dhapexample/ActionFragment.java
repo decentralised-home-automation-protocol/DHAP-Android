@@ -91,7 +91,7 @@ public class ActionFragment extends Fragment {
     }
 
     public void setActionEnabled(boolean enabled) {
-        actionButton.setEnabled(enabled);
+        getActivity().runOnUiThread(() -> actionButton.setEnabled(enabled));
     }
 
     @Override

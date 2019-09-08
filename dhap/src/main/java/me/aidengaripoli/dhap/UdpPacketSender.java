@@ -19,6 +19,7 @@ public class UdpPacketSender {
     private DatagramSocket datagramSocket;
     private final ArrayList<PacketListener> listeners = new ArrayList<>();
     private static UdpPacketSender udpPacketSender;
+    private final Object MUTEX = new Object();
 
     private UdpPacketSender() {
         try {
@@ -40,7 +41,7 @@ public class UdpPacketSender {
     }
 
     public void addPacketListener(PacketListener listener) {
-        synchronized(listeners) {
+        synchronized(MUTEX) {
             if (listener != null) {
                 listeners.add(listener);
             }
@@ -48,7 +49,7 @@ public class UdpPacketSender {
     }
 
     public void removePacketListener(PacketListener listener) {
-        synchronized(listeners) {
+        synchronized(MUTEX) {
             listeners.remove(listener);
         }
     }
@@ -104,6 +105,8 @@ public class UdpPacketSender {
                 try {
                     datagramSocket.receive(receivePacket);
                     String packet = new String(receiveBuffer, 0, receivePacket.getLength());
+                    Log.e(TAG, "listenForPackets: " + packet);
+
                     String packetType = packet.substring(0, DELIM_CHAR_INDEX);
                     String packetData = "";
                     if(packet.length() > DELIM_CHAR_INDEX) {
@@ -111,10 +114,16 @@ public class UdpPacketSender {
                     }
 
                     //TODO: Ensure packet is a DHAP packet
-                    synchronized(listeners) {
+                    synchronized(MUTEX) {
+                        ArrayList<PacketListener> toRemove = new ArrayList<>();
+
                         for (PacketListener listener : listeners) {
-                            listener.newPacket(packetType, packetData, receivePacket.getAddress());
+                            if(listener.newPacket(packetType, packetData, receivePacket.getAddress())){
+                                toRemove.add(listener);
+                            }
                         }
+
+                        listeners.removeAll(toRemove);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

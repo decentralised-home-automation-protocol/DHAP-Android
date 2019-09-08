@@ -63,7 +63,7 @@ public class StatusUpdates implements PacketListener {
     }
 
     @Override
-    public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+    public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
             if(isFromCorrectDevice(packetData)) {
                 ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
@@ -78,6 +78,7 @@ public class StatusUpdates implements PacketListener {
 
             device.getDeviceLayout().statusRequestResponse(leaseLength, updatePeriod);
         }
+        return false;
     }
 
     private boolean isFromCorrectDevice(String packetData) {

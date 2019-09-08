@@ -210,13 +210,14 @@ public final class Discovery implements PacketListener {
     }
 
     @Override
-    public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+    public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
             Device device = parseReply(packetData, fromIP);
             devices.add(device);
         } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
             addHeaderToDevice(packetData, fromIP);
         }
+        return false;
     }
 
     private void addHeaderToDevice(String header, InetAddress fromIP) {
