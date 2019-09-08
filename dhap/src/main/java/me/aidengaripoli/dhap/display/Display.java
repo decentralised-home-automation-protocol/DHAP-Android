@@ -32,7 +32,7 @@ public class Display extends AppCompatActivity {
         } else {
             udpPacketSender.addPacketListener(new PacketListener() {
                 @Override
-                public void newPacket(String packetType, String packetData, InetAddress fromIP) {
+                public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
                     if (packetType.equals(PacketCodes.SEND_UI)) {
                         UdpPacketSender.getInstance().removePacketListener(this);
 
@@ -43,6 +43,7 @@ public class Display extends AppCompatActivity {
 
                         callbacks.deviceActivityIntent(intent);
                     }
+                    return false;
                 }
             });
 

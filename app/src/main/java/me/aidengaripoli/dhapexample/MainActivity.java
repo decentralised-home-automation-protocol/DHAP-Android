@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DHAP dhap;
+    private ActionFragment actionFragment;
 
     private FragmentManager fragmentManager;
 
@@ -34,23 +36,6 @@ public class MainActivity extends AppCompatActivity implements
         dhap = new DHAP(this);
 
         fragmentManager = getSupportFragmentManager();
-
-//        dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallback() {
-//            @Override
-//            public void networkNotFound() {
-//                Log.e(TAG, "networkNotFound");
-//            }
-//
-//            @Override
-//            public void success() {
-//                Log.e(TAG, "success" );
-//            }
-//
-//            @Override
-//            public void failure() {
-//                Log.e(TAG, "failure");
-//            }
-//        });
 
         beginDeviceDiscovery();
     }
@@ -95,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
             DiscoveredDevicesFragment devicesFragment = DiscoveredDevicesFragment
                     .newInstance(devices);
 
-            ActionFragment actionFragment = ActionFragment
+            actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
 
             fragmentManager.beginTransaction()
@@ -112,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements
         runOnUiThread(() -> {
             NoDevicesFoundFragment fragment =  NoDevicesFoundFragment.newInstance();
 
-            ActionFragment actionFragment = ActionFragment
+            actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
 
             fragmentManager.beginTransaction()
@@ -157,7 +142,27 @@ public class MainActivity extends AppCompatActivity implements
             }
             case "Add": {
                 Log.d(TAG,  "Join Device.");
+                actionFragment.setActionEnabled(false);
 //                startActivity(new Intent(this, WifiNetworkListActivity.class));
+                dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallback() {
+                    @Override
+                    public void networkNotFound() {
+                        actionFragment.setActionEnabled(true);
+                        Log.e(TAG, "networkNotFound");
+                    }
+
+                    @Override
+                    public void success() {
+                        actionFragment.setActionEnabled(true);
+                        Log.e(TAG, "successfully joined device" );
+                    }
+
+                    @Override
+                    public void failure() {
+                        actionFragment.setActionEnabled(true);
+                        Log.e(TAG, "failure");
+                    }
+                });
                 break;
             }
         }
