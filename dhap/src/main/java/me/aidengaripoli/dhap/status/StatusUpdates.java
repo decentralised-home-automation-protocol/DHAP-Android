@@ -19,6 +19,7 @@ public class StatusUpdates implements PacketListener {
     private boolean responseRequired;
 
     private boolean isListening = false;
+    private String mac;
 
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
@@ -64,17 +65,24 @@ public class StatusUpdates implements PacketListener {
     @Override
     public void newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
-            ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
-            device.getDeviceLayout().newStatusUpdate(elementStatuses);
+            if(isFromCorrectDevice(packetData)) {
+                ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
+                device.getDeviceLayout().newStatusUpdate(elementStatuses);
+            }
         } else if (packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)) {
             StringTokenizer st = new StringTokenizer(packetData, ",");
-            st.nextToken();
+            this.mac = st.nextToken();
 
             float leaseLength = Float.parseFloat(st.nextToken());
             float updatePeriod = Float.parseFloat(st.nextToken());
 
             device.getDeviceLayout().statusRequestResponse(leaseLength, updatePeriod);
         }
+    }
+
+    private boolean isFromCorrectDevice(String packetData) {
+        StringTokenizer st = new StringTokenizer(packetData, ",");
+        return st.nextToken().equals(mac);
     }
 
     private ArrayList<ElementStatus> getStatus(String packetData) {
