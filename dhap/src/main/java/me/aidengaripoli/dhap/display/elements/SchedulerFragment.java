@@ -99,7 +99,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
         if (getArguments() != null) {
             submitButton.setText(getArguments().getString(ARG_BUTTON_LABEL));
         }
-        submitButton.setOnClickListener(v -> listener.onElementCommand(getTag(), spinnerItems[currentPosition] + "," + time));
+        submitButton.setOnClickListener(v -> sendMessage(currentPosition + "!" + time));
 
         return view;
     }
@@ -129,7 +129,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currentPosition = position;
         if (userSelect) {
-            sendMessage(spinnerItems[currentPosition]);
+            sendMessage(String.valueOf(position));
             userSelect = false;
         }
     }
@@ -148,6 +148,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
 
         getActivity().runOnUiThread(() -> {
             selection.setSelection(spinnerPosition);
+            time = timeValue;
             timeButton.setText(timeValue);
         });
     }

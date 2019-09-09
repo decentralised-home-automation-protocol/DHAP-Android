@@ -18,7 +18,7 @@ import me.aidengaripoli.dhap.display.elements.StepperFragment;
 import me.aidengaripoli.dhap.display.elements.SwitchToggleFragment;
 import me.aidengaripoli.dhap.display.elements.TextInputFragment;
 
-public class ElementFactory {
+class ElementFactory {
     static BaseElementFragment getElement(Element element) {
         XmlParser xmlParser = new XmlParser();
         ArrayList<String> displaySettings = xmlParser.getDisplaySettings(element);

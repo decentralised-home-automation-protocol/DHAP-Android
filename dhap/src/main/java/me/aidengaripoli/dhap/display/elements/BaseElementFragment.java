@@ -10,10 +10,11 @@ public abstract class BaseElementFragment extends Fragment {
 
     static final String ARG_LABEL = "label";
     static final int ARG_LABEL_INDEX = 0;
-    static final String NO_LABEL = "~";
+    private static final String NO_LABEL = "~";
 
     TextView labelView;
     String label;
+    private String Id;
 
     OnElementCommandListener listener;
 
@@ -31,7 +32,7 @@ public abstract class BaseElementFragment extends Fragment {
 
     public void sendMessage(String data) {
         if (listener != null) {
-            listener.onElementCommand(getTag(), data);
+            listener.onElementCommand(Id, data);
         }
     }
 
@@ -50,5 +51,9 @@ public abstract class BaseElementFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    public void setId(String Id) {
+        this.Id = Id;
     }
 }
