@@ -148,6 +148,7 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
 
         getActivity().runOnUiThread(() -> {
             selection.setSelection(spinnerPosition);
+            time = timeValue;
             timeButton.setText(timeValue);
         });
     }
