@@ -87,8 +87,7 @@ public class SelectionFragment extends BaseElementFragment implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (userSelect) {
-            String value = (String) parent.getItemAtPosition(position);
-            sendMessage(value);
+            sendMessage(String.valueOf(position));
             userSelect = false;
         }
     }

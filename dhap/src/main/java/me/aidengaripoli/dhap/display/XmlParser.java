@@ -157,7 +157,7 @@ public class XmlParser {
             e.printStackTrace();
         }
 
-        // get all of the <name> elements
+        // get all of the <group> elements
         NodeList groupNodeList = null;
         try {
             if (builder != null) {
