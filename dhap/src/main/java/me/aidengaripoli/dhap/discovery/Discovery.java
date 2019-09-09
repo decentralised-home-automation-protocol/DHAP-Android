@@ -163,15 +163,29 @@ public final class Discovery implements PacketListener {
 
     private void getDeviceHeaders() {
         udpPacketSender.addPacketListener(this);
-        for (Device device : censusList) {
-            udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, device.getIpAddress().getHostAddress());
+        previousCensusList.clear();
+        List<Device> devicesWithoutHeader = new ArrayList<>(censusList);
 
-            try {
-                Thread.sleep(HEADER_TIMEOUT_IN_MILLIS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        int timeOut = 10;
+
+        while (devicesWithoutHeader.size() > 0 && timeOut > 0) {
+            previousCensusList.clear();
+
+            for (Device device : devicesWithoutHeader) {
+                udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, device.getIpAddress().getHostAddress());
+
+                try {
+                    Thread.sleep(HEADER_TIMEOUT_IN_MILLIS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+            devicesWithoutHeader.removeAll(previousCensusList);
+            previousCensusList.clear();
+            timeOut--;
         }
+
         udpPacketSender.removePacketListener(this);
     }
 
@@ -228,6 +242,8 @@ public final class Discovery implements PacketListener {
             if (device.getIpAddress().equals(fromIP)) {
                 device.setName(headerData[1]);
                 device.setRoom(headerData[2]);
+                previousCensusList.add(device);
+                return;
             }
         }
     }
