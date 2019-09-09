@@ -27,12 +27,21 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     public SwitchToggleFragment() {}
 
     public static SwitchToggleFragment newInstance(ArrayList<String> displaySettings) {
-        return new SwitchToggleFragment();
+
+        SwitchToggleFragment fragment = new SwitchToggleFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_LABEL, displaySettings.get(ARG_LABEL_INDEX));
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            label = getArguments().getString(ARG_LABEL);
+        }
     }
 
     @Nullable
@@ -44,6 +53,7 @@ public class SwitchToggleFragment extends BaseElementFragment implements
         toggleSwitch = rootView.findViewById(R.id.toggle_switch);
         toggleSwitch.setOnClickListener(this);
         toggleSwitch.setChecked(isChecked);
+        toggleSwitch.setText(label);
 
         return rootView;
     }
