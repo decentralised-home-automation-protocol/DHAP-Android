@@ -14,7 +14,7 @@
         <gui_element id="2">
             <type>selection</type>
             <disp_settings>Source,HDMI1,HDMI2,HDMI3,HDMI4,AV</disp_settings>
-            <status_location>4</status_location>
+            <status_location>2</status_location>
             <comment>Input Source</comment>
         </gui_element>
     </group>
@@ -22,13 +22,13 @@
         <gui_element id="1">
             <type>buttontoggle</type>
             <disp_settings>Record,Recording,Not Recording</disp_settings>
-            <status_location>5</status_location>
+            <status_location>3</status_location>
             <comment>Recording</comment>
         </gui_element>
         <gui_element id="2">
             <type>buttontoggle</type>
             <disp_settings>Mute,Muted,Unmuted</disp_settings>
-            <status_location>6</status_location>
+            <status_location>4</status_location>
             <comment>Mute</comment>
         </gui_element>
     </group>
@@ -36,7 +36,7 @@
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Channel,0,100</disp_settings>
-            <status_location>2</status_location>
+            <status_location>5</status_location>
             <comment>Channel selection</comment>
         </gui_element>
     </group>
@@ -44,7 +44,7 @@
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Volume,0,100</disp_settings>
-            <status_location>2</status_location>
+            <status_location>6</status_location>
             <comment>Volume selection</comment>
         </gui_element>
     </group>
@@ -52,7 +52,6 @@
         <gui_element id="1">
             <type>directionalbuttons</type>
             <disp_settings>~,↑,→,↓,←</disp_settings>
-            <status_location>3</status_location>
             <comment>Directional Arrows</comment>
         </gui_element>
     </group>
@@ -60,25 +59,21 @@
         <gui_element id="1">
             <type>buttongroup</type>
             <disp_settings>~,1,2,3</disp_settings>
-            <status_location>6</status_location>
             <comment>Numpad</comment>
         </gui_element>
         <gui_element id="2">
             <type>buttongroup</type>
             <disp_settings>~,4,5,6</disp_settings>
-            <status_location>6</status_location>
             <comment>Numpad</comment>
         </gui_element>
         <gui_element id="3">
             <type>buttongroup</type>
             <disp_settings>~,7,8,9</disp_settings>
-            <status_location>6</status_location>
             <comment>Numpad</comment>
         </gui_element>
         <gui_element id="4">
             <type>buttongroup</type>
             <disp_settings>~,Back,0,Info</disp_settings>
-            <status_location>6</status_location>
             <comment>Numpad</comment>
         </gui_element>
     </group>
