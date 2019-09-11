@@ -14,8 +14,6 @@ import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.DisplayCallbacks;
 
 public class Display extends AppCompatActivity {
-    private static final String TAG = Display.class.getSimpleName();
-
     private Context context;
     private UdpPacketSender udpPacketSender;
 
@@ -47,7 +45,7 @@ public class Display extends AppCompatActivity {
                 }
             });
 
-            udpPacketSender.sendUdpPacketToIP("200", device.getIpAddress().getHostAddress());
+            udpPacketSender.sendUdpPacketToIP(PacketCodes.REQUEST_UI, device.getIpAddress().getHostAddress());
         }
     }
 }

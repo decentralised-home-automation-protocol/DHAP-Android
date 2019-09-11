@@ -5,7 +5,7 @@ public class ElementStatus {
     private int fragmentTag;
     private String value;
 
-    public ElementStatus(int fragmentTag, String value) {
+    ElementStatus(int fragmentTag, String value) {
         this.fragmentTag = fragmentTag;
         this.value = value;
     }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import me.aidengaripoli.dhap.R;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 
-public class DeviceLayoutBuilder {
+class DeviceLayoutBuilder {
 
     private static final String TAG = DeviceLayoutBuilder.class.getSimpleName();
 
@@ -32,13 +32,13 @@ public class DeviceLayoutBuilder {
 
     private HashMap<String, BaseElementFragment> elements;
 
-    public DeviceLayoutBuilder(FragmentManager fragmentManager, Context context) {
+    DeviceLayoutBuilder(FragmentManager fragmentManager, Context context) {
         this.fragmentManager = fragmentManager;
         this.context = context;
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(DeviceLayout description, String deviceName) {
+    ViewGroup create(DeviceLayout description, String deviceName) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import me.aidengaripoli.dhap.Device;
+import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 import me.aidengaripoli.dhap.status.StatusUpdates;
@@ -43,7 +44,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         if (!device.isDebugDevice()) {
-            udpPacketSender.sendUdpPacketToIP("400|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+            udpPacketSender.sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
         }
     }
 
