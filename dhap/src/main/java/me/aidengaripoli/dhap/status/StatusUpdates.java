@@ -1,5 +1,7 @@
 package me.aidengaripoli.dhap.status;
 
+import android.util.Log;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -19,7 +21,6 @@ public class StatusUpdates implements PacketListener {
     private boolean responseRequired;
 
     private boolean isListening = false;
-    private String mac;
 
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
@@ -71,7 +72,6 @@ public class StatusUpdates implements PacketListener {
             }
         } else if (packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)) {
             StringTokenizer st = new StringTokenizer(packetData, ",");
-            this.mac = st.nextToken();
 
             float leaseLength = Float.parseFloat(st.nextToken());
             float updatePeriod = Float.parseFloat(st.nextToken());
@@ -83,7 +83,7 @@ public class StatusUpdates implements PacketListener {
 
     private boolean isFromCorrectDevice(String packetData) {
         StringTokenizer st = new StringTokenizer(packetData, ",");
-        return st.nextToken().equals(mac);
+        return st.nextToken().equals(device.getMacAddress());
     }
 
     private ArrayList<ElementStatus> getStatus(String packetData) {
