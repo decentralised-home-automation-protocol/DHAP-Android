@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <group id="0" permission="RR">
-        <name>Kettle</name>
-        <room>Kitchen</room>
-    </group>
+    <name>Kettle</name>
+    <location>Kitchen</location>
     <group id="1" permission="WR">
         <gui_element id="1">
             <type>switchtoggle</type>

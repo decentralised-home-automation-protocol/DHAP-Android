@@ -38,7 +38,7 @@ public class DeviceLayoutBuilder {
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(DeviceLayout description) {
+    public ViewGroup create(DeviceLayout description, String deviceName) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
@@ -51,10 +51,10 @@ public class DeviceLayoutBuilder {
                 return rootLayout;
             }
 
-            addTitle(groupNodeList, rootLayout);
+            addTitle(deviceName, rootLayout);
 
             // iterate through all the <group> elements
-            for (int i = 1; i < groupNodeList.getLength(); i++) {
+            for (int i = 0; i < groupNodeList.getLength(); i++) {
                 Element element = (Element) groupNodeList.item(i);
 
                 String groupId = parser.getId(element);
@@ -85,14 +85,10 @@ public class DeviceLayoutBuilder {
         return rootLayout;
     }
 
-    private void addTitle(NodeList groupNodeList, LinearLayout rootLayout) {
-        Element groupElement = (Element) groupNodeList.item(0);
-
-        String name = parser.getName(groupElement);
-
+    private void addTitle(String deviceName, LinearLayout rootLayout) {
         TextView title = new TextView(context);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36);
-        title.setText(name);
+        title.setText(deviceName);
 
         LinearLayout groupLayout = createLinearLayout(true);
         groupLayout.addView(title);
@@ -119,7 +115,7 @@ public class DeviceLayoutBuilder {
         fragment.setId(groupId+"-"+elementId);
 
         //Get value in the status_location tag
-        String fragmentTag = parser.getStatusLoction(element);
+        String fragmentTag = parser.getStatusLocation(element);
         
         // add the view to the groups layout
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
