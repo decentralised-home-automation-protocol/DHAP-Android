@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import me.aidengaripoli.dhap.R;
 
 public class SwitchToggleFragment extends BaseElementFragment implements
-        CompoundButton.OnCheckedChangeListener {
+        View.OnClickListener {
 
     public static final String SWITCH_TOGGLE = "switchtoggle";
 
@@ -27,9 +27,12 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     public SwitchToggleFragment() {}
 
     public static SwitchToggleFragment newInstance(ArrayList<String> displaySettings) {
+
         SwitchToggleFragment fragment = new SwitchToggleFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_LABEL, displaySettings.get(ARG_LABEL_INDEX));
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -37,7 +40,7 @@ public class SwitchToggleFragment extends BaseElementFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            label = getArguments().getString(ARG_LABEL);
         }
     }
 
@@ -48,20 +51,22 @@ public class SwitchToggleFragment extends BaseElementFragment implements
         View rootView = inflater.inflate(R.layout.fragment_switch_toggle_element, container, false);
 
         toggleSwitch = rootView.findViewById(R.id.toggle_switch);
-        toggleSwitch.setOnCheckedChangeListener(this);
+        toggleSwitch.setOnClickListener(this);
         toggleSwitch.setChecked(isChecked);
+        toggleSwitch.setText(label);
 
         return rootView;
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        this.isChecked = isChecked;
     }
 
     @Override
     public void updateFragmentData(String value) {
         isChecked = value.equals("true");
         getActivity().runOnUiThread(() -> toggleSwitch.setChecked(isChecked));
+    }
+
+    @Override
+    public void onClick(View v) {
+        isChecked = !isChecked;
+        sendMessage(String.valueOf(isChecked));
     }
 }

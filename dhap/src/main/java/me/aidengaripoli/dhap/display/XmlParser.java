@@ -16,18 +16,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class XmlParser {
-
+class XmlParser {
     private final String TYPE = "type";
     private final String DISPLAY_SETTINGS = "disp_settings";
     private final String LABEL = "label";
-    private final String NAME = "name";
     private final String STATUS_LOCATION = "status_location";
     private final String ID = "id";
     private final String GROUP = "group";
     private final String GUI_ELEMENT = "gui_element";
     private final String DELIM = ",";
-
 
     /**
      * Used to retrieve the string found inside the <Type/> tag.
@@ -78,32 +75,7 @@ public class XmlParser {
      * @param element Parameter 1.
      * @return A String with the value in the name tag.
      */
-    String getName(Element element) {
-        return getTagData(element, NAME);
-    }
-
-    /**
-     * Used to retrieve the name of an element from an input stream of an xml file.
-     *
-     * @param file Parameter 1.
-     * @return A String with the value in the name tag.
-     */
-    public String getDeviceName(String file) {
-        NodeList groupsList = getGroups(file);
-
-        if(groupsList != null){
-            return getName((Element) groupsList.item(0));
-        }
-        return "";
-    }
-
-    /**
-     * Used to retrieve the value in the <name/> tag.
-     *
-     * @param element Parameter 1.
-     * @return A String with the value in the name tag.
-     */
-    String getStatusLoction(Element element) {
+    String getStatusLocation(Element element) {
         return getTagData(element, STATUS_LOCATION);
     }
 
@@ -157,7 +129,7 @@ public class XmlParser {
             e.printStackTrace();
         }
 
-        // get all of the <name> elements
+        // get all of the <group> elements
         NodeList groupNodeList = null;
         try {
             if (builder != null) {
@@ -201,5 +173,4 @@ public class XmlParser {
             return value.equals("horizontal");
         }
     }
-
 }

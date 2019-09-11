@@ -15,8 +15,6 @@ import me.aidengaripoli.dhap.status.StatusUpdates;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
 
-    private static final String TAG = DeviceActivity.class.getSimpleName();
-
     private static final String DEVICE_INTENT_EXTRA = "device";
 
     private Device device;
@@ -31,7 +29,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         DeviceLayoutBuilder layout = new DeviceLayoutBuilder(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device.getDeviceLayout());
+        ViewGroup deviceLayout = layout.create(device.getDeviceLayout(), device.getName());
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.addView(deviceLayout);

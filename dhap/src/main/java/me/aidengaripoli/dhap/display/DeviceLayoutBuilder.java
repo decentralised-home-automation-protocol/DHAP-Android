@@ -38,7 +38,7 @@ public class DeviceLayoutBuilder {
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(DeviceLayout description) {
+    public ViewGroup create(DeviceLayout description, String deviceName) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
@@ -51,20 +51,22 @@ public class DeviceLayoutBuilder {
                 return rootLayout;
             }
 
-            addTitle(groupNodeList, rootLayout);
+            addTitle(deviceName, rootLayout);
 
-            // iterate through all the <name> elements
-            for (int i = 1; i < groupNodeList.getLength(); i++) {
+            // iterate through all the <group> elements
+            for (int i = 0; i < groupNodeList.getLength(); i++) {
                 Element element = (Element) groupNodeList.item(i);
+
+                String groupId = parser.getId(element);
 
                 NodeList guiNodeList = parser.getGuiElementsInGroup(element);
 
                 LinearLayout groupLayout = createLinearLayout(parser.getGroupLayoutOrientation(element));
 
                 if (guiNodeList.getLength() == 1) {
-                    addElementToLayout((Element) guiNodeList.item(0), groupLayout);
+                    addElementToLayout((Element) guiNodeList.item(0), groupLayout, groupId);
                 } else {
-                    createGroupOfElements(groupLayout, guiNodeList);
+                    createGroupOfElements(groupLayout, guiNodeList, groupId);
                 }
 
                 if(parser.doesGroupHaveBorderAttribute(element)){
@@ -83,44 +85,44 @@ public class DeviceLayoutBuilder {
         return rootLayout;
     }
 
-    private void addTitle(NodeList groupNodeList, LinearLayout rootLayout) {
-        Element groupElement = (Element) groupNodeList.item(0);
-
-        String name = parser.getName(groupElement);
-
+    private void addTitle(String deviceName, LinearLayout rootLayout) {
         TextView title = new TextView(context);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36);
-        title.setText(name);
+        title.setText(deviceName);
 
         LinearLayout groupLayout = createLinearLayout(true);
         groupLayout.addView(title);
         rootLayout.addView(groupLayout);
     }
 
-    private void createGroupOfElements(LinearLayout groupLayout, NodeList guiNodeList) {
+    private void createGroupOfElements(LinearLayout groupLayout, NodeList guiNodeList, String groupId) {
         // iterate through all the <gui_element> elements in the name
         for (int i = 0; i < guiNodeList.getLength(); i++) {
             Element element = (Element) guiNodeList.item(i);
-            addElementToLayout(element, groupLayout);
+            addElementToLayout(element, groupLayout, groupId);
         }
     }
 
-    private void addElementToLayout(Element element, LinearLayout layout) {
+    private void addElementToLayout(Element element, LinearLayout layout, String groupId) {
         // generate a view (widget) for each gui_element
         BaseElementFragment fragment = ElementFactory.getElement(element);
 
+        if(fragment == null){
+            return;
+        }
+
+        String elementId = parser.getId(element);
+        fragment.setId(groupId+"-"+elementId);
+
         //Get value in the status_location tag
-        String fragmentTag = parser.getStatusLoction(element);
+        String fragmentTag = parser.getStatusLocation(element);
         
         // add the view to the groups layout
-        if (fragment != null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(layout.getId(), fragment, fragmentTag);
+        fragmentTransaction.commit();
 
-            fragmentTransaction.add(layout.getId(), fragment, fragmentTag);
-            fragmentTransaction.commit();
-
-            elements.put(fragmentTag, fragment);
-        }
+        elements.put(fragmentTag, fragment);
     }
 
     private LinearLayout createLinearLayout(boolean horizontalLayout) {
