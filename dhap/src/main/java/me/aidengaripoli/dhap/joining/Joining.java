@@ -6,14 +6,14 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
+import com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
-import me.aidengaripoli.dhap.joining.callbacks.BaseJoiningCallbacks;
-import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.JoiningCallbacks;
 
 public class Joining {
     private static final String TAG = Joining.class.getSimpleName();
@@ -29,27 +29,27 @@ public class Joining {
         udpPacketSender = UdpPacketSender.getInstance();
     }
 
-    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallbacks callback) {
+    public void connectToAccessPoint(String SSID, String password, JoiningCallbacks callback) {
         addWiFi(SSID, password);
 
         wiseFy.disconnectFromCurrentNetwork();
 
-        wiseFy.connectToNetwork(SSID, TIMEOUT_IN_MILLIS, new com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks() {
+        wiseFy.connectToNetwork(SSID, TIMEOUT_IN_MILLIS, new ConnectToNetworkCallbacks() {
             @Override
             public void connectedToNetwork() {
                 Log.d(TAG, "connectToNetwork - connectedToNetwork");
 
                 if (waitForWifiConnection()) {
-                    callback.success();
+                    callback.joiningSuccess();
                 } else {
-                    callback.failure();
+                    callback.joiningFailure();
                 }
             }
 
             @Override
             public void failureConnectingToNetwork() {
                 Log.d(TAG, "connectToNetwork - failureConnectingToNetwork");
-                callback.failure();
+                callback.joiningFailure();
             }
 
             @Override
@@ -61,20 +61,20 @@ public class Joining {
             @Override
             public void wisefyFailure(int i) {
                 Log.d(TAG, "connectToNetwork - wisefyFailure");
-                callback.failure();
+                callback.joiningFailure();
             }
         });
 
     }
 
-    public void sendCredentials(String SSID, String password, BaseJoiningCallbacks callback) {
+    public void sendCredentials(String SSID, String password, JoiningCallbacks callback) {
         String credentials = PacketCodes.SEND_CREDENTIALS + PacketCodes.PACKET_CODE_DELIM + SSID + "," + password;
         udpPacketSender.sendUdpBroadcastPacket(credentials);
 
         AtomicBoolean credentialsAcknowledged = new AtomicBoolean(false);
         PacketListener packetListener = (packetType, packetData, fromIP) -> {
             if (packetType.equals(PacketCodes.JOINING_SUCCESS)) {
-                callback.success();
+                callback.joiningSuccess();
                 return true;
             }
 
@@ -97,49 +97,49 @@ public class Joining {
             timeOut--;
             udpPacketSender.sendUdpBroadcastPacket(credentials);
 
-            if(timeOut < 0) {
-                callback.failure();
+            if (timeOut < 0) {
+                callback.joiningFailure();
                 udpPacketSender.removePacketListener(packetListener);
                 return;
             }
         }
     }
 
-    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallbacks callback) {
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoiningCallbacks callback) {
         Log.e(TAG, "joinDevice: Starting joining");
-        connectToAccessPoint(networkSSID, networkPassword, new ConnectToNetworkCallbacks() {
+        connectToAccessPoint(networkSSID, networkPassword, new JoiningCallbacks() {
             @Override
             public void networkNotFound() {
                 callback.networkNotFound();
             }
 
             @Override
-            public void success() {
+            public void joiningSuccess() {
                 Log.e(TAG, "Verified credentials");
-                connectToAccessPoint(deviceSSID, devicePassword, new ConnectToNetworkCallbacks() {
+                connectToAccessPoint(deviceSSID, devicePassword, new JoiningCallbacks() {
                     @Override
                     public void networkNotFound() {
                         callback.networkNotFound();
                     }
 
                     @Override
-                    public void success() {
+                    public void joiningSuccess() {
                         Log.e(TAG, "Connected to ESP");
                         sendCredentials(networkSSID, networkPassword, callback);
                     }
 
                     @Override
-                    public void failure() {
+                    public void joiningFailure() {
                         Log.e(TAG, "Failed to connect to ESP");
-                        callback.failure();
+                        callback.joiningFailure();
                     }
                 });
             }
 
             @Override
-            public void failure() {
+            public void joiningFailure() {
                 Log.e(TAG, "Failed to verify credentials");
-                callback.failure();
+                callback.joiningFailure();
             }
         });
     }

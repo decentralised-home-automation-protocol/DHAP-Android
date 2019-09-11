@@ -12,9 +12,9 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.discovery.callbacks.DiscoveredDevicesCallbacks;
-import me.aidengaripoli.dhap.display.callbacks.DeviceUIActivityCallbacks;
-import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoveryCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.DisplayCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.JoiningCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
         ActionFragment.OnActionResultListener,
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_discovery_state_container, fragment)
                 .commit();
 
-        dhap.discoverDevices(new DiscoveredDevicesCallbacks() {
+        dhap.discoverDevices(new DiscoveryCallbacks() {
             @Override
             public void foundDevices(List<Device> devices) {
                 Log.e(TAG, "Devices found.");
@@ -112,12 +112,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
-        dhap.fetchDeviceInterface(device, new DeviceUIActivityCallbacks() {
-            @Override
-            public void assetsFileFailure() {
-                Log.d(TAG, "assetsFileFailure");
-            }
-
+        dhap.fetchDeviceInterface(device, new DisplayCallbacks() {
             @Override
             public void deviceActivityIntent(Intent intent) {
                 Log.d(TAG, "deviceActivityIntent");
@@ -143,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(TAG,  "Join Device.");
                 actionFragment.setActionEnabled(false);
 //                startActivity(new Intent(this, WifiNetworkListActivity.class));
-                dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallbacks() {
+                dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new JoiningCallbacks() {
                     @Override
                     public void networkNotFound() {
                         actionFragment.setActionEnabled(true);
@@ -151,15 +146,15 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                     @Override
-                    public void success() {
+                    public void joiningSuccess() {
                         actionFragment.setActionEnabled(true);
                         Log.e(TAG, "successfully joined device" );
                     }
 
                     @Override
-                    public void failure() {
+                    public void joiningFailure() {
                         actionFragment.setActionEnabled(true);
-                        Log.e(TAG, "failure");
+                        Log.e(TAG, "joiningFailure");
                     }
                 });
                 break;

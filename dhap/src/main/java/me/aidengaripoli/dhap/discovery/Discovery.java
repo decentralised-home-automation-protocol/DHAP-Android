@@ -17,7 +17,7 @@ import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
-import me.aidengaripoli.dhap.discovery.callbacks.DiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoveryCallbacks;
 
 /**
  *
@@ -45,7 +45,7 @@ public final class Discovery implements PacketListener {
     /**
      * @param callback
      */
-    public void discoverDevices(DiscoveredDevicesCallbacks callback) {
+    public void discoverDevices(DiscoveryCallbacks callback) {
         new Thread(() -> {
             try {
 
@@ -70,7 +70,7 @@ public final class Discovery implements PacketListener {
         }).start();
     }
 
-    public void discoverDebugDevices(DiscoveredDevicesCallbacks callback) {
+    public void discoverDebugDevices(DiscoveryCallbacks callback) {
         String deviceXML;
         AssetManager assetManager = context.getAssets();
 
