@@ -81,6 +81,11 @@ public class Joining {
             if (packetType.equals(PacketCodes.ACKNOWLEDGE_CREDENTIALS)) {
                 credentialsAcknowledged.set(true);
             }
+            
+            if(packetType.equals(PacketCodes.JOINING_FAILURE)) {
+                callback.joiningFailure();
+            }
+
             return false;
         };
 
