@@ -2,7 +2,7 @@ package me.aidengaripoli.dhap.display.callbacks;
 
 import android.content.Intent;
 
-public interface GetDeviceUIActivityCallbacks extends BaseCallback {
+public interface DeviceUIActivityCallbacks extends BaseDisplayCallbacks {
 
     void assetsFileFailure();
 

@@ -6,16 +6,14 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
-import com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks;
 
-import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
-import me.aidengaripoli.dhap.joining.callbacks.BaseCallback;
-import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
+import me.aidengaripoli.dhap.joining.callbacks.BaseJoiningCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallbacks;
 
 public class Joining {
     private static final String TAG = Joining.class.getSimpleName();
@@ -31,12 +29,12 @@ public class Joining {
         udpPacketSender = UdpPacketSender.getInstance();
     }
 
-    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallback callback) {
+    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallbacks callback) {
         addWiFi(SSID, password);
 
         wiseFy.disconnectFromCurrentNetwork();
 
-        wiseFy.connectToNetwork(SSID, TIMEOUT_IN_MILLIS, new ConnectToNetworkCallbacks() {
+        wiseFy.connectToNetwork(SSID, TIMEOUT_IN_MILLIS, new com.isupatches.wisefy.callbacks.ConnectToNetworkCallbacks() {
             @Override
             public void connectedToNetwork() {
                 Log.d(TAG, "connectToNetwork - connectedToNetwork");
@@ -69,7 +67,7 @@ public class Joining {
 
     }
 
-    public void sendCredentials(String SSID, String password, BaseCallback callback) {
+    public void sendCredentials(String SSID, String password, BaseJoiningCallbacks callback) {
         String credentials = PacketCodes.SEND_CREDENTIALS + PacketCodes.PACKET_CODE_DELIM + SSID + "," + password;
         udpPacketSender.sendUdpBroadcastPacket(credentials);
 
@@ -107,9 +105,9 @@ public class Joining {
         }
     }
 
-    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallback callback) {
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallbacks callback) {
         Log.e(TAG, "joinDevice: Starting joining");
-        connectToAccessPoint(networkSSID, networkPassword, new ConnectToNetworkCallback() {
+        connectToAccessPoint(networkSSID, networkPassword, new ConnectToNetworkCallbacks() {
             @Override
             public void networkNotFound() {
                 callback.networkNotFound();
@@ -118,7 +116,7 @@ public class Joining {
             @Override
             public void success() {
                 Log.e(TAG, "Verified credentials");
-                connectToAccessPoint(deviceSSID, devicePassword, new ConnectToNetworkCallback() {
+                connectToAccessPoint(deviceSSID, devicePassword, new ConnectToNetworkCallbacks() {
                     @Override
                     public void networkNotFound() {
                         callback.networkNotFound();

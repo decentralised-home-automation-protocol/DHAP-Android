@@ -4,7 +4,7 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.Device;
 
-public interface GetDiscoveredDevicesCallbacks extends BaseCallback {
+public interface DiscoveredDevicesCallbacks extends BaseDiscoveryCallbacks {
 
     /**
      *

@@ -1,6 +1,6 @@
 package me.aidengaripoli.dhap.discovery.callbacks;
 
-public interface BaseCallback {
+public interface BaseDiscoveryCallbacks {
 
     void discoveryFailure();
 

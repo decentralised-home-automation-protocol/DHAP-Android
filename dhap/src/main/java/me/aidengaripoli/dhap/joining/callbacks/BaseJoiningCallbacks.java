@@ -1,6 +1,6 @@
 package me.aidengaripoli.dhap.joining.callbacks;
 
-public interface BaseCallback {
+public interface BaseJoiningCallbacks {
     void success();
 
     void failure();

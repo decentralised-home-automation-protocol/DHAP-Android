@@ -1,5 +1,5 @@
 package me.aidengaripoli.dhap.joining.callbacks;
 
-public interface ConnectToNetworkCallback extends BaseCallback {
+public interface ConnectToNetworkCallbacks extends BaseJoiningCallbacks {
     void networkNotFound();
 }

@@ -1,6 +1,6 @@
 package me.aidengaripoli.dhap.display.callbacks;
 
-public interface BaseCallback {
+public interface BaseDisplayCallbacks {
 
     void displayFailure();
 
