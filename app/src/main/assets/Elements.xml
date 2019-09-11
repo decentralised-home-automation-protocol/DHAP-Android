@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <group id="0" permission="RR">
-        <name>Element Samples</name>
-        <room>Outside</room>
-    </group>
+    <name>Element Samples</name>
+    <location>Outside</location>
 
     <!--SwitchToggle-->
     <group id="1" permisison="WR">
