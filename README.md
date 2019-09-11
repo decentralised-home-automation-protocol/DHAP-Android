@@ -6,15 +6,11 @@ An Android library implementation of the [Decentralised Home Automation Protocol
 
 ## Installation
 
-```
-TODO
-```
+Visit the [website](https://decentralised-home-automation-protocol.github.io/DHAP-Documentation/guide/installation.html#android) for installation instructions.
 
 ## Usage
 
-```
-TODO
-```
+Visit the [website](https://decentralised-home-automation-protocol.github.io/DHAP-Documentation/guide/getting-started.html) for usage instructions.
 
 ## License
 
