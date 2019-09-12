@@ -123,6 +123,11 @@ public class MainActivity extends AppCompatActivity implements
             public void invalidDisplayXmlFailure() {
                 Log.d(TAG, "invalidDisplayXmlFailure");
             }
+
+            @Override
+            public void displayTimeoutFailure() {
+                Log.d(TAG, "displayTimeoutFailure");
+            }
         });
     }
 

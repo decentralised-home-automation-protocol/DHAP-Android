@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.InetAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -28,28 +29,46 @@ public class Display extends AppCompatActivity {
             intent.putExtra("device", device);
             callbacks.deviceActivityIntent(intent);
         } else {
-            udpPacketSender.addPacketListener(new PacketListener() {
-                @Override
-                public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
-                    if (packetType.equals(PacketCodes.SEND_UI)) {
-                        UdpPacketSender.getInstance().removePacketListener(this);
+            AtomicBoolean responseReceived = new AtomicBoolean(false);
 
-                        if (!DeviceLayoutBuilder.isValidXml(packetData)) {
-                            callbacks.invalidDisplayXmlFailure();
-                        } else {
-                            device.newDeviceLayout(packetData);
+            PacketListener packetListener = (packetType, packetData, fromIP) -> {
+                if (packetType.equals(PacketCodes.SEND_UI)) {
+                    responseReceived.set(true);
 
-                            Intent intent = new Intent(context, DeviceActivity.class);
-                            intent.putExtra("device", device);
+                    if (!DeviceLayoutBuilder.isValidXml(packetData)) {
+                        callbacks.invalidDisplayXmlFailure();
+                    } else {
+                        device.newDeviceLayout(packetData);
 
-                            callbacks.deviceActivityIntent(intent);
-                        }
+                        Intent intent = new Intent(context, DeviceActivity.class);
+                        intent.putExtra("device", device);
+
+                        callbacks.deviceActivityIntent(intent);
                     }
-                    return false;
+                    return true;
                 }
-            });
+                return false;
+            };
 
-            udpPacketSender.sendUdpPacketToIP(PacketCodes.REQUEST_UI, device.getIpAddress().getHostAddress());
+            udpPacketSender.addPacketListener(packetListener);
+
+            int timeOut = 20;
+
+            while (!responseReceived.get()) {
+                udpPacketSender.sendUdpPacketToIP(PacketCodes.REQUEST_UI, device.getIpAddress().getHostAddress());
+                timeOut--;
+
+                if (timeOut < 0) {
+                    callbacks.displayTimeoutFailure();
+                    udpPacketSender.removePacketListener(packetListener);
+                    return;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

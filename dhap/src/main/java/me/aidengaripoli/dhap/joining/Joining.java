@@ -69,7 +69,6 @@ public class Joining {
 
     public void sendCredentials(String SSID, String password, JoiningCallbacks callback) {
         String credentials = PacketCodes.SEND_CREDENTIALS + PacketCodes.PACKET_CODE_DELIM + SSID + "," + password;
-        udpPacketSender.sendUdpBroadcastPacket(credentials);
 
         AtomicBoolean credentialsAcknowledged = new AtomicBoolean(false);
         PacketListener packetListener = (packetType, packetData, fromIP) -> {
@@ -81,8 +80,8 @@ public class Joining {
             if (packetType.equals(PacketCodes.ACKNOWLEDGE_CREDENTIALS)) {
                 credentialsAcknowledged.set(true);
             }
-            
-            if(packetType.equals(PacketCodes.JOINING_FAILURE)) {
+
+            if (packetType.equals(PacketCodes.JOINING_FAILURE)) {
                 callback.joiningFailure();
             }
 
@@ -94,18 +93,18 @@ public class Joining {
         int timeOut = 20;
 
         while (!credentialsAcknowledged.get()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            timeOut--;
             udpPacketSender.sendUdpBroadcastPacket(credentials);
+            timeOut--;
 
             if (timeOut < 0) {
                 callback.joiningFailure();
                 udpPacketSender.removePacketListener(packetListener);
                 return;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
