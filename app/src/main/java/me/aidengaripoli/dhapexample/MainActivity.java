@@ -12,8 +12,8 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.discovery.callbacks.DiscoveryCallbacks;
-import me.aidengaripoli.dhap.display.callbacks.DisplayCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.fetchDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.JoiningCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_discovery_state_container, fragment)
                 .commit();
 
-        dhap.discoverDevices(new DiscoveryCallbacks() {
+        dhap.discoverDevices(new DiscoverDevicesCallbacks() {
             @Override
             public void foundDevices(List<Device> devices) {
                 Log.e(TAG, "Devices found.");
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
-        dhap.fetchDeviceInterface(device, new DisplayCallbacks() {
+        dhap.fetchDeviceInterface(device, new fetchDeviceInterfaceCallbacks() {
             @Override
             public void deviceActivityIntent(Intent intent) {
                 Log.d(TAG, "deviceActivityIntent");
@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void displayFailure() {
-                Log.d(TAG, "displayFailure");
+            public void invalidDisplayXmlFailure() {
+                Log.d(TAG, "invalidDisplayXmlFailure");
             }
         });
     }

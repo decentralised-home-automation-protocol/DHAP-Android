@@ -3,9 +3,9 @@ package me.aidengaripoli.dhap;
 import android.content.Context;
 
 import me.aidengaripoli.dhap.discovery.Discovery;
-import me.aidengaripoli.dhap.discovery.callbacks.DiscoveryCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
 import me.aidengaripoli.dhap.display.Display;
-import me.aidengaripoli.dhap.display.callbacks.DisplayCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.fetchDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
 import me.aidengaripoli.dhap.joining.callbacks.JoiningCallbacks;
 
@@ -20,7 +20,7 @@ public class DHAP {
         joining = new Joining(context);
     }
 
-    public void fetchDeviceInterface(Device device, DisplayCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, fetchDeviceInterfaceCallbacks callbacks) {
         display.fetchDeviceInterface(device, callbacks);
     }
 
@@ -36,11 +36,11 @@ public class DHAP {
         joining.sendCredentials(SSID, password, callback);
     }
 
-    public void discoverDevices(DiscoveryCallbacks callbacks) {
+    public void discoverDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
     }
 
-    public void discoverDebugDevices(DiscoveryCallbacks callbacks) {
+    public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
     }
 }
