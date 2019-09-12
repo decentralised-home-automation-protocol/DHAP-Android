@@ -78,7 +78,7 @@ public class Joining {
             }
 
             if (packetType.equals(PacketCodes.ACKNOWLEDGE_CREDENTIALS)) {
-                if(!credentialsAcknowledged.get()){
+                if (!credentialsAcknowledged.get()) {
                     callback.credentialsAcknowledged();
                 }
                 credentialsAcknowledged.set(true);

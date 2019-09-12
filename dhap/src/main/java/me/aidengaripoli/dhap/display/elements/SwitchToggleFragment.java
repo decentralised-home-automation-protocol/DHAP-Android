@@ -1,11 +1,9 @@
 package me.aidengaripoli.dhap.display.elements;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -24,7 +22,8 @@ public class SwitchToggleFragment extends BaseElementFragment implements
 
     private boolean isChecked;
 
-    public SwitchToggleFragment() {}
+    public SwitchToggleFragment() {
+    }
 
     public static SwitchToggleFragment newInstance(ArrayList<String> displaySettings) {
 

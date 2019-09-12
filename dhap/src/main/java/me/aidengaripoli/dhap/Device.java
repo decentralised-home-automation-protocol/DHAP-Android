@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 
 import java.net.InetAddress;
 
-import me.aidengaripoli.dhap.display.DeviceActivity;
 import me.aidengaripoli.dhap.display.DeviceLayout;
 import me.aidengaripoli.dhap.display.DeviceLayoutBuilder;
 

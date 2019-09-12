@@ -11,7 +11,8 @@ import androidx.fragment.app.Fragment;
 
 public class NoDevicesFoundFragment extends Fragment {
 
-    public NoDevicesFoundFragment() {}
+    public NoDevicesFoundFragment() {
+    }
 
     public static NoDevicesFoundFragment newInstance() {
         return new NoDevicesFoundFragment();

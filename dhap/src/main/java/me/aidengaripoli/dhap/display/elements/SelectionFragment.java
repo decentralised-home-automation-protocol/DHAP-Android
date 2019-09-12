@@ -1,7 +1,6 @@
 package me.aidengaripoli.dhap.display.elements;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;

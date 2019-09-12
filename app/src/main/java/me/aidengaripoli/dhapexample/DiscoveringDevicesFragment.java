@@ -11,7 +11,8 @@ import androidx.fragment.app.Fragment;
 
 public class DiscoveringDevicesFragment extends Fragment {
 
-    public DiscoveringDevicesFragment() {}
+    public DiscoveringDevicesFragment() {
+    }
 
     public static DiscoveringDevicesFragment newInstance() {
         return new DiscoveringDevicesFragment();

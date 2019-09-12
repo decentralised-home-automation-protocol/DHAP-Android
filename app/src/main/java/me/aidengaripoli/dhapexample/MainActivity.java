@@ -14,7 +14,6 @@ import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
 import me.aidengaripoli.dhap.display.callbacks.fetchDeviceInterfaceCallbacks;
-import me.aidengaripoli.dhap.joining.callbacks.BaseJoiningCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void displayNoDevicesFound() {
         runOnUiThread(() -> {
-            NoDevicesFoundFragment fragment =  NoDevicesFoundFragment.newInstance();
+            NoDevicesFoundFragment fragment = NoDevicesFoundFragment.newInstance();
 
             actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case "Add": {
-                Log.d(TAG,  "Join Device.");
+                Log.d(TAG, "Join Device.");
                 actionFragment.setActionEnabled(false);
 //                startActivity(new Intent(this, WifiNetworkListActivity.class));
                 dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new JoinDeviceCallbacks() {

@@ -18,7 +18,8 @@ public class ButtonGroupFragment extends BaseElementFragment {
 
     private String[] buttonLabels;
 
-    public ButtonGroupFragment() {}
+    public ButtonGroupFragment() {
+    }
 
     public static ButtonGroupFragment newInstance(ArrayList<String> displaySettings) {
         ButtonGroupFragment fragment = new ButtonGroupFragment();

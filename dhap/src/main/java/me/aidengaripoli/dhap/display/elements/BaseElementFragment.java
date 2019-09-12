@@ -15,8 +15,7 @@ public abstract class BaseElementFragment extends Fragment {
     TextView labelView;
     String label;
     private String Id;
-
-    OnElementCommandListener listener;
+    private OnElementCommandListener listener;
 
     public abstract void updateFragmentData(String value);
 

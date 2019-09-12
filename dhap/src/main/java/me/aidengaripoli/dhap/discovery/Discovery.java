@@ -95,7 +95,7 @@ public final class Discovery implements PacketListener {
             callback.noDevicesFound();
         }
 
-        if(censusList.isEmpty()) {
+        if (censusList.isEmpty()) {
             callback.noDevicesFound();
         } else {
             callback.foundDevices(censusList);

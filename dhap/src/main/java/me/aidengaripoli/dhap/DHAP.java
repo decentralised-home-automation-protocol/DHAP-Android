@@ -7,7 +7,6 @@ import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
 import me.aidengaripoli.dhap.display.Display;
 import me.aidengaripoli.dhap.display.callbacks.fetchDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
-import me.aidengaripoli.dhap.joining.callbacks.BaseJoiningCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.ConnectToApCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.SendCredentialsCallbacks;

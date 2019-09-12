@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.Device;

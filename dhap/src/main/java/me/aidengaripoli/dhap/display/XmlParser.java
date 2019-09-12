@@ -154,22 +154,22 @@ class XmlParser {
         return element.getElementsByTagName(GUI_ELEMENT);
     }
 
-    boolean doesGroupHaveBorderAttribute(Element element){
+    boolean doesGroupHaveBorderAttribute(Element element) {
         String value = element.getAttribute("frame");
 
-        if(value == null){
+        if (value == null) {
             return false;
-        }else {
+        } else {
             return value.equals("true");
         }
     }
 
-    boolean getGroupLayoutOrientation(Element element){
+    boolean getGroupLayoutOrientation(Element element) {
         String value = element.getAttribute("orientation");
 
-        if(value == null){
+        if (value == null) {
             return false;
-        }else {
+        } else {
             return value.equals("horizontal");
         }
     }

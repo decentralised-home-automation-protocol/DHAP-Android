@@ -26,7 +26,8 @@ public class ActionFragment extends Fragment {
 
     private OnActionResultListener mListener;
 
-    public ActionFragment() {}
+    public ActionFragment() {
+    }
 
     public static ActionFragment newInstance(String actionText, boolean actionEnabled) {
         ActionFragment fragment = new ActionFragment();
