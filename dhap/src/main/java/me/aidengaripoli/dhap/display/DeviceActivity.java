@@ -1,12 +1,10 @@
 package me.aidengaripoli.dhap.display;
 
 import android.os.Bundle;
-import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -28,12 +26,8 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
         device = getIntent().getParcelableExtra(DEVICE_INTENT_EXTRA);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        DeviceLayoutBuilder layout = new DeviceLayoutBuilder(fragmentManager, this);
-        ViewGroup deviceLayout = layout.create(device.getDeviceLayout(), device.getName());
-
         ScrollView scrollView = new ScrollView(this);
-        scrollView.addView(deviceLayout);
+        scrollView.addView(device.getDeviceViewGroup(getSupportFragmentManager(), this));
 
         statusUpdates = new StatusUpdates(device);
         udpPacketSender = UdpPacketSender.getInstance();

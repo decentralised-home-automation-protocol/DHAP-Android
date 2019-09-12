@@ -1,11 +1,17 @@
 package me.aidengaripoli.dhap;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.FragmentManager;
 
 import java.net.InetAddress;
 
+import me.aidengaripoli.dhap.display.DeviceActivity;
 import me.aidengaripoli.dhap.display.DeviceLayout;
+import me.aidengaripoli.dhap.display.DeviceLayoutBuilder;
 
 /**
  *
@@ -112,6 +118,11 @@ public class Device implements Parcelable {
 
     public boolean isDebugDevice() {
         return macAddress == null && ipAddress == null;
+    }
+
+    public ViewGroup getDeviceViewGroup(FragmentManager supportFragmentManager, Context context) {
+        DeviceLayoutBuilder layout = new DeviceLayoutBuilder(supportFragmentManager, context);
+        return layout.create(getDeviceLayout(), name);
     }
 }
 

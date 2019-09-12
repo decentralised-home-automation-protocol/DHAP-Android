@@ -34,12 +34,16 @@ public class Display extends AppCompatActivity {
                     if (packetType.equals(PacketCodes.SEND_UI)) {
                         UdpPacketSender.getInstance().removePacketListener(this);
 
-                        device.newDeviceLayout(packetData);
+                        if (!DeviceLayoutBuilder.isValidXml(packetData)) {
+                            callbacks.displayFailure();
+                        } else {
+                            device.newDeviceLayout(packetData);
 
-                        Intent intent = new Intent(context, DeviceActivity.class);
-                        intent.putExtra("device", device);
+                            Intent intent = new Intent(context, DeviceActivity.class);
+                            intent.putExtra("device", device);
 
-                        callbacks.deviceActivityIntent(intent);
+                            callbacks.deviceActivityIntent(intent);
+                        }
                     }
                     return false;
                 }

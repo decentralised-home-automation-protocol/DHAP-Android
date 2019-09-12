@@ -21,7 +21,7 @@ import java.util.HashMap;
 import me.aidengaripoli.dhap.R;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 
-class DeviceLayoutBuilder {
+public class DeviceLayoutBuilder {
 
     private static final String TAG = DeviceLayoutBuilder.class.getSimpleName();
 
@@ -32,13 +32,13 @@ class DeviceLayoutBuilder {
 
     private HashMap<String, BaseElementFragment> elements;
 
-    DeviceLayoutBuilder(FragmentManager fragmentManager, Context context) {
+    public DeviceLayoutBuilder(FragmentManager fragmentManager, Context context) {
         this.fragmentManager = fragmentManager;
         this.context = context;
         elements = new HashMap<>();
     }
 
-    ViewGroup create(DeviceLayout description, String deviceName) {
+    public ViewGroup create(DeviceLayout description, String deviceName) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
@@ -55,13 +55,13 @@ class DeviceLayoutBuilder {
 
             // iterate through all the <group> elements
             for (int i = 0; i < groupNodeList.getLength(); i++) {
-                Element element = (Element) groupNodeList.item(i);
+                Element group = (Element) groupNodeList.item(i);
 
-                String groupId = parser.getId(element);
+                String groupId = parser.getId(group);
 
-                NodeList guiNodeList = parser.getGuiElementsInGroup(element);
+                NodeList guiNodeList = parser.getGuiElementsInGroup(group);
 
-                LinearLayout groupLayout = createLinearLayout(parser.getGroupLayoutOrientation(element));
+                LinearLayout groupLayout = createLinearLayout(parser.getGroupLayoutOrientation(group));
 
                 if (guiNodeList.getLength() == 1) {
                     addElementToLayout((Element) guiNodeList.item(0), groupLayout, groupId);
@@ -69,7 +69,7 @@ class DeviceLayoutBuilder {
                     createGroupOfElements(groupLayout, guiNodeList, groupId);
                 }
 
-                if(parser.doesGroupHaveBorderAttribute(element)){
+                if (parser.doesGroupHaveBorderAttribute(group)) {
                     groupLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.border));
                 }
 
@@ -78,11 +78,61 @@ class DeviceLayoutBuilder {
 
         } catch (Exception e) {
             Log.e(TAG, "ERROR WHILST GENERATING UI: " + e.getMessage());
+            return null;
         }
 
         description.setElements(elements);
 
         return rootLayout;
+    }
+
+    static boolean isValidXml(String xml) {
+        try {
+            NodeList groupNodeList = parser.getGroups(xml);
+
+            if (groupNodeList == null) {
+                Log.e(TAG, "isValidXml: No groups found");
+                return false;
+            }
+
+            // iterate through all the <group> elements
+            for (int i = 0; i < groupNodeList.getLength(); i++) {
+                Element group = (Element) groupNodeList.item(i);
+                String groupID = parser.getId(group);
+                if (groupID == null) {
+                    Log.e(TAG, "isValidXml: Group has no ID");
+                    return false;
+                }
+
+                NodeList elementsInGroup = parser.getGuiElementsInGroup(group);
+                if (elementsInGroup == null) {
+                    Log.e(TAG, "isValidXml: Group has no elements");
+                    return false;
+                }
+
+                for (int j = 0; j < elementsInGroup.getLength(); j++) {
+                    Element element = (Element) elementsInGroup.item(j);
+
+                    BaseElementFragment fragment = ElementFactory.getElement(element);
+                    if (fragment == null) {
+                        Log.e(TAG, "isValidXml: element type not found");
+                        return false;
+                    }
+
+                    String elementID = parser.getId(element);
+                    if (elementID == null) {
+                        Log.e(TAG, "isValidXml: Element has no ID");
+                        return false;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "error in device xml. " + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     private void addTitle(String deviceName, LinearLayout rootLayout) {
@@ -103,20 +153,32 @@ class DeviceLayoutBuilder {
         }
     }
 
+    private boolean testElement(Element element) {
+        BaseElementFragment fragment = ElementFactory.getElement(element);
+
+        String elementID = parser.getId(element);
+
+        if (elementID == null) {
+            return false;
+        }
+
+        return fragment != null;
+    }
+
     private void addElementToLayout(Element element, LinearLayout layout, String groupId) {
         // generate a view (widget) for each gui_element
         BaseElementFragment fragment = ElementFactory.getElement(element);
 
-        if(fragment == null){
+        if (fragment == null) {
             return;
         }
 
         String elementId = parser.getId(element);
-        fragment.setId(groupId+"-"+elementId);
+        fragment.setId(groupId + "-" + elementId);
 
         //Get value in the status_location tag
         String fragmentTag = parser.getStatusLocation(element);
-        
+
         // add the view to the groups layout
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(layout.getId(), fragment, fragmentTag);
