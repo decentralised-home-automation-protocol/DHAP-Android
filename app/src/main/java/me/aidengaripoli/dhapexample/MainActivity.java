@@ -13,7 +13,7 @@ import java.util.List;
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
-import me.aidengaripoli.dhap.display.callbacks.fetchDeviceInterfaceCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.FetchDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
-        dhap.fetchDeviceInterface(device, new fetchDeviceInterfaceCallbacks() {
+        dhap.fetchDeviceInterface(device, new FetchDeviceInterfaceCallbacks() {
             @Override
             public void deviceActivityIntent(Intent intent) {
                 Log.d(TAG, "deviceActivityIntent");
