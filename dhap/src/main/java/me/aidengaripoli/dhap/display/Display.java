@@ -11,7 +11,7 @@ import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.UdpPacketSender;
-import me.aidengaripoli.dhap.display.callbacks.FetchDeviceInterfaceCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 
 public class Display extends AppCompatActivity {
     private Context context;
@@ -22,7 +22,7 @@ public class Display extends AppCompatActivity {
         udpPacketSender = UdpPacketSender.getInstance();
     }
 
-    public void fetchDeviceInterface(Device device, FetchDeviceInterfaceCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
         if (device.isDebugDevice()) {
             Intent intent = new Intent(context, DeviceActivity.class);
             intent.putExtra("device", device);

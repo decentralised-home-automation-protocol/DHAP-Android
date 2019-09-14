@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">DHAPExample</string>
-
     <string name="discovered_device_mac">Device MAC Address:</string>
     <string name="discovered_device_ip">Device IP Address:</string>
     <string name="discovering_devices">Discovering devices…</string>
     <string name="no_devices_found">No Devices Found</string>
+    <string name="wifi_connect_prompt_home">Select your home WiFi network</string>
+    <string name="wifi_connect_prompt_device">Select your IoT device</string>
     <string name="name">Name:</string>
     <string name="room">Room:</string>
+    <string name="wifi_network_ssid">Wifi Network SSID</string>
+    <string name="wifi_password">WiFi Password</string>
+    <string name="device_password">Device Password</string>
+    <string name="join_a_device">Join a device</string>
+    <string name="join_device">Join device</string>
 </resources>
