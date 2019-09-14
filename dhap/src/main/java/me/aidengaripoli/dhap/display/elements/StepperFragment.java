@@ -27,7 +27,8 @@ public class StepperFragment extends BaseElementFragment {
     private int max;
     private int min;
 
-    public StepperFragment() {}
+    public StepperFragment() {
+    }
 
     public static StepperFragment newInstance(ArrayList<String> displaySettings) {
         StepperFragment fragment = new StepperFragment();

@@ -12,9 +12,9 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
-import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
-import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.FetchDeviceInterfaceCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
         ActionFragment.OnActionResultListener,
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_discovery_state_container, fragment)
                 .commit();
 
-        dhap.discoverDevices(new GetDiscoveredDevicesCallbacks() {
+        dhap.discoverDevices(new DiscoverDevicesCallbacks() {
             @Override
             public void foundDevices(List<Device> devices) {
                 Log.e(TAG, "Devices found.");
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void displayNoDevicesFound() {
         runOnUiThread(() -> {
-            NoDevicesFoundFragment fragment =  NoDevicesFoundFragment.newInstance();
+            NoDevicesFoundFragment fragment = NoDevicesFoundFragment.newInstance();
 
             actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
@@ -112,12 +112,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceSelected(Device device) {
         Log.d(TAG, "received device: " + device.getMacAddress());
-        dhap.fetchDeviceInterface(device, new GetDeviceUIActivityCallbacks() {
-            @Override
-            public void assetsFileFailure() {
-                Log.d(TAG, "assetsFileFailure");
-            }
-
+        dhap.fetchDeviceInterface(device, new FetchDeviceInterfaceCallbacks() {
             @Override
             public void deviceActivityIntent(Intent intent) {
                 Log.d(TAG, "deviceActivityIntent");
@@ -125,8 +120,13 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void displayFailure() {
-                Log.d(TAG, "displayFailure");
+            public void invalidDisplayXmlFailure() {
+                Log.d(TAG, "invalidDisplayXmlFailure");
+            }
+
+            @Override
+            public void displayTimeoutFailure() {
+                Log.d(TAG, "displayTimeoutFailure");
             }
         });
     }
@@ -140,26 +140,35 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             }
             case "Add": {
-                Log.d(TAG,  "Join Device.");
+                Log.d(TAG, "Join Device.");
                 actionFragment.setActionEnabled(false);
 //                startActivity(new Intent(this, WifiNetworkListActivity.class));
-                dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new ConnectToNetworkCallback() {
+                dhap.joinDevice("TP-LINK_AE045A", "0358721743", "ESPsoftAP_01", "passforap", new JoinDeviceCallbacks() {
                     @Override
-                    public void networkNotFound() {
-                        actionFragment.setActionEnabled(true);
-                        Log.e(TAG, "networkNotFound");
+                    public void networkNotFound(String SSID) {
+                        Log.e(TAG, "Network not found: " + SSID);
+                    }
+
+                    @Override
+                    public void credentialsAcknowledged() {
+                        Log.e(TAG, "Credentials Acknowledged");
+                    }
+
+                    @Override
+                    public void sendCredentialsTimeout() {
+                        Log.e(TAG, "Sending of credentials timed out");
                     }
 
                     @Override
                     public void success() {
                         actionFragment.setActionEnabled(true);
-                        Log.e(TAG, "successfully joined device" );
+                        Log.d(TAG, "successfully joined device");
                     }
 
                     @Override
-                    public void failure() {
+                    public void failure(String message) {
                         actionFragment.setActionEnabled(true);
-                        Log.e(TAG, "failure");
+                        Log.e(TAG, "failure: " + message);
                     }
                 });
                 break;

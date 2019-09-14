@@ -45,7 +45,8 @@ public class SchedulerFragment extends BaseElementFragment implements AdapterVie
         }
     };
 
-    public SchedulerFragment() {}
+    public SchedulerFragment() {
+    }
 
     public static SchedulerFragment newInstance(ArrayList<String> displaySettings) {
         SchedulerFragment fragment = new SchedulerFragment();

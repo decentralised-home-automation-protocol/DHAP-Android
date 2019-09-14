@@ -1,7 +1,6 @@
 package me.aidengaripoli.dhapexample;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 
 public class DiscoveredDevicesFragment extends Fragment implements
         DiscoveredDeviceAdapter.OnDeviceClicked {
@@ -34,7 +32,8 @@ public class DiscoveredDevicesFragment extends Fragment implements
 
     private OnDeviceSelectedListener listener;
 
-    public DiscoveredDevicesFragment() {}
+    public DiscoveredDevicesFragment() {
+    }
 
     public static DiscoveredDevicesFragment newInstance(ArrayList<Device> devices) {
         DiscoveredDevicesFragment fragment = new DiscoveredDevicesFragment();

@@ -29,13 +29,14 @@ public class ButtonToggleFragment extends BaseElementFragment implements
 
     private Button toggleButton;
 
-    public ButtonToggleFragment() {}
+    public ButtonToggleFragment() {
+    }
 
     public static ButtonToggleFragment newInstance(ArrayList<String> displaySettings) {
         ButtonToggleFragment fragment = new ButtonToggleFragment();
 
         Bundle args = new Bundle();
-        args.putString(ARG_LABEL,  displaySettings.get(ARG_LABEL_INDEX));
+        args.putString(ARG_LABEL, displaySettings.get(ARG_LABEL_INDEX));
         args.putString(ARG_POS_LABEL, displaySettings.get(ARG_POS_LABEL_INDEX));
         args.putString(ARG_NEG_LABEL, displaySettings.get(ARG_NEG_LABEL_INDEX));
 

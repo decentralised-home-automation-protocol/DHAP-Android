@@ -4,17 +4,10 @@ import java.util.List;
 
 import me.aidengaripoli.dhap.Device;
 
-public interface GetDiscoveredDevicesCallbacks extends BaseCallback {
+public interface DiscoverDevicesCallbacks {
+    void discoveryFailure();
 
-    /**
-     *
-     * @param devices
-     */
     void foundDevices(List<Device> devices);
 
-    /**
-     *
-     */
     void noDevicesFound();
-
 }

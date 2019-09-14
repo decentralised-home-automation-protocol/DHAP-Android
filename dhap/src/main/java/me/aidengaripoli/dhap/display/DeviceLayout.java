@@ -58,10 +58,10 @@ public class DeviceLayout implements Parcelable {
     public void newStatusUpdate(ArrayList<ElementStatus> elementStatuses) {
         for (ElementStatus elementStatus : elementStatuses) {
             String key = String.valueOf(elementStatus.getFragmentTag());
-            if(elements == null){
+            if (elements == null) {
                 return;
             }
-            if(elements.containsKey(key)){
+            if (elements.containsKey(key)) {
                 BaseElementFragment element = elements.get(key);
                 if (element != null) {
                     element.updateFragmentData(elementStatus.getValue());

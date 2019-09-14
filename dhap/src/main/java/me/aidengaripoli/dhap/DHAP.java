@@ -3,16 +3,15 @@ package me.aidengaripoli.dhap;
 import android.content.Context;
 
 import me.aidengaripoli.dhap.discovery.Discovery;
-import me.aidengaripoli.dhap.discovery.callbacks.GetDiscoveredDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
 import me.aidengaripoli.dhap.display.Display;
-import me.aidengaripoli.dhap.display.callbacks.GetDeviceUIActivityCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.FetchDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
-import me.aidengaripoli.dhap.joining.callbacks.BaseCallback;
-import me.aidengaripoli.dhap.joining.callbacks.ConnectToNetworkCallback;
+import me.aidengaripoli.dhap.joining.callbacks.ConnectToApCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
+import me.aidengaripoli.dhap.joining.callbacks.SendCredentialsCallbacks;
 
 public class DHAP {
-    private static final String TAG = DHAP.class.getSimpleName();
-
     private Discovery discovery;
     private Display display;
     private Joining joining;
@@ -23,27 +22,27 @@ public class DHAP {
         joining = new Joining(context);
     }
 
-    public void fetchDeviceInterface(Device device, GetDeviceUIActivityCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, FetchDeviceInterfaceCallbacks callbacks) {
         display.fetchDeviceInterface(device, callbacks);
     }
 
-    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, ConnectToNetworkCallback callback) {
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoinDeviceCallbacks callback) {
         joining.joinDevice(networkSSID, networkPassword, deviceSSID, devicePassword, callback);
     }
 
-    public void connectToAccessPoint(String SSID, String password, ConnectToNetworkCallback callback) {
+    public void connectToAccessPoint(String SSID, String password, ConnectToApCallbacks callback) {
         joining.connectToAccessPoint(SSID, password, callback);
     }
 
-    public void sendCredentials(String SSID, String password, BaseCallback callback) {
+    public void sendCredentials(String SSID, String password, SendCredentialsCallbacks callback) {
         joining.sendCredentials(SSID, password, callback);
     }
 
-    public void discoverDevices(GetDiscoveredDevicesCallbacks callbacks) {
+    public void discoverDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
     }
 
-    public void discoverDebugDevices(GetDiscoveredDevicesCallbacks callbacks) {
+    public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
     }
 }

@@ -1,7 +1,5 @@
 package me.aidengaripoli.dhap.status;
 
-import android.util.Log;
-
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -19,7 +17,6 @@ public class StatusUpdates implements PacketListener {
     private float leaseLength;
     private float updatePeriod;
     private boolean responseRequired;
-
     private boolean isListening = false;
 
     public StatusUpdates(Device device) {
@@ -44,7 +41,7 @@ public class StatusUpdates implements PacketListener {
         listenForUpdates();
     }
 
-    public void listenForUpdates() {
+    private void listenForUpdates() {
         if (!isListening) {
             udpPacketSender.addPacketListener(this);
             isListening = true;
@@ -56,7 +53,7 @@ public class StatusUpdates implements PacketListener {
         stopListeningForUpdates();
     }
 
-    public void stopListeningForUpdates() {
+    private void stopListeningForUpdates() {
         if (isListening) {
             udpPacketSender.removePacketListener(this);
             isListening = false;
@@ -66,7 +63,7 @@ public class StatusUpdates implements PacketListener {
     @Override
     public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
-            if(isFromCorrectDevice(packetData)) {
+            if (isFromCorrectDevice(packetData)) {
                 ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
                 device.getDeviceLayout().newStatusUpdate(elementStatuses);
             }
@@ -102,7 +99,7 @@ public class StatusUpdates implements PacketListener {
 
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            ElementStatus elementStatus = new ElementStatus(fragmentTag,  token);
+            ElementStatus elementStatus = new ElementStatus(fragmentTag, token);
             elementStatuses.add(elementStatus);
             fragmentTag++;
         }

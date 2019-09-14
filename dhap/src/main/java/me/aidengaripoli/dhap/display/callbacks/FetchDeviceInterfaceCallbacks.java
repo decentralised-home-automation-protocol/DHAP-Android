@@ -2,10 +2,10 @@ package me.aidengaripoli.dhap.display.callbacks;
 
 import android.content.Intent;
 
-public interface GetDeviceUIActivityCallbacks extends BaseCallback {
+public interface FetchDeviceInterfaceCallbacks {
+    void invalidDisplayXmlFailure();
 
-    void assetsFileFailure();
+    void displayTimeoutFailure();
 
     void deviceActivityIntent(Intent intent);
-
 }

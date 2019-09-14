@@ -24,7 +24,8 @@ public class DirectionalButtonsFragment extends BaseElementFragment {
     private static final int ARG_BOTTOM_INDEX = 3;
     private static final int ARG_LEFT_INDEX = 4;
 
-    public DirectionalButtonsFragment() {}
+    public DirectionalButtonsFragment() {
+    }
 
     public static DirectionalButtonsFragment newInstance(ArrayList<String> displaySettings) {
         DirectionalButtonsFragment fragment = new DirectionalButtonsFragment();

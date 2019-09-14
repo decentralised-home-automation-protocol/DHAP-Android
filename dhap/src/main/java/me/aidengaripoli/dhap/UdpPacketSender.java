@@ -41,7 +41,7 @@ public class UdpPacketSender {
     }
 
     public void addPacketListener(PacketListener listener) {
-        synchronized(MUTEX) {
+        synchronized (MUTEX) {
             if (listener != null) {
                 listeners.add(listener);
             }
@@ -49,7 +49,7 @@ public class UdpPacketSender {
     }
 
     public void removePacketListener(PacketListener listener) {
-        synchronized(MUTEX) {
+        synchronized (MUTEX) {
             listeners.remove(listener);
         }
     }
@@ -109,16 +109,16 @@ public class UdpPacketSender {
 
                     String packetType = packet.substring(0, DELIM_CHAR_INDEX);
                     String packetData = "";
-                    if(packet.length() > DELIM_CHAR_INDEX) {
-                        packetData = packet.substring(DELIM_CHAR_INDEX+1);
+                    if (packet.length() > DELIM_CHAR_INDEX) {
+                        packetData = packet.substring(DELIM_CHAR_INDEX + 1);
                     }
 
                     //TODO: Ensure packet is a DHAP packet
-                    synchronized(MUTEX) {
+                    synchronized (MUTEX) {
                         ArrayList<PacketListener> toRemove = new ArrayList<>();
 
                         for (PacketListener listener : listeners) {
-                            if(listener.newPacket(packetType, packetData, receivePacket.getAddress())){
+                            if (listener.newPacket(packetType, packetData, receivePacket.getAddress())) {
                                 toRemove.add(listener);
                             }
                         }

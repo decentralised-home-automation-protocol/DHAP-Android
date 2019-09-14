@@ -34,7 +34,8 @@ public class RangeInputFragment extends BaseElementFragment {
     private EditText valueView;
     private SeekBar seekBarView;
 
-    public RangeInputFragment() {}
+    public RangeInputFragment() {
+    }
 
     public static RangeInputFragment newInstance(ArrayList<String> displaySettings) {
         RangeInputFragment fragment = new RangeInputFragment();
@@ -124,7 +125,7 @@ public class RangeInputFragment extends BaseElementFragment {
         return view;
     }
 
-    private void setProgressbarValue(){
+    private void setProgressbarValue() {
         valueView.setText(String.valueOf(value));
 
         float progress = (float) (value - min) / range * 100;

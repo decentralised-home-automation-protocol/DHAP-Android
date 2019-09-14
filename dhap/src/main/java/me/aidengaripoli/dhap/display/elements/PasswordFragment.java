@@ -21,7 +21,8 @@ public class PasswordFragment extends BaseElementFragment {
     private String buttonLabel;
     private EditText passwordView;
 
-    public PasswordFragment() {}
+    public PasswordFragment() {
+    }
 
     public static PasswordFragment newInstance(ArrayList<String> displaySettings) {
         PasswordFragment fragment = new PasswordFragment();
