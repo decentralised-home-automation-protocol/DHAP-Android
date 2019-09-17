@@ -6,9 +6,8 @@ import android.widget.ScrollView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
-import me.aidengaripoli.dhap.PacketCodes;
-import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 import me.aidengaripoli.dhap.status.StatusUpdates;
 
@@ -18,7 +17,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
 
     private Device device;
     private StatusUpdates statusUpdates;
-    private UdpPacketSender udpPacketSender;
+    private DHAP dhap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +29,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         scrollView.addView(device.getDeviceViewGroup(getSupportFragmentManager(), this));
 
         statusUpdates = new StatusUpdates(device);
-        udpPacketSender = UdpPacketSender.getInstance();
+        dhap = new DHAP(this);
 
         setContentView(scrollView);
     }
@@ -38,7 +37,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         if (!device.isDebugDevice()) {
-            udpPacketSender.sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+            dhap.sendIoTCommand(tag, data, device);
         }
     }
 

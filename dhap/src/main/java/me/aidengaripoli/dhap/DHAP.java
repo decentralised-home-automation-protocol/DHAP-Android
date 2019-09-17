@@ -45,4 +45,8 @@ public class DHAP {
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
     }
+
+    public void sendIoTCommand(String tag, String data, Device device) {
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+    }
 }
