@@ -30,7 +30,7 @@ public class Device implements Parcelable {
     };
 
     private String name;
-    private String room;
+    private String location;
     private String macAddress;
     private InetAddress ipAddress;
     private DeviceLayout deviceLayout;
@@ -51,7 +51,7 @@ public class Device implements Parcelable {
         status = in.readInt();
         visibility = in.readInt();
         name = in.readString();
-        room = in.readString();
+        location = in.readString();
     }
 
     public DeviceLayout getDeviceLayout() {
@@ -86,12 +86,12 @@ public class Device implements Parcelable {
         this.name = name;
     }
 
-    public String getRoom() {
-        return room;
+    public String getLocation() {
+        return location;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Device implements Parcelable {
         dest.writeInt(status);
         dest.writeInt(visibility);
         dest.writeString(name);
-        dest.writeString(room);
+        dest.writeString(location);
     }
 
     public boolean isDebugDevice() {

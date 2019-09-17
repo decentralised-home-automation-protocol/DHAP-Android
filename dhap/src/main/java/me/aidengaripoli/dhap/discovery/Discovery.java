@@ -86,7 +86,7 @@ public final class Discovery implements PacketListener {
                     deviceXML = inputStreamToString(inputStream);
                     Device device = new Device(null, null, 0, 0);
                     device.newDeviceLayout(deviceXML);
-                    device.setRoom("Debug Room");
+                    device.setLocation("Debug Location");
                     device.setName("Debug Name");
                     censusList.add(device);
                 }
@@ -241,7 +241,7 @@ public final class Discovery implements PacketListener {
         for (Device device : censusList) {
             if (device.getIpAddress().equals(fromIP)) {
                 device.setName(headerData[1]);
-                device.setRoom(headerData[2]);
+                device.setLocation(headerData[2]);
                 previousCensusList.add(device);
                 return;
             }
