@@ -5,7 +5,7 @@ import android.content.Context;
 import me.aidengaripoli.dhap.discovery.Discovery;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
 import me.aidengaripoli.dhap.display.Display;
-import me.aidengaripoli.dhap.display.callbacks.FetchDeviceInterfaceCallbacks;
+import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
 import me.aidengaripoli.dhap.joining.callbacks.ConnectToApCallbacks;
 import me.aidengaripoli.dhap.joining.callbacks.JoinDeviceCallbacks;
@@ -22,7 +22,7 @@ public class DHAP {
         joining = new Joining(context);
     }
 
-    public void fetchDeviceInterface(Device device, FetchDeviceInterfaceCallbacks callbacks) {
+    public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
         display.fetchDeviceInterface(device, callbacks);
     }
 
@@ -44,5 +44,9 @@ public class DHAP {
 
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
+    }
+
+    public void sendIoTCommand(String tag, String data, Device device) {
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
     }
 }

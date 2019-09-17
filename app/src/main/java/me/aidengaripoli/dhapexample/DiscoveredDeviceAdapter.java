@@ -61,18 +61,18 @@ public class DiscoveredDeviceAdapter extends
     public static class DiscoveredDeviceViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
-        private TextView room;
+        private TextView location;
 
         public DiscoveredDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.text_view_device_name);
-            room = itemView.findViewById(R.id.text_view_device_room);
+            location = itemView.findViewById(R.id.text_view_device_room);
         }
 
         public void bind(Device device) {
             name.setText(device.getName());
-            room.setText(device.getRoom());
+            location.setText(device.getLocation());
         }
     }
 

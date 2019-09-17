@@ -153,18 +153,6 @@ public class DeviceLayoutBuilder {
         }
     }
 
-    private boolean testElement(Element element) {
-        BaseElementFragment fragment = ElementFactory.getElement(element);
-
-        String elementID = parser.getId(element);
-
-        if (elementID == null) {
-            return false;
-        }
-
-        return fragment != null;
-    }
-
     private void addElementToLayout(Element element, LinearLayout layout, String groupId) {
         // generate a view (widget) for each gui_element
         BaseElementFragment fragment = ElementFactory.getElement(element);
