@@ -120,8 +120,11 @@ public class Device implements Parcelable {
     }
 
     public ViewGroup getDeviceViewGroup(FragmentManager supportFragmentManager, Context context) {
+        if(deviceLayout == null || deviceLayout.getXml().isEmpty()){
+            return null;
+        }
         DeviceLayoutBuilder layout = new DeviceLayoutBuilder(supportFragmentManager, context);
-        return layout.create(getDeviceLayout(), name);
+        return layout.create(deviceLayout, name);
     }
 }
 
