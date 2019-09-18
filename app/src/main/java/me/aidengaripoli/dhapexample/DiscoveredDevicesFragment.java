@@ -25,17 +25,15 @@ public class DiscoveredDevicesFragment extends Fragment implements
 
     private static final String ARG_DEVICES = "devices";
 
-    private RecyclerView discoveredDevicesRecyclerView;
-    private RecyclerView.Adapter adapter;
-
     private ArrayList<Device> mDevices = new ArrayList<>();
 
     private OnDeviceSelectedListener listener;
+    private RecyclerView.Adapter adapter;
 
     public DiscoveredDevicesFragment() {
     }
 
-    public static DiscoveredDevicesFragment newInstance(ArrayList<Device> devices) {
+    static DiscoveredDevicesFragment newInstance(ArrayList<Device> devices) {
         DiscoveredDevicesFragment fragment = new DiscoveredDevicesFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_DEVICES, devices);
@@ -59,7 +57,7 @@ public class DiscoveredDevicesFragment extends Fragment implements
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        discoveredDevicesRecyclerView = view.findViewById(R.id.recycler_view_discovered_devices);
+        RecyclerView discoveredDevicesRecyclerView = view.findViewById(R.id.recycler_view_discovered_devices);
         discoveredDevicesRecyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
@@ -92,12 +90,6 @@ public class DiscoveredDevicesFragment extends Fragment implements
         listener = null;
     }
 
-//    private void displayDeviceUi(String xml) {
-//        Intent intent = new Intent(getContext(), DeviceActivity.class);
-//        intent.putExtra("xml", xml);
-//        startActivity(intent);
-//    }
-
     @Override
     public void onDeviceClicked(Device device) {
         Log.d(TAG, "OnDeviceClicked");
@@ -108,5 +100,10 @@ public class DiscoveredDevicesFragment extends Fragment implements
 
     public interface OnDeviceSelectedListener {
         void onDeviceSelected(Device device);
+    }
+
+    void removeDevice(Device device){
+        mDevices.remove(device);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -21,26 +21,13 @@ public class ActionFragment extends Fragment {
     private String mSecondaryActionText;
     private boolean mActionEnabled;
 
-    private Button actionButton;
-    private Button secondaryActionButton;
-
     private OnActionResultListener mListener;
 
     public ActionFragment() {
     }
 
-    public static ActionFragment newInstance(String actionText, boolean actionEnabled) {
-        ActionFragment fragment = new ActionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_ACTION_TEXT, actionText);
-        args.putBoolean(ARG_ACTION_ENABLED, actionEnabled);
-        args.putString(ARG_SECONDARY_ACTION_TEXT, "");
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static ActionFragment newInstance(String primaryActionText, boolean primaryActionEnabled,
-                                             String secondaryActionText) {
+    static ActionFragment newInstance(String primaryActionText, boolean primaryActionEnabled,
+                                      String secondaryActionText) {
         ActionFragment fragment = new ActionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ACTION_TEXT, primaryActionText);
@@ -65,12 +52,12 @@ public class ActionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_action, container, false);
 
-        actionButton = rootView.findViewById(R.id.button_action);
+        Button actionButton = rootView.findViewById(R.id.button_action);
         actionButton.setText(mActionText);
         actionButton.setEnabled(mActionEnabled);
         actionButton.setOnClickListener(v -> onActionButtonPressed("primary"));
 
-        secondaryActionButton = rootView.findViewById(R.id.button_secondary_action);
+        Button secondaryActionButton = rootView.findViewById(R.id.button_secondary_action);
         if (!mSecondaryActionText.isEmpty()) {
             secondaryActionButton.setText(mSecondaryActionText);
             secondaryActionButton.setOnClickListener(v -> onActionButtonPressed("secondary"));
@@ -89,10 +76,6 @@ public class ActionFragment extends Fragment {
                 mListener.onActionResult(mSecondaryActionText);
             }
         }
-    }
-
-    public void setActionEnabled(boolean enabled) {
-        getActivity().runOnUiThread(() -> actionButton.setEnabled(enabled));
     }
 
     @Override

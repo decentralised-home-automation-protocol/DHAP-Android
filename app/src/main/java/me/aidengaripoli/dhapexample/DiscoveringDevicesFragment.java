@@ -14,7 +14,7 @@ public class DiscoveringDevicesFragment extends Fragment {
     public DiscoveringDevicesFragment() {
     }
 
-    public static DiscoveringDevicesFragment newInstance() {
+    static DiscoveringDevicesFragment newInstance() {
         return new DiscoveringDevicesFragment();
     }
 
