@@ -39,7 +39,7 @@ public class StatusUpdates implements PacketListener {
                 + leaseLength + "," + updatePeriod + ",";
         statusLeaseRequest += responseRequired ? "T" : "F";
 
-        udpPacketSender.sendUdpPacketToIP(statusLeaseRequest, device.getIpAddress().getHostAddress());
+        udpPacketSender.sendUdpPacketToIP(statusLeaseRequest, device.getIpAddress());
         listenForUpdates();
     }
 
@@ -51,7 +51,7 @@ public class StatusUpdates implements PacketListener {
     }
 
     public void leaveLease() {
-        udpPacketSender.sendUdpPacketToIP(PacketCodes.STATUS_END_LEASE, device.getIpAddress().getHostAddress());
+        udpPacketSender.sendUdpPacketToIP(PacketCodes.STATUS_END_LEASE, device.getIpAddress());
         stopListeningForUpdates();
     }
 

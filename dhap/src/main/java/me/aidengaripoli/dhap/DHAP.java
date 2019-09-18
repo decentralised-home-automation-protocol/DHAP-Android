@@ -42,11 +42,15 @@ public class DHAP {
         discovery.discoverDevices(callbacks);
     }
 
+    public void clearSavedDevices(){
+        discovery.clearSavedDevices();
+    }
+
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
     }
 
     public void sendIoTCommand(String tag, String data, Device device) {
-        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress());
     }
 }

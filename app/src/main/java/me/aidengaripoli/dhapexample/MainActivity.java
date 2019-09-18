@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (action) {
             case "Refresh": {
                 Log.d(TAG, "Re-discovering devices.");
+                dhap.clearSavedDevices();
                 beginDeviceDiscovery();
                 break;
             }

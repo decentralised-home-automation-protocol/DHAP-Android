@@ -54,7 +54,7 @@ public class Display extends AppCompatActivity {
             int timeOut = 20;
 
             while (!responseReceived.get()) {
-                udpPacketSender.sendUdpPacketToIP(PacketCodes.REQUEST_UI, device.getIpAddress().getHostAddress());
+                udpPacketSender.sendUdpPacketToIP(PacketCodes.REQUEST_UI, device.getIpAddress());
                 timeOut--;
 
                 if (timeOut < 0) {

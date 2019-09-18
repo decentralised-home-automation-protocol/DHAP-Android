@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentManager;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,14 +34,14 @@ public class Device implements Parcelable {
     private String name;
     private String location;
     private String macAddress;
-    private InetAddress ipAddress;
+    private String ipAddress;
     private int status;
     private int visibility;
     private StatusUpdates statusUpdates;
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
 
-    public Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
+    public Device(String macAddress, String ipAddress, int status, int visibility) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.status = status;
@@ -52,7 +51,7 @@ public class Device implements Parcelable {
 
     protected Device(Parcel in) {
         macAddress = in.readString();
-        ipAddress = (InetAddress) in.readSerializable();
+        ipAddress = in.readString();
         status = in.readInt();
         visibility = in.readInt();
         name = in.readString();
@@ -65,7 +64,7 @@ public class Device implements Parcelable {
         return macAddress;
     }
 
-    public InetAddress getIpAddress() {
+    public String getIpAddress() {
         return ipAddress;
     }
 
@@ -125,7 +124,7 @@ public class Device implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(macAddress);
-        dest.writeSerializable(ipAddress);
+        dest.writeString(ipAddress);
         dest.writeInt(status);
         dest.writeInt(visibility);
         dest.writeString(name);

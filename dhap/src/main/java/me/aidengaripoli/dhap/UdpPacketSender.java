@@ -55,29 +55,19 @@ public class UdpPacketSender {
     }
 
     public void sendUdpPacketToIP(String data, String IP) {
-
-        try {
-            InetAddress address = InetAddress.getByName(IP);
-            sendPacket(address, data);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        sendPacket(IP, data);
     }
 
     public void sendUdpBroadcastPacket(String data) {
-        try {
-            InetAddress address = InetAddress.getByName(BROADCAST_ADDRESS);
-            sendPacket(address, data);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        sendPacket(BROADCAST_ADDRESS, data);
     }
 
-    private void sendPacket(InetAddress address, String data) {
+    private void sendPacket(String address, String data) {
         new Thread(() -> {
             try {
+                InetAddress inetAddress = InetAddress.getByName(address);
                 byte[] buffer = data.getBytes();
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, UDP_PORT);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, inetAddress, UDP_PORT);
                 datagramSocket.send(packet);
             } catch (SocketException e) {
                 e.printStackTrace();
