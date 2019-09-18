@@ -1,8 +1,11 @@
 package me.aidengaripoli.dhap.status;
 
+import android.util.Log;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -16,12 +19,15 @@ public class StatusUpdates implements PacketListener {
     private Device device;
     private float leaseLength;
     private float updatePeriod;
+    private long lastUpdateTime;
+
     private boolean responseRequired;
-    private boolean isListening = false;
+    private AtomicBoolean isListening;
     private StatusLeaseCallbacks statusLeaseCallbacks;
 
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
+        isListening = new AtomicBoolean(false);
         this.device = device;
     }
 
@@ -32,6 +38,24 @@ public class StatusUpdates implements PacketListener {
         this.leaseLength = leaseLength;
         this.updatePeriod = updatePeriod;
         this.responseRequired = responseRequired;
+        lastUpdateTime = System.currentTimeMillis();
+
+        new Thread(() -> {
+            long sleepTime = (long) (updatePeriod*3);
+
+            while(isListening.get()){
+                if(System.currentTimeMillis() - lastUpdateTime > sleepTime){
+                    Log.e("Status", "requestStatusLease: status updates are not longer being received. Requesting new lease...");
+                    sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
+                }
+
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void sendLeaseRequest(float leaseLength, float updatePeriod, boolean responseRequired) {
@@ -44,9 +68,9 @@ public class StatusUpdates implements PacketListener {
     }
 
     private void listenForUpdates() {
-        if (!isListening) {
+        if (!isListening.get()) {
             udpPacketSender.addPacketListener(this);
-            isListening = true;
+            isListening.set(true);
         }
     }
 
@@ -56,15 +80,16 @@ public class StatusUpdates implements PacketListener {
     }
 
     private void stopListeningForUpdates() {
-        if (isListening) {
+        if (isListening.get()) {
             udpPacketSender.removePacketListener(this);
-            isListening = false;
+            isListening.set(false);
         }
     }
 
     @Override
     public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
+            lastUpdateTime = System.currentTimeMillis();
             if (isFromCorrectDevice(packetData)) {
                 ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
                 device.newStatusUpdate(elementStatuses);
