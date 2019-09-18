@@ -16,6 +16,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.zip.DeflaterInputStream;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -33,7 +34,8 @@ public final class Discovery implements PacketListener {
     private ArrayList<Device> censusList;
     private ArrayList<Device> previousCensusList;
     private ArrayList<Device> devicesReplies;
-    private HashSet<String> knownDevices;
+    private HashSet<String> respondingDevices;
+
     private UdpPacketSender udpPacketSender;
     private Context context;
 
@@ -48,23 +50,41 @@ public final class Discovery implements PacketListener {
                 censusList = new ArrayList<>();
                 previousCensusList = new ArrayList<>();
                 devicesReplies = new ArrayList<>();
-                knownDevices = new HashSet<>();
-
-                ArrayList<Device> censusListFromFile = getSavedDevices();
-
-                if (censusListFromFile != null) {
-                    censusList.addAll(censusListFromFile);
-                }
+                respondingDevices = new HashSet<>();
 
                 findDevices();
 
                 if (censusList.size() > 0) {
+                    ArrayList<Device> devicesWithoutHeader = new ArrayList<>(censusList);
+                    ArrayList<Device> savedDevices = getSavedDevices();
 
-                    getDeviceHeaders(censusListFromFile);
+                    if(savedDevices != null){
+                        //Find devices that are saved to file and in the list of devices that just responded.
+                        for(Device savedDevice : savedDevices){
+                            for (Device censusDevice : censusList){
+                                if(censusDevice.toString().equals(savedDevice.toString())){
+                                    //Device is in both lists.
+                                    devicesWithoutHeader.remove(censusDevice);
+                                }
+                            }
+                        }
+                        getDeviceHeaders(devicesWithoutHeader);
+                        savedDevices.addAll(devicesWithoutHeader);
+                        saveToFile(savedDevices);
 
-                    saveToFile(censusList);
+                        //Mark the devices that did not respond as inactive.
+                        for(Device device : savedDevices){
+                            if(!respondingDevices.contains(device.toString())){
+                                device.isActive = 0;
+                            }
+                        }
 
-                    callback.foundDevices(censusList);
+                        callback.foundDevices(savedDevices);
+                    } else{
+                        getDeviceHeaders(censusList);
+                        saveToFile(censusList);
+                        callback.foundDevices(censusList);
+                    }
                 } else {
                     callback.noDevicesFound();
                 }
@@ -90,7 +110,6 @@ public final class Discovery implements PacketListener {
 
             for (String deviceString : devices) {
                 Device device = parseDeviceFromFile(deviceString);
-                knownDevices.add(device.toString());
                 censusListFromFile.add(device);
             }
 
@@ -231,16 +250,12 @@ public final class Discovery implements PacketListener {
         }
     }
 
-    private void getDeviceHeaders(ArrayList<Device> censusListFromFile) {
+    private void getDeviceHeaders(ArrayList<Device> devices) {
         udpPacketSender.addPacketListener(this);
-        previousCensusList.clear();
-
-        ArrayList<Device> devicesWithoutHeader = new ArrayList<>(censusList);
-        if(censusListFromFile != null){
-            devicesWithoutHeader.removeAll(censusListFromFile);
-        }
-
         int timeOut = 10;
+
+        ArrayList<Device> devicesWithoutHeader = new ArrayList<>(devices);
+
 
         while (devicesWithoutHeader.size() > 0 && timeOut > 0) {
             previousCensusList.clear();
@@ -294,11 +309,11 @@ public final class Discovery implements PacketListener {
         if (packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
             Device device = parseReply(packetData, fromIP);
 
-            if (knownDevices.contains(device.toString())) {
+            if (respondingDevices.contains(device.toString())) {
                 return false;
             }
 
-            knownDevices.add(device.toString());
+            respondingDevices.add(device.toString());
             devicesReplies.add(device);
         } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
             addHeaderToDevice(packetData, fromIP);

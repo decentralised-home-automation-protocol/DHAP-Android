@@ -23,7 +23,11 @@ public class DHAP {
     }
 
     public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
-        display.fetchDeviceInterface(device, callbacks);
+        if(device.isActive == 1){
+            display.fetchDeviceInterface(device, callbacks);
+        } else {
+            callbacks.displayTimeoutFailure();
+        }
     }
 
     public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoinDeviceCallbacks callback) {

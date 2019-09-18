@@ -40,12 +40,14 @@ public class Device implements Parcelable {
     private StatusUpdates statusUpdates;
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
+    public int isActive;
 
     public Device(String macAddress, String ipAddress, int status, int visibility) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.status = status;
         this.visibility = visibility;
+        isActive = 1;
         this.statusUpdates = new StatusUpdates(this);
     }
 
@@ -57,6 +59,7 @@ public class Device implements Parcelable {
         name = in.readString();
         location = in.readString();
         xml = in.readString();
+        isActive = in.readInt();
         statusUpdates = new StatusUpdates(this);
     }
 
@@ -130,6 +133,7 @@ public class Device implements Parcelable {
         dest.writeString(name);
         dest.writeString(location);
         dest.writeString(xml);
+        dest.writeInt(isActive);
     }
 
     public boolean isDebugDevice() {
