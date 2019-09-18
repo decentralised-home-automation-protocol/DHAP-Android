@@ -37,7 +37,7 @@ public class Display extends AppCompatActivity {
                     if (!DeviceLayoutBuilder.isValidXml(packetData)) {
                         callbacks.invalidDisplayXmlFailure();
                     } else {
-                        device.newDeviceLayout(packetData);
+                        device.setXml(packetData);
 
                         Intent intent = new Intent(context, DeviceActivity.class);
                         intent.putExtra("device", device);

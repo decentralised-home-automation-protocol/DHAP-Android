@@ -85,7 +85,7 @@ public final class Discovery implements PacketListener {
                     InputStream inputStream = assetManager.open(fileName);
                     deviceXML = inputStreamToString(inputStream);
                     Device device = new Device(null, null, 0, 0);
-                    device.newDeviceLayout(deviceXML);
+                    device.setXml(deviceXML);
                     device.setLocation("Debug Location");
                     device.setName("Debug Name");
                     censusList.add(device);

@@ -67,7 +67,7 @@ public class StatusUpdates implements PacketListener {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
             if (isFromCorrectDevice(packetData)) {
                 ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
-                device.getDeviceLayout().newStatusUpdate(elementStatuses);
+                device.newStatusUpdate(elementStatuses);
             }
         } else if (packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)) {
             StringTokenizer st = new StringTokenizer(packetData, ",");

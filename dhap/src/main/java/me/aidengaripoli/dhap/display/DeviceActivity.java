@@ -2,6 +2,7 @@ package me.aidengaripoli.dhap.display;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
@@ -27,7 +28,10 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         dhap = new DHAP(this);
 
         ScrollView scrollView = new ScrollView(this);
-        scrollView.addView(device.getDeviceViewGroup(getSupportFragmentManager(), this));
+        ViewGroup viewGroup = device.getDeviceViewGroup(getSupportFragmentManager(), this);
+        if(viewGroup != null){
+            scrollView.addView(viewGroup);
+        }
 
         setContentView(scrollView);
     }
