@@ -11,10 +11,9 @@ import java.net.InetAddress;
 
 import me.aidengaripoli.dhap.display.DeviceLayout;
 import me.aidengaripoli.dhap.display.DeviceLayoutBuilder;
+import me.aidengaripoli.dhap.status.StatusLeaseCallbacks;
+import me.aidengaripoli.dhap.status.StatusUpdates;
 
-/**
- *
- */
 public class Device implements Parcelable {
 
     public static final Creator<Device> CREATOR = new Creator<Device>() {
@@ -36,12 +35,14 @@ public class Device implements Parcelable {
     private DeviceLayout deviceLayout;
     private int status;
     private int visibility;
+    private StatusUpdates statusUpdates;
 
     public Device(String macAddress, InetAddress ipAddress, int status, int visibility) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.status = status;
         this.visibility = visibility;
+        this.statusUpdates = new StatusUpdates(this);
     }
 
     protected Device(Parcel in) {
@@ -52,6 +53,7 @@ public class Device implements Parcelable {
         visibility = in.readInt();
         name = in.readString();
         location = in.readString();
+        statusUpdates = new StatusUpdates(this);
     }
 
     public DeviceLayout getDeviceLayout() {
@@ -125,6 +127,14 @@ public class Device implements Parcelable {
         }
         DeviceLayoutBuilder layout = new DeviceLayoutBuilder(supportFragmentManager, context);
         return layout.create(deviceLayout, name);
+    }
+
+    public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired, StatusLeaseCallbacks statusLeaseCallbacks) {
+        statusUpdates.requestStatusLease(leaseLength, updatePeriod,responseRequired,statusLeaseCallbacks);
+    }
+
+    public void leaveLease() {
+        statusUpdates.leaveLease();
     }
 }
 

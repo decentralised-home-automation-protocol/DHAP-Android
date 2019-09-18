@@ -18,13 +18,15 @@ public class StatusUpdates implements PacketListener {
     private float updatePeriod;
     private boolean responseRequired;
     private boolean isListening = false;
+    private StatusLeaseCallbacks statusLeaseCallbacks;
 
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
         this.device = device;
     }
 
-    public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired) {
+    public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired, StatusLeaseCallbacks statusLeaseCallbacks) {
+        this.statusLeaseCallbacks = statusLeaseCallbacks;
         sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
 
         this.leaseLength = leaseLength;
@@ -73,7 +75,7 @@ public class StatusUpdates implements PacketListener {
             float leaseLength = Float.parseFloat(st.nextToken());
             float updatePeriod = Float.parseFloat(st.nextToken());
 
-            device.getDeviceLayout().statusRequestResponse(leaseLength, updatePeriod);
+            statusLeaseCallbacks.leaseResponse(leaseLength, updatePeriod);
         }
         return false;
     }
@@ -90,7 +92,7 @@ public class StatusUpdates implements PacketListener {
         st.nextToken();
 
         if (st.nextToken().equals(END_OF_LEASE)) {
-            if (device.getDeviceLayout().shouldRenewStatusLease()) {
+            if (statusLeaseCallbacks.shouldRenewStatusLease()) {
                 sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
             }
         }

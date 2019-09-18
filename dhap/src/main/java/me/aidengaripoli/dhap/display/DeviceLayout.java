@@ -12,8 +12,6 @@ import me.aidengaripoli.dhap.status.ElementStatus;
 
 public class DeviceLayout implements Parcelable {
 
-    private static final String TAG = DeviceLayout.class.getSimpleName();
-
     public static final Creator<DeviceLayout> CREATOR = new Creator<DeviceLayout>() {
         @Override
         public DeviceLayout createFromParcel(Parcel in) {
@@ -68,14 +66,5 @@ public class DeviceLayout implements Parcelable {
                 }
             }
         }
-    }
-
-    public boolean shouldRenewStatusLease() {
-        Log.d(TAG, "shouldRenewStatusLease: Renewing Status Lease");
-        return true;
-    }
-
-    public void statusRequestResponse(float leaseLength, float updatePeriod) {
-        Log.e(TAG, "statusRequestResponse: LeaseLength: " + leaseLength + " UpdatePeriod: " + updatePeriod);
     }
 }
