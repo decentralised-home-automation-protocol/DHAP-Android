@@ -1,8 +1,11 @@
 package me.aidengaripoli.dhap.status;
 
+import android.util.Log;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
@@ -16,20 +19,43 @@ public class StatusUpdates implements PacketListener {
     private Device device;
     private float leaseLength;
     private float updatePeriod;
+    private long lastUpdateTime;
+
     private boolean responseRequired;
-    private boolean isListening = false;
+    private AtomicBoolean isListening;
+    private StatusLeaseCallbacks statusLeaseCallbacks;
 
     public StatusUpdates(Device device) {
         udpPacketSender = UdpPacketSender.getInstance();
+        isListening = new AtomicBoolean(false);
         this.device = device;
     }
 
-    public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired) {
+    public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired, StatusLeaseCallbacks statusLeaseCallbacks) {
+        this.statusLeaseCallbacks = statusLeaseCallbacks;
         sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
 
         this.leaseLength = leaseLength;
         this.updatePeriod = updatePeriod;
         this.responseRequired = responseRequired;
+        lastUpdateTime = System.currentTimeMillis();
+
+        new Thread(() -> {
+            long sleepTime = (long) (updatePeriod*3);
+
+            while(isListening.get()){
+                if(System.currentTimeMillis() - lastUpdateTime > sleepTime){
+                    Log.e("Status", "requestStatusLease: status updates are not longer being received. Requesting new lease...");
+                    sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
+                }
+
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void sendLeaseRequest(float leaseLength, float updatePeriod, boolean responseRequired) {
@@ -37,35 +63,36 @@ public class StatusUpdates implements PacketListener {
                 + leaseLength + "," + updatePeriod + ",";
         statusLeaseRequest += responseRequired ? "T" : "F";
 
-        udpPacketSender.sendUdpPacketToIP(statusLeaseRequest, device.getIpAddress().getHostAddress());
+        udpPacketSender.sendUdpPacketToIP(statusLeaseRequest, device.getIpAddress());
         listenForUpdates();
     }
 
     private void listenForUpdates() {
-        if (!isListening) {
+        if (!isListening.get()) {
             udpPacketSender.addPacketListener(this);
-            isListening = true;
+            isListening.set(true);
         }
     }
 
     public void leaveLease() {
-        udpPacketSender.sendUdpPacketToIP(PacketCodes.STATUS_END_LEASE, device.getIpAddress().getHostAddress());
+        udpPacketSender.sendUdpPacketToIP(PacketCodes.STATUS_END_LEASE, device.getIpAddress());
         stopListeningForUpdates();
     }
 
     private void stopListeningForUpdates() {
-        if (isListening) {
+        if (isListening.get()) {
             udpPacketSender.removePacketListener(this);
-            isListening = false;
+            isListening.set(false);
         }
     }
 
     @Override
     public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
         if (packetType.equals(PacketCodes.STATUS_UPDATE)) {
+            lastUpdateTime = System.currentTimeMillis();
             if (isFromCorrectDevice(packetData)) {
                 ArrayList<ElementStatus> elementStatuses = getStatus(packetData);
-                device.getDeviceLayout().newStatusUpdate(elementStatuses);
+                device.newStatusUpdate(elementStatuses);
             }
         } else if (packetType.equals(PacketCodes.STATUS_LEASE_RESPONSE)) {
             StringTokenizer st = new StringTokenizer(packetData, ",");
@@ -73,7 +100,7 @@ public class StatusUpdates implements PacketListener {
             float leaseLength = Float.parseFloat(st.nextToken());
             float updatePeriod = Float.parseFloat(st.nextToken());
 
-            device.getDeviceLayout().statusRequestResponse(leaseLength, updatePeriod);
+            statusLeaseCallbacks.leaseResponse(leaseLength, updatePeriod);
         }
         return false;
     }
@@ -90,7 +117,7 @@ public class StatusUpdates implements PacketListener {
         st.nextToken();
 
         if (st.nextToken().equals(END_OF_LEASE)) {
-            if (device.getDeviceLayout().shouldRenewStatusLease()) {
+            if (statusLeaseCallbacks.shouldRenewStatusLease()) {
                 sendLeaseRequest(leaseLength, updatePeriod, responseRequired);
             }
         }

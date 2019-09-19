@@ -18,6 +18,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 
+import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.R;
 import me.aidengaripoli.dhap.display.elements.BaseElementFragment;
 
@@ -38,14 +39,14 @@ public class DeviceLayoutBuilder {
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(DeviceLayout description, String deviceName) {
+    public ViewGroup create(Device device, String deviceName) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
         rootLayout.setGravity(Gravity.CENTER);
 
         try {
-            NodeList groupNodeList = parser.getGroups(description.getXml());
+            NodeList groupNodeList = parser.getGroups(device.getXml());
 
             if (groupNodeList == null) {
                 return rootLayout;
@@ -81,7 +82,7 @@ public class DeviceLayoutBuilder {
             return null;
         }
 
-        description.setElements(elements);
+        device.setElements(elements);
 
         return rootLayout;
     }

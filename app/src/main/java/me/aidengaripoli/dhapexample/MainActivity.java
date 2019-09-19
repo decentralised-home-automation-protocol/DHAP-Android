@@ -3,6 +3,7 @@ package me.aidengaripoli.dhapexample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -23,8 +24,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private DHAP dhap;
     private ActionFragment actionFragment;
-
     private FragmentManager fragmentManager;
+    private DiscoveredDevicesFragment devicesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void displayDiscoveredDevices(final ArrayList<Device> devices) {
         runOnUiThread(() -> {
-            DiscoveredDevicesFragment devicesFragment = DiscoveredDevicesFragment
-                    .newInstance(devices);
+            devicesFragment = DiscoveredDevicesFragment.newInstance(devices);
 
             actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (action) {
             case "Refresh": {
                 Log.d(TAG, "Re-discovering devices.");
+                dhap.clearSavedDevices();
                 beginDeviceDiscovery();
                 break;
             }
@@ -145,4 +146,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    public void removeDevice(View view){
+        Device device = (Device) view.getTag();
+        Log.e(TAG, "removeDevice: " + device.getName());
+        dhap.removeDevice(device);
+        devicesFragment.removeDevice(device);
+    }
 }

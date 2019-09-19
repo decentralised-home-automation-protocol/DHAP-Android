@@ -23,7 +23,11 @@ public class DHAP {
     }
 
     public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
-        display.fetchDeviceInterface(device, callbacks);
+        if(device.isActive == 1){
+            display.fetchDeviceInterface(device, callbacks);
+        } else {
+            callbacks.displayTimeoutFailure();
+        }
     }
 
     public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoinDeviceCallbacks callback) {
@@ -42,11 +46,19 @@ public class DHAP {
         discovery.discoverDevices(callbacks);
     }
 
+    public void clearSavedDevices(){
+        discovery.clearSavedDevices();
+    }
+
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
     }
 
     public void sendIoTCommand(String tag, String data, Device device) {
-        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress().getHostAddress());
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress());
+    }
+
+    public void removeDevice(Device device) {
+        discovery.removeDevice(device);
     }
 }

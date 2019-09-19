@@ -4,6 +4,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +24,7 @@ public class DiscoveredDeviceAdapter extends
 
     private OnDeviceClicked mListener;
 
-    public DiscoveredDeviceAdapter(List<Device> devices, OnDeviceClicked listener) {
+    DiscoveredDeviceAdapter(List<Device> devices, OnDeviceClicked listener) {
         mDevices = devices;
         mListener = listener;
     }
@@ -58,22 +60,27 @@ public class DiscoveredDeviceAdapter extends
         return mDevices.size();
     }
 
-    public static class DiscoveredDeviceViewHolder extends RecyclerView.ViewHolder {
+    static class DiscoveredDeviceViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
         private TextView location;
+        private Button remove;
+        private ImageView noResponse;
 
-        public DiscoveredDeviceViewHolder(@NonNull View itemView) {
+        DiscoveredDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.text_view_device_name);
             location = itemView.findViewById(R.id.text_view_device_room);
+            remove = itemView.findViewById(R.id.remove_button);
+            noResponse = itemView.findViewById(R.id.warning_image);
         }
 
-        public void bind(Device device) {
+        void bind(Device device) {
             name.setText(device.getName());
             location.setText(device.getLocation());
+            remove.setTag(device);
+            noResponse.setVisibility(device.isActive == 1 ? View.INVISIBLE : View.VISIBLE);
         }
     }
-
 }

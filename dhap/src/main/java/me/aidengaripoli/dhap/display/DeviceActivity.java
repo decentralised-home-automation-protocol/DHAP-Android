@@ -1,6 +1,8 @@
 package me.aidengaripoli.dhap.display;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
@@ -9,14 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
-import me.aidengaripoli.dhap.status.StatusUpdates;
+import me.aidengaripoli.dhap.status.StatusLeaseCallbacks;
 
 public class DeviceActivity extends AppCompatActivity implements OnElementCommandListener {
 
     private static final String DEVICE_INTENT_EXTRA = "device";
 
     private Device device;
-    private StatusUpdates statusUpdates;
     private DHAP dhap;
 
     @Override
@@ -24,12 +25,13 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
         super.onCreate(savedInstanceState);
 
         device = getIntent().getParcelableExtra(DEVICE_INTENT_EXTRA);
+        dhap = new DHAP(this);
 
         ScrollView scrollView = new ScrollView(this);
-        scrollView.addView(device.getDeviceViewGroup(getSupportFragmentManager(), this));
-
-        statusUpdates = new StatusUpdates(device);
-        dhap = new DHAP(this);
+        ViewGroup viewGroup = device.getDeviceViewGroup(getSupportFragmentManager(), this);
+        if(viewGroup != null){
+            scrollView.addView(viewGroup);
+        }
 
         setContentView(scrollView);
     }
@@ -44,8 +46,19 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     protected void onResume() {
         super.onResume();
+
         if (!device.isDebugDevice()) {
-            statusUpdates.requestStatusLease(10000, 1000, false);
+            device.requestStatusLease(10000, 1000, false, new StatusLeaseCallbacks() {
+                @Override
+                public void leaseResponse(float leaseLength, float updatePeriod) {
+                    Log.d("DeviceActivity", "leaseResponse: " + leaseLength + " UpdatePeriod: " + updatePeriod);
+                }
+
+                @Override
+                public boolean shouldRenewStatusLease() {
+                    return true;
+                }
+            });
         }
     }
 
@@ -53,7 +66,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     protected void onStop() {
         super.onStop();
         if (!device.isDebugDevice()) {
-            statusUpdates.leaveLease();
+            device.leaveLease();
         }
     }
 }
