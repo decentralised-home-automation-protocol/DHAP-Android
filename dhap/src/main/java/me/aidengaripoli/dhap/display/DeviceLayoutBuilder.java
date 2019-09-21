@@ -39,7 +39,7 @@ public class DeviceLayoutBuilder {
         elements = new HashMap<>();
     }
 
-    public ViewGroup create(Device device, String deviceName) {
+    public ViewGroup create(Device device) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setId(View.generateViewId());
@@ -52,7 +52,7 @@ public class DeviceLayoutBuilder {
                 return rootLayout;
             }
 
-            addTitle(deviceName, rootLayout);
+            addTitle(device, rootLayout);
 
             // iterate through all the <group> elements
             for (int i = 0; i < groupNodeList.getLength(); i++) {
@@ -136,10 +136,11 @@ public class DeviceLayoutBuilder {
         return true;
     }
 
-    private void addTitle(String deviceName, LinearLayout rootLayout) {
+    private void addTitle(Device device, LinearLayout rootLayout) {
         TextView title = new TextView(context);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36);
-        title.setText(deviceName);
+        String text = device.getName() + " - " + device.getLocation();
+        title.setText(text);
 
         LinearLayout groupLayout = createLinearLayout(true);
         groupLayout.addView(title);

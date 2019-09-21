@@ -37,16 +37,18 @@ public class Device implements Parcelable {
     private String ipAddress;
     private int status;
     private int visibility;
+    private int headerVersion;
     private StatusUpdates statusUpdates;
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
     public int isActive;
 
-    public Device(String macAddress, String ipAddress, int status, int visibility) {
+    public Device(String macAddress, String ipAddress, int status, int visibility, int headerVersion) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.status = status;
         this.visibility = visibility;
+        this.headerVersion = headerVersion;
         isActive = 1;
         this.statusUpdates = new StatusUpdates(this);
     }
@@ -56,6 +58,7 @@ public class Device implements Parcelable {
         ipAddress = in.readString();
         status = in.readInt();
         visibility = in.readInt();
+        headerVersion = in.readInt();
         name = in.readString();
         location = in.readString();
         xml = in.readString();
@@ -87,6 +90,14 @@ public class Device implements Parcelable {
         this.location = location;
     }
 
+    public void setHeaderVersion(int version) {
+        this.headerVersion = version;
+    }
+
+    public int getHeaderVersion() {
+        return headerVersion;
+    }
+
     public String getXml() {
         return xml;
     }
@@ -116,7 +127,7 @@ public class Device implements Parcelable {
 
     @Override
     public String toString() {
-        return macAddress + "," + ipAddress + "," + status + "," + visibility;
+        return macAddress  + "," + status + "," + visibility + "," + headerVersion;
     }
 
     @Override
@@ -130,6 +141,7 @@ public class Device implements Parcelable {
         dest.writeString(ipAddress);
         dest.writeInt(status);
         dest.writeInt(visibility);
+        dest.writeInt(headerVersion);
         dest.writeString(name);
         dest.writeString(location);
         dest.writeString(xml);
@@ -146,7 +158,7 @@ public class Device implements Parcelable {
             return null;
         }
         DeviceLayoutBuilder layout = new DeviceLayoutBuilder(supportFragmentManager, context);
-        return layout.create(this, name);
+        return layout.create(this);
     }
 
     public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired, StatusLeaseCallbacks statusLeaseCallbacks) {
@@ -159,6 +171,14 @@ public class Device implements Parcelable {
 
     public void sendIoTCommand(String tag, String data) {
         UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, ipAddress);
+    }
+
+    public void changeDeviceName(String name) {
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.CHANGE_NAME + "|" + name, ipAddress);
+    }
+
+    public void changeDeviceLocation(String location) {
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.CHANGE_LOCATION + "|" + location, ipAddress);
     }
 }
 

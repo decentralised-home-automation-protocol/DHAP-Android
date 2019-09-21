@@ -22,4 +22,8 @@ public class PacketCodes {
     public static final String STATUS_LEASE_RESPONSE = "510";
     public static final String STATUS_END_LEASE = "520";
     public static final String STATUS_UPDATE = "530";
+
+    public static final String CHANGE_NAME = "600";
+    public static final String CHANGE_LOCATION = "610";
+
 }
