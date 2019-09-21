@@ -8,7 +8,6 @@ import android.widget.ScrollView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.display.elements.OnElementCommandListener;
 import me.aidengaripoli.dhap.status.StatusLeaseCallbacks;
@@ -18,18 +17,16 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     private static final String DEVICE_INTENT_EXTRA = "device";
 
     private Device device;
-    private DHAP dhap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         device = getIntent().getParcelableExtra(DEVICE_INTENT_EXTRA);
-        dhap = new DHAP(this);
 
         ScrollView scrollView = new ScrollView(this);
         ViewGroup viewGroup = device.getDeviceViewGroup(getSupportFragmentManager(), this);
-        if(viewGroup != null){
+        if (viewGroup != null) {
             scrollView.addView(viewGroup);
         }
 
@@ -39,7 +36,7 @@ public class DeviceActivity extends AppCompatActivity implements OnElementComman
     @Override
     public void onElementCommand(String tag, String data) {
         if (!device.isDebugDevice()) {
-            dhap.sendIoTCommand(tag, data, device);
+            device.sendIoTCommand(tag, data);
         }
     }
 

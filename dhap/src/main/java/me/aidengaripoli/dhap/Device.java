@@ -141,7 +141,7 @@ public class Device implements Parcelable {
     }
 
     public ViewGroup getDeviceViewGroup(FragmentManager supportFragmentManager, Context context) {
-        if(xml == null || xml.isEmpty()){
+        if (xml == null || xml.isEmpty()) {
             Log.e("Device", "getDeviceViewGroup: No XML");
             return null;
         }
@@ -150,11 +150,15 @@ public class Device implements Parcelable {
     }
 
     public void requestStatusLease(float leaseLength, float updatePeriod, boolean responseRequired, StatusLeaseCallbacks statusLeaseCallbacks) {
-        statusUpdates.requestStatusLease(leaseLength, updatePeriod,responseRequired,statusLeaseCallbacks);
+        statusUpdates.requestStatusLease(leaseLength, updatePeriod, responseRequired, statusLeaseCallbacks);
     }
 
     public void leaveLease() {
         statusUpdates.leaveLease();
+    }
+
+    public void sendIoTCommand(String tag, String data) {
+        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, ipAddress);
     }
 }
 
