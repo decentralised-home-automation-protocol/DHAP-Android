@@ -34,7 +34,7 @@ public final class Discovery implements PacketListener {
 
     private ArrayList<Device> censusList;
     private ArrayList<Device> previousCensusList;
-    private ArrayList<Device> devicesReplies;
+    private int devicesReplies;
     private HashSet<String> respondingDevices;
     private HashMap<String, Device> devicesWithoutHeader;
     private HashMap<String, Device> savedDevices;
@@ -52,39 +52,28 @@ public final class Discovery implements PacketListener {
             try {
                 censusList = new ArrayList<>();
                 previousCensusList = new ArrayList<>();
-                devicesReplies = new ArrayList<>();
+                devicesReplies = 0;
                 respondingDevices = new HashSet<>();
                 savedDevices = getSavedDevices();
                 devicesWithoutHeader = new HashMap<>();
 
+                for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
+                    censusList.add(entry.getValue());
+                }
+
                 findDevices();
 
+                if(censusList.size() == 0){
+                    callback.noDevicesFound();
+                    return;
+                }
+
                 getDeviceHeaders(devicesWithoutHeader);
+                saveToFile(savedDevices);
 
-                if (savedDevices == null) {
-                    if(censusList.size() == 0){
-                        callback.noDevicesFound();
-                        return;
-                    }
-                    saveToFile(devicesWithoutHeader);
-                } else {
-                    for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
-                        String key = entry.getKey();
-                        Device value = entry.getValue();
-
-                        if (!respondingDevices.contains(key)) {
-                            value.isActive = 0;
-                        }
-                    }
-
-                    savedDevices.putAll(devicesWithoutHeader);
-                    saveToFile(savedDevices);
-
-                    censusList.clear();
-
-                    for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
-                        censusList.add(entry.getValue());
-                    }
+                censusList.clear();
+                for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
+                    censusList.add(entry.getValue());
                 }
                 callback.foundDevices(censusList);
             } catch (Exception e) {
@@ -98,11 +87,11 @@ public final class Discovery implements PacketListener {
     }
 
     private HashMap<String, Device> getSavedDevices() {
+        HashMap<String, Device> censusListFromFile = new HashMap<>();
+
         try {
             InputStream inputStream = context.openFileInput(FILENAME);
             String censusListString = inputStreamToString(inputStream);
-
-            HashMap<String, Device> censusListFromFile = new HashMap<>();
 
             String[] devices = censusListString.split("-");
 
@@ -118,7 +107,7 @@ public final class Discovery implements PacketListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return censusListFromFile;
     }
 
     private Device parseDeviceFromFile(String deviceString) {
@@ -127,7 +116,7 @@ public final class Discovery implements PacketListener {
         Device device = new Device(
                 deviceData[0],
                 deviceData[4],
-                Integer.parseInt(deviceData[1]),
+                0,
                 Integer.parseInt(deviceData[2]),
                 Integer.parseInt(deviceData[3])
         );
@@ -177,7 +166,7 @@ public final class Discovery implements PacketListener {
                 if (fileName.endsWith(".xml")) {
                     InputStream inputStream = assetManager.open(fileName);
                     deviceXML = inputStreamToString(inputStream);
-                    Device device = new Device(null, null, 0, 0, 0);
+                    Device device = new Device(null, null, 1, 0, 0);
                     device.setXml(deviceXML);
                     device.setLocation("Debug Location");
                     device.setName("Debug Name");
@@ -215,11 +204,9 @@ public final class Discovery implements PacketListener {
 
             listenForReplies();
 
-            Log.d(TAG, "Received (" + devicesReplies.size() + ") replies.");
+            Log.d(TAG, "Received (" + devicesReplies + ") replies.");
             // received replies?
-            if (devicesReplies.size() > 0) { // yes
-                updateCensusList(devicesReplies);
-            } else { // no
+            if (devicesReplies == 0) { // yes
                 emptyRepliesCount++;
                 Log.d(TAG, "Empty replies: (" + emptyRepliesCount + ").");
                 // is this the 3rd empty reply?
@@ -227,6 +214,8 @@ public final class Discovery implements PacketListener {
                     Log.d(TAG, "Third empty reply. Finishing discovery.");
                     return;
                 }
+            } else { // no
+                emptyRepliesCount = 0;
             }
 
             Log.d(TAG, "List: " + censusList.toString());
@@ -297,7 +286,7 @@ public final class Discovery implements PacketListener {
     private void listenForReplies() {
         Log.d(TAG, "Listening to replies...");
 
-        devicesReplies.clear();
+        devicesReplies = 0;
         udpPacketSender.addPacketListener(this);
 
         // listen to replies for ~1 second
@@ -319,20 +308,24 @@ public final class Discovery implements PacketListener {
             }
 
             //Check if this device has been saved in the local storage list.
-            if (savedDevices != null && savedDevices.containsKey(device.getMacAddress())) {
+            if (savedDevices.containsKey(device.getMacAddress())) {
                 //Check if the IP and header version are out of date
                 Device savedDevice = savedDevices.get(device.getMacAddress());
+                savedDevice.setStatus(1);
                 if (savedDevice.getHeaderVersion() != device.getHeaderVersion()
                         || !savedDevice.getIpAddress().equals(device.getIpAddress())) {
                     savedDevices.remove(device.getMacAddress());
                     devicesWithoutHeader.put(device.getMacAddress(), device);
+                    censusList.add(device);
                 }
             } else {
+                savedDevices.put(device.getMacAddress(), device);
                 devicesWithoutHeader.put(device.getMacAddress(), device);
+                censusList.add(device);
             }
 
             respondingDevices.add(device.getMacAddress());
-            devicesReplies.add(device);
+            devicesReplies++;
         } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
             addHeaderToDevice(packetData, fromIP);
         }
@@ -364,16 +357,11 @@ public final class Discovery implements PacketListener {
         return new Device(
                 deviceString[0],
                 fromIP.getHostAddress(),
-                Integer.parseInt(deviceString[1]),
+                1,
                 Integer.parseInt(deviceString[2]),
                 Integer.parseInt(deviceString[3])
 
         );
-    }
-
-    private void updateCensusList(List<Device> repliedDevices) {
-        Log.d(TAG, "Updating list...");
-        censusList.addAll(repliedDevices);
     }
 
     public void clearSavedDevices() {

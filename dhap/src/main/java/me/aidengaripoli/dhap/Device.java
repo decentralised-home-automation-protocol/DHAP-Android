@@ -41,7 +41,6 @@ public class Device implements Parcelable {
     private StatusUpdates statusUpdates;
     private String xml;
     private HashMap<String, BaseElementFragment> elements;
-    public int isActive;
 
     public Device(String macAddress, String ipAddress, int status, int visibility, int headerVersion) {
         this.macAddress = macAddress;
@@ -49,7 +48,6 @@ public class Device implements Parcelable {
         this.status = status;
         this.visibility = visibility;
         this.headerVersion = headerVersion;
-        isActive = 1;
         this.statusUpdates = new StatusUpdates(this);
     }
 
@@ -62,7 +60,6 @@ public class Device implements Parcelable {
         name = in.readString();
         location = in.readString();
         xml = in.readString();
-        isActive = in.readInt();
         statusUpdates = new StatusUpdates(this);
     }
 
@@ -76,6 +73,14 @@ public class Device implements Parcelable {
 
     public String getName() {
         return name;
+    }
+
+    public int getStatus(){
+        return status;
+    }
+
+    public void setStatus(int status){
+        this.status = status;
     }
 
     public void setName(String name) {
@@ -145,7 +150,6 @@ public class Device implements Parcelable {
         dest.writeString(name);
         dest.writeString(location);
         dest.writeString(xml);
-        dest.writeInt(isActive);
     }
 
     public boolean isDebugDevice() {
