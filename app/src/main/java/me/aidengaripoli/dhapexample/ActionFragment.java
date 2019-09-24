@@ -65,6 +65,9 @@ public class ActionFragment extends Fragment {
             secondaryActionButton.setVisibility(View.INVISIBLE);
         }
 
+        Button clearButton = rootView.findViewById(R.id.button_action2);
+        clearButton.setOnClickListener(v -> mListener.onActionResult("Clear"));
+
         return rootView;
     }
 

@@ -136,10 +136,16 @@ public class MainActivity extends AppCompatActivity implements
         switch (action) {
             case "Refresh": {
                 Log.d(TAG, "Re-discovering devices.");
-                dhap.clearSavedDevices();
                 beginDeviceDiscovery();
                 break;
             }
+
+            case "Clear": {
+                dhap.clearSavedDevices();
+                displayNoDevicesFound();
+                break;
+            }
+
             case "Add": {
                 startActivity(new Intent(this, JoiningActivity.class));
                 break;
@@ -156,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public void editDeviceHeader(View view) {
         Device device = (Device) view.getTag();
-        Log.e(TAG, "editDevice: " + device.getName());
 
         ChangeHeaderFragment dialog = ChangeHeaderFragment.newInstance(device, this);
         dialog.show(getSupportFragmentManager(), "ChangeHeaderFragment");
