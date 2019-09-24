@@ -67,8 +67,8 @@ public class Joining {
 
     }
 
-    public void sendCredentials(String SSID, String password, SendCredentialsCallbacks callback) {
-        String credentials = PacketCodes.SEND_CREDENTIALS + PacketCodes.PACKET_CODE_DELIM + SSID + "," + password;
+    public void sendCredentials(String SSID, String password, String name, String location, SendCredentialsCallbacks callback) {
+        String credentials = PacketCodes.SEND_CREDENTIALS + PacketCodes.PACKET_CODE_DELIM + SSID + "," + password + "," + name + "," + location;
 
         AtomicBoolean credentialsAcknowledged = new AtomicBoolean(false);
         PacketListener packetListener = (packetType, packetData, fromIP) -> {
@@ -113,7 +113,7 @@ public class Joining {
         }
     }
 
-    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoinDeviceCallbacks callback) {
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, String name, String location, JoinDeviceCallbacks callback) {
         Log.e(TAG, "joinDevice: Starting joining");
         connectToAccessPoint(networkSSID, networkPassword, new ConnectToApCallbacks() {
             @Override
@@ -133,7 +133,7 @@ public class Joining {
                     @Override
                     public void success() {
                         Log.e(TAG, "Connected to ESP");
-                        sendCredentials(networkSSID, networkPassword, callback);
+                        sendCredentials(networkSSID, networkPassword, name, location, callback);
                     }
 
                     @Override
