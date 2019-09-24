@@ -28,6 +28,8 @@ public class JoiningActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapterDevice;
     private EditText homePassword;
     private EditText devicePassword;
+    private EditText deviceName;
+    private EditText deviceLocation;
     private TextView joiningState;
     private List<ScanResult> nearbyAccessPoints;
     private ScanResult selectedHomeNetwork;
@@ -63,6 +65,10 @@ public class JoiningActivity extends AppCompatActivity {
 
         homePassword = findViewById(R.id.edit_text_home_pasword);
         devicePassword = findViewById(R.id.edit_text_device_pasword);
+
+        deviceName = findViewById(R.id.edit_text_device_name);
+        deviceLocation = findViewById(R.id.edit_text_device_location);
+
         joiningState = findViewById(R.id.joiningState);
 
         getNearbyAccessPoints();
@@ -110,36 +116,38 @@ public class JoiningActivity extends AppCompatActivity {
         String text = "Verifying credentials...";
         joiningState.setText(text);
 
-        dhap.joinDevice(selectedHomeNetwork.SSID, homePassword.getText().toString(), selectedDeviceNetwork.SSID, devicePassword.getText().toString(), new JoinDeviceCallbacks() {
-            @Override
-            public void networkNotFound(String SSID) {
-                String text = "Network with SSID: " + SSID + " not found!";
-                joiningState.setText(text);
-            }
+        dhap.joinDevice(selectedHomeNetwork.SSID, homePassword.getText().toString(), selectedDeviceNetwork.SSID,
+                devicePassword.getText().toString(), deviceName.getText().toString(), deviceLocation.getText().toString(),
+                new JoinDeviceCallbacks() {
+                    @Override
+                    public void networkNotFound(String SSID) {
+                        String text = "Network with SSID: " + SSID + " not found!";
+                        joiningState.setText(text);
+                    }
 
-            @Override
-            public void credentialsAcknowledged() {
-                String text = "Credentials Acknowledged";
-                joiningState.setText(text);
-            }
+                    @Override
+                    public void credentialsAcknowledged() {
+                        String text = "Credentials Acknowledged";
+                        joiningState.setText(text);
+                    }
 
-            @Override
-            public void sendCredentialsTimeout() {
-                String text = "Joining Failed. Sending credentials timed out";
-                joiningState.setText(text);
-            }
+                    @Override
+                    public void sendCredentialsTimeout() {
+                        String text = "Joining Failed. Sending credentials timed out";
+                        joiningState.setText(text);
+                    }
 
-            @Override
-            public void success() {
-                String text = "Device Successfully Joined";
-                joiningState.setText(text);
-            }
+                    @Override
+                    public void success() {
+                        String text = "Device Successfully Joined";
+                        joiningState.setText(text);
+                    }
 
-            @Override
-            public void failure(String message) {
-                String text = "Joining Failed. " + message;
-                joiningState.setText(text);
-            }
-        });
+                    @Override
+                    public void failure(String message) {
+                        String text = "Joining Failed. " + message;
+                        joiningState.setText(text);
+                    }
+                });
     }
 }

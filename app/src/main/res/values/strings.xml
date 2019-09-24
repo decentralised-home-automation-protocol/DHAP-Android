@@ -13,8 +13,11 @@
     <string name="device_password">Device Password</string>
     <string name="join_a_device">Join a device</string>
     <string name="join_device">Join device</string>
-    <string name="device_name">Device Name</string>
     <string name="device_location">Device Location</string>
-    <string name="location">Location</string>
+    <string name="location">Location:</string>
     <string name="remove">Remove</string>
+    <string name="device_name">Device Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="change_header">Change Header</string>
 </resources>

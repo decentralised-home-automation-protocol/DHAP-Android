@@ -23,30 +23,30 @@ public class DHAP {
     }
 
     public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
-        if(device.getStatus() == 1){
+        if (device.getStatus() == 1) {
             display.fetchDeviceInterface(device, callbacks);
         } else {
             callbacks.displayTimeoutFailure();
         }
     }
 
-    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, JoinDeviceCallbacks callback) {
-        joining.joinDevice(networkSSID, networkPassword, deviceSSID, devicePassword, callback);
+    public void joinDevice(String networkSSID, String networkPassword, String deviceSSID, String devicePassword, String name, String location, JoinDeviceCallbacks callback) {
+        joining.joinDevice(networkSSID, networkPassword, deviceSSID, devicePassword, name, location, callback);
     }
 
     public void connectToAccessPoint(String SSID, String password, ConnectToApCallbacks callback) {
         joining.connectToAccessPoint(SSID, password, callback);
     }
 
-    public void sendCredentials(String SSID, String password, SendCredentialsCallbacks callback) {
-        joining.sendCredentials(SSID, password, callback);
+    public void sendCredentials(String SSID, String password, String name, String location, SendCredentialsCallbacks callback) {
+        joining.sendCredentials(SSID, password, name, location, callback);
     }
 
     public void discoverDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDevices(callbacks);
     }
 
-    public void clearSavedDevices(){
+    public void clearSavedDevices() {
         discovery.clearSavedDevices();
     }
 
