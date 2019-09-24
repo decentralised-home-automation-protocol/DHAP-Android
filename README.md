@@ -3,6 +3,7 @@
 An Android library implementation of the [Decentralised Home Automation Protocol](https://decentralised-home-automation-protocol.github.io/DHAP-Documentation/)
 
 This repo includes and example application which can perform all of the basic functionality needed to control DHAP compliant IoT devices. To use the example application, simply clone this repo and open it in Android Studio. From there you can compile and run the example app on your Android device.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
@@ -34,7 +35,7 @@ allprojects {
 ``` gradle {3}
 dependencies {
   ...
-  implementation 'com.github.decentralised-home-automation-protocol:DHAP-Android:0.1.0'
+  implementation 'com.github.decentralised-home-automation-protocol:DHAP-Android:0.2.0'
 }
 ```
 
