@@ -89,6 +89,10 @@ public class DeviceLayoutBuilder {
 
     static boolean isValidXml(String xml) {
         try {
+            if (xml == null || xml.isEmpty() || xml.equals("null")) {
+                return false;
+            }
+
             NodeList groupNodeList = parser.getGroups(xml);
 
             if (groupNodeList == null) {

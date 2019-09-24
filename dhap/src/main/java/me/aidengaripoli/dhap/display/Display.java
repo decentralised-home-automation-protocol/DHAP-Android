@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.PacketCodes;
 import me.aidengaripoli.dhap.PacketListener;
+import me.aidengaripoli.dhap.SavedCensusListManager;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 
@@ -27,6 +28,12 @@ public class Display extends AppCompatActivity {
             Intent intent = new Intent(context, DeviceActivity.class);
             intent.putExtra("device", device);
             callbacks.deviceActivityIntent(intent);
+        }
+        if (DeviceLayoutBuilder.isValidXml(device.getXml())) {
+            Intent intent = new Intent(context, DeviceActivity.class);
+            intent.putExtra("device", device);
+
+            callbacks.deviceActivityIntent(intent);
         } else {
             AtomicBoolean responseReceived = new AtomicBoolean(false);
 
@@ -38,6 +45,9 @@ public class Display extends AppCompatActivity {
                         callbacks.invalidDisplayXmlFailure();
                     } else {
                         device.setXml(packetData);
+
+                        SavedCensusListManager savedCensusListManager = new SavedCensusListManager(context);
+                        savedCensusListManager.updateSavedDevice(device);
 
                         Intent intent = new Intent(context, DeviceActivity.class);
                         intent.putExtra("device", device);
