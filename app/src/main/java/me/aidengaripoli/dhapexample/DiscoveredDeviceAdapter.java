@@ -80,7 +80,7 @@ public class DiscoveredDeviceAdapter extends
             name.setText(device.getName());
             location.setText(device.getLocation());
             remove.setTag(device);
-            noResponse.setVisibility(device.isActive == 1 ? View.INVISIBLE : View.VISIBLE);
+            noResponse.setVisibility(device.getStatus() == 1 ? View.INVISIBLE : View.VISIBLE);
         }
     }
 }

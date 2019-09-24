@@ -23,7 +23,7 @@ public class DHAP {
     }
 
     public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
-        if(device.isActive == 1){
+        if(device.getStatus() == 1){
             display.fetchDeviceInterface(device, callbacks);
         } else {
             callbacks.displayTimeoutFailure();
@@ -52,10 +52,6 @@ public class DHAP {
 
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {
         discovery.discoverDebugDevices(callbacks);
-    }
-
-    public void sendIoTCommand(String tag, String data, Device device) {
-        UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.IOT_COMMAND + "|" + tag + "=" + data, device.getIpAddress());
     }
 
     public void removeDevice(Device device) {
