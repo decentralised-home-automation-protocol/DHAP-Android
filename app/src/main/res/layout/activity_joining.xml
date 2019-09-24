@@ -18,13 +18,12 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="153dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="152dp"
+                android:layout_marginEnd="32dp"
                 android:onClick="joinDevice"
                 android:text="@string/join_device"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_device_location" />
 
@@ -52,12 +51,11 @@
                 android:layout_marginEnd="99dp"
                 android:ems="10"
                 android:hint="@string/device_name"
+                android:importantForAutofill="no"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_device_pasword"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_device_pasword" />
 
             <EditText
                 android:id="@+id/edit_text_device_location"
@@ -71,7 +69,6 @@
                 android:importantForAutofill="no"
                 android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_device_name" />
 
@@ -146,6 +143,7 @@
                 android:id="@+id/recyclerViewDevice"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:background="#EBEBEB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -154,6 +152,7 @@
                 android:id="@+id/recyclerViewHome"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:background="#EBEBEB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/joiningHomeWifiPrompt">
