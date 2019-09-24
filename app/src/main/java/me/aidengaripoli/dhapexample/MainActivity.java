@@ -18,7 +18,8 @@ import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
         ActionFragment.OnActionResultListener,
-        DiscoveredDevicesFragment.OnDeviceSelectedListener {
+        DiscoveredDevicesFragment.OnDeviceSelectedListener,
+        ChangeHeaderFragment.OnChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -146,10 +147,23 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void removeDevice(View view){
+    public void removeDevice(View view) {
         Device device = (Device) view.getTag();
         Log.e(TAG, "removeDevice: " + device.getName());
         dhap.removeDevice(device);
         devicesFragment.removeDevice(device);
+    }
+
+    public void editDeviceHeader(View view) {
+        Device device = (Device) view.getTag();
+        Log.e(TAG, "editDevice: " + device.getName());
+
+        ChangeHeaderFragment dialog = ChangeHeaderFragment.newInstance(device, this);
+        dialog.show(getSupportFragmentManager(), "ChangeHeaderFragment");
+    }
+
+    @Override
+    public void headerChanged() {
+        beginDeviceDiscovery();
     }
 }

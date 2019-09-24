@@ -65,6 +65,7 @@ public class DiscoveredDeviceAdapter extends
         private TextView name;
         private TextView location;
         private Button remove;
+        private Button edit;
         private ImageView noResponse;
 
         DiscoveredDeviceViewHolder(@NonNull View itemView) {
@@ -73,6 +74,7 @@ public class DiscoveredDeviceAdapter extends
             name = itemView.findViewById(R.id.text_view_device_name);
             location = itemView.findViewById(R.id.text_view_device_room);
             remove = itemView.findViewById(R.id.remove_button);
+            edit = itemView.findViewById(R.id.edit_button);
             noResponse = itemView.findViewById(R.id.warning_image);
         }
 
@@ -80,6 +82,7 @@ public class DiscoveredDeviceAdapter extends
             name.setText(device.getName());
             location.setText(device.getLocation());
             remove.setTag(device);
+            edit.setTag(device);
             noResponse.setVisibility(device.getStatus() == 1 ? View.INVISIBLE : View.VISIBLE);
         }
     }
