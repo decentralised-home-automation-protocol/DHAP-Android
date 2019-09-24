@@ -184,5 +184,9 @@ public class Device implements Parcelable {
     public void changeDeviceLocation(String location) {
         UdpPacketSender.getInstance().sendUdpPacketToIP(PacketCodes.CHANGE_LOCATION + "|" + location, ipAddress);
     }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
 }
 

@@ -16,7 +16,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import me.aidengaripoli.dhap.Device;
@@ -33,11 +32,11 @@ public final class Discovery implements PacketListener {
     private static final String FILENAME = "census_list";
 
     private ArrayList<Device> censusList;
-    private ArrayList<Device> previousCensusList;
+    private ArrayList<Device> tempList;
     private int devicesReplies;
     private HashSet<String> respondingDevices;
     private HashMap<String, Device> devicesWithoutHeader;
-    private HashMap<String, Device> savedDevices;
+    private HashMap<String, Device> knownDevices;
 
     private UdpPacketSender udpPacketSender;
     private Context context;
@@ -51,13 +50,12 @@ public final class Discovery implements PacketListener {
         new Thread(() -> {
             try {
                 censusList = new ArrayList<>();
-                previousCensusList = new ArrayList<>();
                 devicesReplies = 0;
                 respondingDevices = new HashSet<>();
-                savedDevices = getSavedDevices();
+                knownDevices = getKnownDevices();
                 devicesWithoutHeader = new HashMap<>();
 
-                for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
+                for (Map.Entry<String, Device> entry : knownDevices.entrySet()) {
                     censusList.add(entry.getValue());
                 }
 
@@ -69,24 +67,19 @@ public final class Discovery implements PacketListener {
                 }
 
                 getDeviceHeaders(devicesWithoutHeader);
-                saveToFile(savedDevices);
+                saveToFile(knownDevices);
 
-                censusList.clear();
-                for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
-                    censusList.add(entry.getValue());
-                }
                 callback.foundDevices(censusList);
             } catch (Exception e) {
                 Log.e(TAG, String.valueOf(e));
                 callback.discoveryFailure();
             } finally {
                 censusList.clear();
-                previousCensusList.clear();
             }
         }).start();
     }
 
-    private HashMap<String, Device> getSavedDevices() {
+    private HashMap<String, Device> getKnownDevices() {
         HashMap<String, Device> censusListFromFile = new HashMap<>();
 
         try {
@@ -102,7 +95,7 @@ public final class Discovery implements PacketListener {
 
             return censusListFromFile;
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "getSavedDevices: No census List found");
+            Log.e(TAG, "getKnownDevices: No census List found");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -140,8 +133,6 @@ public final class Discovery implements PacketListener {
             censusListString.append(",").append(value.getLocation());
             censusListString.append("-");
         }
-
-        Log.e(TAG, "saveToFile: " + censusListString);
 
         try {
             outputStream = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -199,45 +190,35 @@ public final class Discovery implements PacketListener {
         int emptyRepliesCount = 0;
         int listRepeatedCount = 0;
 
+        String previousCensusList = "";
+
         while (true) {
             broadcastList();
 
             listenForReplies();
 
-            Log.d(TAG, "Received (" + devicesReplies + ") replies.");
             // received replies?
             if (devicesReplies == 0) { // yes
                 emptyRepliesCount++;
-                Log.d(TAG, "Empty replies: (" + emptyRepliesCount + ").");
                 // is this the 3rd empty reply?
                 if (emptyRepliesCount == 3) { // yes
-                    Log.d(TAG, "Third empty reply. Finishing discovery.");
                     return;
                 }
             } else { // no
                 emptyRepliesCount = 0;
             }
 
-            Log.d(TAG, "List: " + censusList.toString());
-
-            if (previousCensusList.equals(censusList)) {
+            if (previousCensusList.equals(censusList.toString())) {
                 listRepeatedCount++;
-                Log.d(TAG, "List repeated (" + listRepeatedCount + ") times.");
             } else {
-                Log.d(TAG, "Setting previous list to current list.");
                 listRepeatedCount = 0;
-                previousCensusList.clear();
-                previousCensusList.addAll(censusList);
+                previousCensusList = censusList.toString();
             }
 
             // list repeated > 5 times?
             if (listRepeatedCount > 5) { // yes
-                Log.d(TAG, "List repeated 5 times. Finishing discovery.");
                 return;
             }
-
-            // repeat
-            Log.d(TAG, "Repeating...");
         }
     }
 
@@ -246,13 +227,13 @@ public final class Discovery implements PacketListener {
         int timeOut = 10;
 
         ArrayList<Device> devicesWithoutHeader = new ArrayList<>();
-
+        tempList = new ArrayList<>();
         for (Map.Entry<String, Device> entry : devices.entrySet()) {
             devicesWithoutHeader.add(entry.getValue());
         }
 
         while (devicesWithoutHeader.size() > 0 && timeOut > 0) {
-            previousCensusList.clear();
+            tempList.clear();
 
             for (Device device : devicesWithoutHeader) {
                 udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, device.getIpAddress());
@@ -264,8 +245,8 @@ public final class Discovery implements PacketListener {
                 }
             }
 
-            devicesWithoutHeader.removeAll(previousCensusList);
-            previousCensusList.clear();
+            devicesWithoutHeader.removeAll(tempList);
+            tempList.clear();
             timeOut--;
         }
 
@@ -273,7 +254,6 @@ public final class Discovery implements PacketListener {
     }
 
     private void broadcastList() {
-        Log.d(TAG, "Broadcasting list...");
         String censusListString = PacketCodes.DISCOVERY_REQUEST;
 
         if (censusList.size() > 0) {
@@ -284,8 +264,6 @@ public final class Discovery implements PacketListener {
     }
 
     private void listenForReplies() {
-        Log.d(TAG, "Listening to replies...");
-
         devicesReplies = 0;
         udpPacketSender.addPacketListener(this);
 
@@ -308,18 +286,20 @@ public final class Discovery implements PacketListener {
             }
 
             //Check if this device has been saved in the local storage list.
-            if (savedDevices.containsKey(device.getMacAddress())) {
+            if (knownDevices.containsKey(device.getMacAddress())) {
                 //Check if the IP and header version are out of date
-                Device savedDevice = savedDevices.get(device.getMacAddress());
+                Device savedDevice = knownDevices.get(device.getMacAddress());
                 savedDevice.setStatus(1);
-                if (savedDevice.getHeaderVersion() != device.getHeaderVersion()
-                        || !savedDevice.getIpAddress().equals(device.getIpAddress())) {
-                    savedDevices.remove(device.getMacAddress());
-                    devicesWithoutHeader.put(device.getMacAddress(), device);
-                    censusList.add(device);
+                if (savedDevice.getHeaderVersion() != device.getHeaderVersion()){
+                    savedDevice.setHeaderVersion(device.getHeaderVersion());
+                    devicesWithoutHeader.put(savedDevice.getMacAddress(), savedDevice);
+                }
+
+                if (!savedDevice.getIpAddress().equals(device.getIpAddress())) {
+                    savedDevice.setIpAddress(device.getIpAddress());
                 }
             } else {
-                savedDevices.put(device.getMacAddress(), device);
+                knownDevices.put(device.getMacAddress(), device);
                 devicesWithoutHeader.put(device.getMacAddress(), device);
                 censusList.add(device);
             }
@@ -327,27 +307,19 @@ public final class Discovery implements PacketListener {
             respondingDevices.add(device.getMacAddress());
             devicesReplies++;
         } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
-            addHeaderToDevice(packetData, fromIP);
+            addHeaderToDevice(packetData);
         }
         return false;
     }
 
-    private void addHeaderToDevice(String header, InetAddress fromIP) {
-        Log.d(TAG, "addHeaderToDevice: Header received " + header);
+    private void addHeaderToDevice(String header) {
         String[] headerData = header.split(",");
 
-        Log.e(TAG, "addHeaderToDevice: " + header);
-
-        for (Device device : censusList) {
-            if (device.getIpAddress().equals(fromIP.getHostAddress())) {
-                if (headerData.length < 4) {
-                    return;
-                }
-                device.setName(headerData[2]);
-                device.setLocation(headerData[3]);
-                previousCensusList.add(device);
-                return;
-            }
+        if(devicesWithoutHeader.containsKey(headerData[0])){
+            Device device = devicesWithoutHeader.get(headerData[0]);
+            device.setName(headerData[2]);
+            device.setLocation(headerData[3]);
+            tempList.add(device);
         }
     }
 
@@ -367,24 +339,16 @@ public final class Discovery implements PacketListener {
     public void clearSavedDevices() {
         File dir = context.getFilesDir();
         File file = new File(dir, FILENAME);
-        boolean deleted = file.delete();
-
-        if (deleted) {
-            Log.e(TAG, "clearSavedDevices: cleared");
-        } else {
-            Log.e(TAG, "clearSavedDevices: not cleared");
-        }
-
+        file.delete();
     }
 
     public void removeDevice(Device device) {
-        HashMap<String, Device> censusListFromFile = getSavedDevices();
+        HashMap<String, Device> censusListFromFile = getKnownDevices();
         if (censusListFromFile == null) {
             return;
         }
 
         if (censusListFromFile.containsKey(device.getMacAddress())) {
-            Log.e(TAG, "removeDevice: Device removed " + device.getName());
             censusListFromFile.remove(device.getMacAddress());
             saveToFile(censusListFromFile);
         } else {

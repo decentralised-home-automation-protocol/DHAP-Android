@@ -23,7 +23,7 @@ public class DHAP {
     }
 
     public void fetchDeviceInterface(Device device, GetDeviceInterfaceCallbacks callbacks) {
-        if(device.isActive == 1){
+        if(device.getStatus() == 1){
             display.fetchDeviceInterface(device, callbacks);
         } else {
             callbacks.displayTimeoutFailure();

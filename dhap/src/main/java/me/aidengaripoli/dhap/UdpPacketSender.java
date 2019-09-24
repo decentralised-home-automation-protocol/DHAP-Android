@@ -95,7 +95,6 @@ public class UdpPacketSender {
                 try {
                     datagramSocket.receive(receivePacket);
                     String packet = new String(receiveBuffer, 0, receivePacket.getLength());
-                    Log.e(TAG, "listenForPackets: " + packet);
 
                     String packetType = packet.substring(0, DELIM_CHAR_INDEX);
                     String packetData = "";
