@@ -298,11 +298,14 @@ public final class Discovery implements PacketListener {
                         Device deviceResponse = parseReply(packetData, fromIP);
 
                         Device device = devicesMap.get(deviceResponse.getMacAddress());
+
                         if (device == null) {
                             return false;
                         }
-
                         device.setStatus(1);
+                        if(responseList.contains(device)){
+                            return false;
+                        }
                         responseList.add(device);
 
                         if (device.getHeaderVersion() != deviceResponse.getHeaderVersion()) {
