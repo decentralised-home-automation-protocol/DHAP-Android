@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import me.aidengaripoli.dhap.Device;
@@ -19,6 +20,7 @@ import me.aidengaripoli.dhap.PacketListener;
 import me.aidengaripoli.dhap.SavedCensusListManager;
 import me.aidengaripoli.dhap.UdpPacketSender;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.RefreshCensuslistCallbacks;
 
 public final class Discovery implements PacketListener {
 
@@ -239,6 +241,10 @@ public final class Discovery implements PacketListener {
 
         if (devicesWithoutHeader.containsKey(headerData[0])) {
             Device device = devicesWithoutHeader.get(headerData[0]);
+            if (device == null) {
+                return;
+            }
+            device.setHeaderVersion(Integer.parseInt(headerData[1]));
             device.setName(headerData[2]);
             device.setLocation(headerData[3]);
             tempList.add(device);
@@ -274,5 +280,85 @@ public final class Discovery implements PacketListener {
         } else {
             Log.e(TAG, "removeDevice: Device not found " + device.getName());
         }
+    }
+
+    public void refreshCensusList(List<Device> devices, RefreshCensuslistCallbacks callbacks) {
+        new Thread(() -> {
+            HashMap<String, Device> devicesMap = new HashMap<>();
+            for (Device device : devices) {
+                devicesMap.put(device.getMacAddress(), device);
+                device.setStatus(0);
+            }
+            ArrayList<Device> responseList = new ArrayList<>(devices);
+
+            PacketListener packetListener = new PacketListener() {
+                @Override
+                public boolean newPacket(String packetType, String packetData, InetAddress fromIP) {
+                    if (packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
+                        Device deviceResponse = parseReply(packetData, fromIP);
+
+                        Device device = devicesMap.get(deviceResponse.getMacAddress());
+                        if (device == null) {
+                            return false;
+                        }
+
+                        device.setStatus(1);
+                        responseList.add(device);
+
+                        if (device.getHeaderVersion() != deviceResponse.getHeaderVersion()) {
+                            udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_HEADER_REQUEST, deviceResponse.getIpAddress());
+                        }
+                    } else if (packetType.equals(PacketCodes.DISCOVERY_HEADER_RESPONSE)) {
+                        String[] headerData = packetData.split(",");
+
+                        if (devicesMap.containsKey(headerData[0])) {
+                            Device device = devicesMap.get(headerData[0]);
+                            if (device == null) {
+                                return false;
+                            }
+                            device.setHeaderVersion(Integer.parseInt(headerData[1]));
+                            device.setName(headerData[2]);
+                            device.setLocation(headerData[3]);
+                        }
+                    }
+                    return false;
+                }
+            };
+
+            udpPacketSender.addPacketListener(packetListener);
+
+            int timeOut = 10;
+            ArrayList<Device> devicesToRefresh = new ArrayList<>(devices);
+
+            while (devicesToRefresh.size() > 0 && timeOut > 0) {
+                for (Device device : devicesToRefresh) {
+                    udpPacketSender.sendUdpPacketToIP(PacketCodes.DISCOVERY_REQUEST, device.getIpAddress());
+
+                    try {
+                        Thread.sleep(HEADER_TIMEOUT_IN_MILLIS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                devicesToRefresh.removeAll(responseList);
+                Log.e(TAG, "refreshCensusList: " + responseList.size());
+                responseList.clear();
+                timeOut--;
+            }
+
+            udpPacketSender.removePacketListener(packetListener);
+            callbacks.censusListRefreshed();
+        }).start();
+    }
+
+    public ArrayList<Device> getSavedDevices() {
+        HashMap<String, Device> savedDevices = savedCensusListManager.getKnownDevices();
+        ArrayList<Device> savedDevicesList = new ArrayList<>();
+
+        for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
+            savedDevicesList.add(entry.getValue());
+        }
+
+        return savedDevicesList;
     }
 }

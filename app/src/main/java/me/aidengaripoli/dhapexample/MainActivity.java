@@ -14,6 +14,7 @@ import java.util.List;
 import me.aidengaripoli.dhap.DHAP;
 import me.aidengaripoli.dhap.Device;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.RefreshCensuslistCallbacks;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 
 public class MainActivity extends AppCompatActivity implements
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActionFragment actionFragment;
     private FragmentManager fragmentManager;
     private DiscoveredDevicesFragment devicesFragment;
+    private ArrayList<Device> censusList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity implements
 
         fragmentManager = getSupportFragmentManager();
 
-        beginDeviceDiscovery();
+        censusList = new ArrayList<>();
+        censusList.addAll(dhap.getSavedDevices());
+
+        refreshCensusList();
     }
 
     private void beginDeviceDiscovery() {
@@ -59,7 +64,9 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void foundDevices(List<Device> devices) {
                 Log.e(TAG, "Devices found.");
-                displayDiscoveredDevices(new ArrayList<>(devices));
+                censusList.clear();
+                censusList.addAll(devices);
+                displayDiscoveredDevices();
             }
 
             @Override
@@ -75,38 +82,42 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void displayDiscoveredDevices(final ArrayList<Device> devices) {
+    private void displayDiscoveredDevices() {
         runOnUiThread(() -> {
-            devicesFragment = DiscoveredDevicesFragment.newInstance(devices);
+            displayActionBar();
 
-            actionFragment = ActionFragment
-                    .newInstance("Add", true, "Refresh");
+            devicesFragment = DiscoveredDevicesFragment.newInstance(censusList);
 
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_discovery_state_container, devicesFragment)
-                    .commit();
-
-            fragmentManager.beginTransaction().
-                    add(R.id.fragment_action_container, actionFragment)
                     .commit();
         });
     }
 
     private void displayNoDevicesFound() {
         runOnUiThread(() -> {
+            displayActionBar();
+
             NoDevicesFoundFragment fragment = NoDevicesFoundFragment.newInstance();
 
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_discovery_state_container, fragment)
+                    .commit();
+        });
+    }
+
+    private void displayActionBar(){
+        ActionFragment actionFragment = (ActionFragment) fragmentManager
+                .findFragmentById(R.id.fragment_action_container);
+
+        if (actionFragment == null) {
             actionFragment = ActionFragment
                     .newInstance("Add", true, "Refresh");
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_action_container, actionFragment)
                     .commit();
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_discovery_state_container, fragment)
-                    .commit();
-        });
+        }
     }
 
     @Override
@@ -134,13 +145,20 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onActionResult(String action) {
         switch (action) {
-            case "Refresh": {
+            case "Discovery": {
                 Log.d(TAG, "Re-discovering devices.");
                 beginDeviceDiscovery();
                 break;
             }
 
+            case "Refresh": {
+                Log.d(TAG, "Refreshing censuslist.");
+                refreshCensusList();
+                break;
+            }
+
             case "Clear": {
+                censusList.clear();
                 dhap.clearSavedDevices();
                 displayNoDevicesFound();
                 break;
@@ -167,8 +185,21 @@ public class MainActivity extends AppCompatActivity implements
         dialog.show(getSupportFragmentManager(), "ChangeHeaderFragment");
     }
 
+    private void refreshCensusList(){
+        dhap.refreshCensusList(censusList, new RefreshCensuslistCallbacks() {
+            @Override
+            public void censusListRefreshed() {
+                if(censusList.isEmpty()){
+                    displayNoDevicesFound();
+                }else{
+                    displayDiscoveredDevices();
+                }
+            }
+        });
+    }
+
     @Override
     public void headerChanged() {
-        beginDeviceDiscovery();
+        refreshCensusList();
     }
 }
