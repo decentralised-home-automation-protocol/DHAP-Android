@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DHAP dhap;
-    private ActionFragment actionFragment;
     private FragmentManager fragmentManager;
     private DiscoveredDevicesFragment devicesFragment;
     private ArrayList<Device> censusList;
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void displayActionBar(){
+    private void displayActionBar() {
         ActionFragment actionFragment = (ActionFragment) fragmentManager
                 .findFragmentById(R.id.fragment_action_container);
 
@@ -185,14 +184,18 @@ public class MainActivity extends AppCompatActivity implements
         dialog.show(getSupportFragmentManager(), "ChangeHeaderFragment");
     }
 
-    private void refreshCensusList(){
+    private void refreshCensusList() {
         dhap.refreshCensusList(censusList, new RefreshCensuslistCallbacks() {
             @Override
             public void censusListRefreshed() {
-                if(censusList.isEmpty()){
+                if (censusList.isEmpty()) {
                     displayNoDevicesFound();
-                }else{
-                    displayDiscoveredDevices();
+                } else {
+                    if (devicesFragment == null) {
+                        displayDiscoveredDevices();
+                    } else {
+                        runOnUiThread(() -> devicesFragment.updateDevices());
+                    }
                 }
             }
         });
