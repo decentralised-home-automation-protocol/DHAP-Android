@@ -3,8 +3,10 @@ package me.aidengaripoli.dhapexample;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,7 @@ public class JoiningActivity extends AppCompatActivity {
     private List<ScanResult> nearbyAccessPoints;
     private ScanResult selectedHomeNetwork;
     private ScanResult selectedDeviceNetwork;
+    private Button joinButton;
 
     private OnWifiNetworkClickListener homeWifiListener = new OnWifiNetworkClickListener() {
         @Override
@@ -70,6 +73,8 @@ public class JoiningActivity extends AppCompatActivity {
         deviceLocation = findViewById(R.id.edit_text_device_location);
 
         joiningState = findViewById(R.id.joiningState);
+
+        joinButton = findViewById(R.id.join_button);
 
         getNearbyAccessPoints();
     }
@@ -113,6 +118,12 @@ public class JoiningActivity extends AppCompatActivity {
     }
 
     public void joinDevice(View view) {
+        if(selectedHomeNetwork == null || selectedDeviceNetwork == null){
+            Toast.makeText(getApplicationContext(),"Select a home and IoT device Network",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        joinButton.setEnabled(false);
+
         String text = "Verifying credentials...";
         joiningState.setText(text);
 
@@ -121,32 +132,36 @@ public class JoiningActivity extends AppCompatActivity {
                 new JoinDeviceCallbacks() {
                     @Override
                     public void networkNotFound(String SSID) {
-                        String text = "Network with SSID: " + SSID + " not found!";
-                        joiningState.setText(text);
+                        String text = "Network with SSID: " + SSID + " not found";
+                        runOnUiThread(() -> joiningState.setText(text));
+                        joinButton.setEnabled(true);
                     }
 
                     @Override
                     public void credentialsAcknowledged() {
                         String text = "Credentials Acknowledged";
-                        joiningState.setText(text);
+                        runOnUiThread(() -> joiningState.setText(text));
                     }
 
                     @Override
                     public void sendCredentialsTimeout() {
                         String text = "Joining Failed. Sending credentials timed out";
-                        joiningState.setText(text);
+                        runOnUiThread(() -> joiningState.setText(text));
+                        joinButton.setEnabled(true);
                     }
 
                     @Override
                     public void success() {
                         String text = "Device Successfully Joined";
-                        joiningState.setText(text);
+                        runOnUiThread(() -> joiningState.setText(text));
+                        joinButton.setEnabled(true);
                     }
 
                     @Override
                     public void failure(String message) {
                         String text = "Joining Failed. " + message;
-                        joiningState.setText(text);
+                        runOnUiThread(() -> joiningState.setText(text));
+                        joinButton.setEnabled(true);
                     }
                 });
     }

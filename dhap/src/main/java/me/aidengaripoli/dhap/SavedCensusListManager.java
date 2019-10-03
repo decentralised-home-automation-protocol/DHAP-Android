@@ -36,7 +36,9 @@ public class SavedCensusListManager {
 
             for (String deviceString : devices) {
                 Device device = parseDeviceFromFile(deviceString);
-                censusListFromFile.put(device.getMacAddress(), device);
+                if(device != null){
+                    censusListFromFile.put(device.getMacAddress(), device);
+                }
             }
 
             return censusListFromFile;
@@ -51,6 +53,11 @@ public class SavedCensusListManager {
 
     private Device parseDeviceFromFile(String deviceString) {
         String[] deviceData = deviceString.split(DEVICE_DATA_DELIM);
+        Log.e(TAG, "parseDeviceFromFile: " + deviceData.length);
+
+        if(deviceData.length < 3){
+            return null;
+        }
 
         Device device = new Device(
                 deviceData[0],
@@ -60,9 +67,17 @@ public class SavedCensusListManager {
                 Integer.parseInt(deviceData[1])
         );
 
-        device.setName(deviceData[3]);
-        device.setLocation(deviceData[4]);
-        device.setXml(deviceData[5]);
+        if(deviceData.length > 3){
+            device.setName(deviceData[3]);
+        }
+
+        if(deviceData.length > 4){
+            device.setLocation(deviceData[4]);
+        }
+
+        if(deviceData.length > 5){
+            device.setXml(deviceData[5]);
+        }
         return device;
     }
 

@@ -2,8 +2,12 @@ package me.aidengaripoli.dhap;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.aidengaripoli.dhap.discovery.Discovery;
 import me.aidengaripoli.dhap.discovery.callbacks.DiscoverDevicesCallbacks;
+import me.aidengaripoli.dhap.discovery.callbacks.RefreshCensuslistCallbacks;
 import me.aidengaripoli.dhap.display.Display;
 import me.aidengaripoli.dhap.display.callbacks.GetDeviceInterfaceCallbacks;
 import me.aidengaripoli.dhap.joining.Joining;
@@ -48,6 +52,14 @@ public class DHAP {
 
     public void clearSavedDevices() {
         discovery.clearSavedDevices();
+    }
+
+    public ArrayList<Device> getSavedDevices() {
+        return discovery.getSavedDevices();
+    }
+
+    public void refreshCensusList(List<Device> devices, RefreshCensuslistCallbacks callbacks){
+        discovery.refreshCensusList(devices, callbacks);
     }
 
     public void discoverDebugDevices(DiscoverDevicesCallbacks callbacks) {

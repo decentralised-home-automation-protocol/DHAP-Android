@@ -68,6 +68,8 @@ public class ActionFragment extends Fragment {
         Button clearButton = rootView.findViewById(R.id.button_action2);
         clearButton.setOnClickListener(v -> mListener.onActionResult("Clear"));
 
+        Button DiscoverButton = rootView.findViewById(R.id.button_discover);
+        DiscoverButton.setOnClickListener(v -> mListener.onActionResult("Discovery"));
         return rootView;
     }
 

@@ -98,6 +98,10 @@ public class DiscoveredDevicesFragment extends Fragment implements
         }
     }
 
+    void updateDevices() {
+        adapter.notifyDataSetChanged();
+    }
+
     public interface OnDeviceSelectedListener {
         void onDeviceSelected(Device device);
     }
