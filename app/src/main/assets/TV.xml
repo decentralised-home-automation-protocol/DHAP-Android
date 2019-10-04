@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <name>TV</name>
-    <location>Living Room</location>
-    <group id="1" permission="WR" frame="false" orientation="horizontal">
+    <group id="1" frame="false" orientation="horizontal">
         <gui_element id="1">
             <type>switchtoggle</type>
             <disp_settings>On/Off</disp_settings>
@@ -16,7 +14,7 @@
             <comment>Input Source</comment>
         </gui_element>
     </group>
-    <group id="2" permission="WR" frame="true" orientation="horizontal">
+    <group id="2" frame="true" orientation="horizontal">
         <gui_element id="1">
             <type>buttontoggle</type>
             <disp_settings>Record,Recording,Not Recording</disp_settings>
@@ -30,7 +28,7 @@
             <comment>Mute</comment>
         </gui_element>
     </group>
-    <group id="3" permission="WR">
+    <group id="3">
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Channel,0,100</disp_settings>
@@ -38,7 +36,7 @@
             <comment>Channel selection</comment>
         </gui_element>
     </group>
-    <group id="4" permission="WR">
+    <group id="4">
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Volume,0,100</disp_settings>
@@ -46,14 +44,14 @@
             <comment>Volume selection</comment>
         </gui_element>
     </group>
-    <group id="5" permission="WR">
+    <group id="5">
         <gui_element id="1">
             <type>directionalbuttons</type>
             <disp_settings>~,↑,→,↓,←</disp_settings>
             <comment>Directional Arrows</comment>
         </gui_element>
     </group>
-    <group id="6" permission="WR" frame="true" orientation="vertical">
+    <group id="6" frame="true" orientation="vertical">
         <gui_element id="1">
             <type>buttongroup</type>
             <disp_settings>~,1,2,3</disp_settings>

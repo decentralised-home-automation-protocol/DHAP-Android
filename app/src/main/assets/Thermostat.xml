@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <name>Thermostat</name>
-    <location>Living Room</location>
-    <group id="1" permission="WR">
+    <group id="1">
         <gui_element id="1">
             <type>switchtoggle</type>
             <disp_settings>On/Off</disp_settings>
@@ -10,7 +8,7 @@
             <comment>Turn thermostat On or Off</comment>
         </gui_element>
     </group>
-    <group id="2" permission="WR">
+    <group id="2">
         <gui_element id="1">
             <type>status</type>
             <disp_settings>Current Temp:</disp_settings>
@@ -24,7 +22,7 @@
             <comment>Current Temperature</comment>
         </gui_element>
     </group>
-    <group id="3" permission="WR">
+    <group id="3">
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Fan Speed,0,10</disp_settings>
@@ -32,7 +30,7 @@
             <comment>Fan speed</comment>
         </gui_element>
     </group>
-    <group id="4" permission="WR">
+    <group id="4">
         <gui_element id="1">
             <type>scheduler</type>
             <disp_settings>Schedule an action,Submit,Heat,Cool,Shutdown,Startup</disp_settings>

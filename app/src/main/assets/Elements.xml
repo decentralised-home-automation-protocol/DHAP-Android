@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <name>Element Samples</name>
-    <location>Outside</location>
-
     <!--SwitchToggle-->
-    <group id="1" permisison="WR">
+    <group id="1">
         <gui_element id="1">
             <type>switchtoggle</type>
             <disp_settings>On/Off</disp_settings>
@@ -14,7 +11,7 @@
     </group>
 
     <!--ButtonToggle-->
-    <group id="2" permisison="WR">
+    <group id="2">
         <gui_element id="1">
             <type>buttontoggle</type>
             <disp_settings>Open/Close,Open,Close</disp_settings>
@@ -24,7 +21,7 @@
     </group>
 
     <!--Stepper-->
-    <group id="3" permisison="WR">
+    <group id="3">
         <gui_element id="1">
             <type>stepper</type>
             <disp_settings>Number,0,10</disp_settings>
@@ -34,7 +31,7 @@
     </group>
 
     <!--RangeInput-->
-    <group id="4" permisison="WR">
+    <group id="4">
         <gui_element id="1">
             <type>rangeinput</type>
             <disp_settings>Volume,Set,1000,3000</disp_settings>
@@ -44,7 +41,7 @@
     </group>
 
     <!--DirectionalButtons-->
-    <group id="5" permisison="WR">
+    <group id="5">
         <gui_element id="1">
             <type>directionalbuttons</type>
             <disp_settings>Direction,N,E,S,W</disp_settings>
@@ -53,7 +50,7 @@
     </group>
 
     <!--Selection-->
-    <group id="6" permisison="WR">
+    <group id="6">
         <gui_element id="1">
             <type>selection</type>
             <disp_settings>Move Door,one,two,three,four,five,six</disp_settings>
@@ -63,7 +60,7 @@
     </group>
 
     <!--Status-->
-    <group id="7" permisison="WR">
+    <group id="7">
         <gui_element id="1">
             <type>status</type>
             <disp_settings>Voltage</disp_settings>
@@ -73,7 +70,7 @@
     </group>
 
     <!--TextInput-->
-    <group id="8" permisison="WR">
+    <group id="8">
         <gui_element id="1">
             <type>textinput</type>
             <disp_settings>Name,Submit</disp_settings>
@@ -83,7 +80,7 @@
     </group>
 
     <!--Progress-->
-    <group id="9" permission="WR">
+    <group id="9">
         <gui_element id="1">
             <type>progress</type>
             <disp_settings>Loading...</disp_settings>
@@ -93,7 +90,7 @@
     </group>
 
     <!--ButtonGroup-->
-    <group id="10" permisison="WR">
+    <group id="10">
         <gui_element id="1">
             <type>buttongroup</type>
             <disp_settings>Numpad,1,2,3,4</disp_settings>
@@ -102,7 +99,7 @@
     </group>
 
     <!--Scheduler-->
-    <group id="11" permisison="WR">
+    <group id="11">
         <gui_element id="1">
             <type>scheduler</type>
             <disp_settings>Schedule an event,Submit,Mon,Tue,Wed,Thu,Fri</disp_settings>
@@ -112,7 +109,7 @@
     </group>
 
     <!--Password-->
-    <group id="12" permisison="WR">
+    <group id="12">
         <gui_element id="1">
             <type>password</type>
             <disp_settings>Password,Submit</disp_settings>
