@@ -289,7 +289,7 @@ public final class Discovery implements PacketListener {
                 devicesMap.put(device.getMacAddress(), device);
                 device.setStatus(0);
             }
-            ArrayList<Device> responseList = new ArrayList<>(devices);
+            ArrayList<Device> responseList = new ArrayList<>();
 
             PacketListener packetListener = new PacketListener() {
                 @Override
@@ -344,7 +344,6 @@ public final class Discovery implements PacketListener {
                     }
                 }
                 devicesToRefresh.removeAll(responseList);
-                Log.e(TAG, "refreshCensusList: " + responseList.size());
                 responseList.clear();
                 timeOut--;
             }
