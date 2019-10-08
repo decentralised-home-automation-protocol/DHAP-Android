@@ -330,7 +330,7 @@ public final class Discovery implements PacketListener {
 
             udpPacketSender.addPacketListener(packetListener);
 
-            int timeOut = 10;
+            int timeOut = 5;
             ArrayList<Device> devicesToRefresh = new ArrayList<>(devices);
 
             while (devicesToRefresh.size() > 0 && timeOut > 0) {
@@ -349,6 +349,7 @@ public final class Discovery implements PacketListener {
             }
 
             udpPacketSender.removePacketListener(packetListener);
+            savedCensusListManager.saveToFile(devicesMap);
             callbacks.censusListRefreshed();
         }).start();
     }
@@ -358,6 +359,7 @@ public final class Discovery implements PacketListener {
         ArrayList<Device> savedDevicesList = new ArrayList<>();
 
         for (Map.Entry<String, Device> entry : savedDevices.entrySet()) {
+            entry.getValue().setStatus(0);
             savedDevicesList.add(entry.getValue());
         }
 
