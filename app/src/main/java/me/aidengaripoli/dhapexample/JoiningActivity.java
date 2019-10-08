@@ -133,8 +133,10 @@ public class JoiningActivity extends AppCompatActivity {
                     @Override
                     public void networkNotFound(String SSID) {
                         String text = "Network with SSID: " + SSID + " not found";
-                        runOnUiThread(() -> joiningState.setText(text));
-                        joinButton.setEnabled(true);
+                        runOnUiThread(() -> {
+                            joiningState.setText(text);
+                            joinButton.setEnabled(true);
+                        });
                     }
 
                     @Override
@@ -146,22 +148,28 @@ public class JoiningActivity extends AppCompatActivity {
                     @Override
                     public void sendCredentialsTimeout() {
                         String text = "Joining Failed. Sending credentials timed out";
-                        runOnUiThread(() -> joiningState.setText(text));
-                        joinButton.setEnabled(true);
+                        runOnUiThread(() -> {
+                            joiningState.setText(text);
+                            joinButton.setEnabled(true);
+                        });
                     }
 
                     @Override
                     public void success() {
                         String text = "Device Successfully Joined";
-                        runOnUiThread(() -> joiningState.setText(text));
-                        joinButton.setEnabled(true);
+                        runOnUiThread(() -> {
+                            joiningState.setText(text);
+                            joinButton.setEnabled(true);
+                        });
                     }
 
                     @Override
                     public void failure(String message) {
                         String text = "Joining Failed. " + message;
-                        runOnUiThread(() -> joiningState.setText(text));
-                        joinButton.setEnabled(true);
+                        runOnUiThread(() -> {
+                            joiningState.setText(text);
+                            joinButton.setEnabled(true);
+                        });
                     }
                 });
     }
