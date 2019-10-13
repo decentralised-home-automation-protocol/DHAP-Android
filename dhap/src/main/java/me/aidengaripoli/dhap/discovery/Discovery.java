@@ -205,6 +205,10 @@ public final class Discovery implements PacketListener {
         if (packetType.equals(PacketCodes.DISCOVERY_RESPONSE)) {
             Device device = parseReply(packetData, fromIP);
 
+            if(device == null){
+                return false;
+            }
+
             if (respondingDevices.contains(device.getMacAddress())) {
                 return false;
             }
@@ -254,13 +258,16 @@ public final class Discovery implements PacketListener {
     private Device parseReply(String packetData, InetAddress fromIP) {
         String[] deviceString = packetData.split(",");
 
+        if(deviceString.length < 4){
+            return null;
+        }
+
         return new Device(
                 deviceString[0],
                 fromIP.getHostAddress(),
                 1,
                 Integer.parseInt(deviceString[2]),
                 Integer.parseInt(deviceString[3])
-
         );
     }
 
