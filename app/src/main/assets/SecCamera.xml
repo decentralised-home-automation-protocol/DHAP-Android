@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <device>
-    <name>Security Camera</name>
-    <location>Outside</location>
-    <group id="1" permission="WR">
+    <group id="1">
         <gui_element id="1">
             <type>switchtoggle</type>
             <disp_settings>On/Off</disp_settings>
@@ -16,7 +14,7 @@
             <comment>Camera source</comment>
         </gui_element>
     </group>
-    <group id="2" permission="WR">
+    <group id="2">
         <gui_element id="1">
             <type>buttontoggle</type>
             <disp_settings>Record,Recording,Not Recording</disp_settings>
@@ -24,14 +22,14 @@
             <comment>Recording</comment>
         </gui_element>
     </group>
-    <group id="3" permission="WR">
+    <group id="3">
         <gui_element id="1">
             <type>directionalbuttons</type>
             <disp_settings>Camera Movement,↑,→,↓,←</disp_settings>
             <comment>Directional Arrows</comment>
         </gui_element>
     </group>
-    <group id="4" permission="WR">
+    <group id="4">
         <gui_element id="1">
             <type>buttongroup</type>
             <disp_settings> ,Stream</disp_settings>

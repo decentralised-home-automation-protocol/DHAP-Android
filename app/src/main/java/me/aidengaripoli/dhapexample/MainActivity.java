@@ -42,7 +42,16 @@ public class MainActivity extends AppCompatActivity implements
         censusList = new ArrayList<>();
         censusList.addAll(dhap.getSavedDevices());
 
-        refreshCensusList();
+        if (censusList.isEmpty()) {
+            displayNoDevicesFound();
+        } else {
+            if (devicesFragment == null) {
+                displayDiscoveredDevices();
+            } else {
+                runOnUiThread(() -> devicesFragment.updateDevices());
+            }
+            refreshCensusList();
+        }
     }
 
     private void beginDeviceDiscovery() {
