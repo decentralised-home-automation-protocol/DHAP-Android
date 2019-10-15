@@ -1,7 +1,13 @@
 package me.aidengaripoli.dhapexample;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.isupatches.wisefy.WiseFy;
 import com.isupatches.wisefy.callbacks.GetNearbyAccessPointsCallbacks;
@@ -75,15 +82,38 @@ public class JoiningActivity extends AppCompatActivity {
         joiningState = findViewById(R.id.joiningState);
 
         joinButton = findViewById(R.id.join_button);
-
         getNearbyAccessPoints();
+        scanWiFI(null);
     }
+
 
     private void setUpRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManagerHome = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManagerHome);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void scanWiFI(View view){
+        WifiManager wifiManager = (WifiManager)
+                getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager.startScan();
+
+        BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent intent) {
+                boolean success = intent.getBooleanExtra(
+                        WifiManager.EXTRA_RESULTS_UPDATED, false);
+                if (success) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(),"Wifi scanned",Toast.LENGTH_SHORT).show());
+                    getNearbyAccessPoints();
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        getApplicationContext().registerReceiver(wifiScanReceiver, intentFilter);
     }
 
     private void getNearbyAccessPoints() {
@@ -114,12 +144,12 @@ public class JoiningActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getNearbyAccessPoints();
+        scanWiFI(null);
     }
 
     public void joinDevice(View view) {
-        if(selectedHomeNetwork == null || selectedDeviceNetwork == null){
-            Toast.makeText(getApplicationContext(),"Select a home and IoT device Network",Toast.LENGTH_SHORT).show();
+        if (selectedHomeNetwork == null || selectedDeviceNetwork == null) {
+            Toast.makeText(getApplicationContext(), "Select a home and IoT device Network", Toast.LENGTH_SHORT).show();
             return;
         }
         joinButton.setEnabled(false);
