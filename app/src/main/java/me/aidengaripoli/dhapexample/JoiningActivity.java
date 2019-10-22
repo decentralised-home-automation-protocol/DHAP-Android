@@ -98,6 +98,7 @@ public class JoiningActivity extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager)
                 getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.startScan();
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(),"Scanning WiFi",Toast.LENGTH_SHORT).show());
 
         BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
             @Override
@@ -105,7 +106,7 @@ public class JoiningActivity extends AppCompatActivity {
                 boolean success = intent.getBooleanExtra(
                         WifiManager.EXTRA_RESULTS_UPDATED, false);
                 if (success) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(),"Wifi scanned",Toast.LENGTH_SHORT).show());
+//                    runOnUiThread(() -> Toast.makeText(getApplicationContext(),"Wifi scanned",Toast.LENGTH_SHORT).show());
                     getNearbyAccessPoints();
                 }
             }
